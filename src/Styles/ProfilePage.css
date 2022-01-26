@@ -1,0 +1,402 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    text-decoration: none;
+    list-style: none;
+    font-family: Montserrat, sans-serif;
+}
+
+.container-1400 {
+    max-width: 1400px;
+    margin: 0px auto;
+}
+
+.user-record img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid;
+    position: relative;
+    bottom: -30px;
+}
+
+.header {
+    background: rgb(243, 243, 243);
+    padding-top: 30px;
+}
+
+span.span-star {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: 900;
+}
+
+.fa-star::before {
+    content: "";
+    color: gold;
+}
+
+.cs-pro p {
+    padding-top: 20px;
+    font-size: 18px;
+    color: rgba(120, 120, 120, 0.65);
+}
+
+.user-edit {
+    padding-left: 20px;
+}
+
+.user-record {
+    display: flex;
+    align-items: flex-end;
+}
+
+.user-record h3 {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.email-record h6 {
+    font-size: 23px;
+}
+
+ul.navbar-nav.ml-auto.header-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+ul.navbar-nav.ml-auto.header-bar li a {
+    font-size: 20px;
+    margin-left: 70px;
+    color: black;
+    font-weight: 500;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.hover-effect {
+    position: relative;
+}
+
+a.nav-link.hover-effect:hover {
+    background-color: unset !important;
+    color: rgb(65, 155, 205) !important;
+}
+
+.hover-effect::after {
+    width: 0px;
+    height: 2px;
+    content: "";
+    position: absolute;
+    background: goldenrod;
+    color: white;
+    left: 7px;
+    bottom: 0px;
+    transition: all 0.5s ease-in-out 0s;
+}
+
+.hover-effect:hover::after {
+    width: 100%;
+}
+
+a.nav-link.hover-effect.active::after {
+    width: 100%;
+}
+
+.sec-1 {
+    padding-top: 80px;
+}
+
+.row.profile-sec {
+    padding-bottom: 20px;
+}
+
+span.input-font i {
+    margin-top: 9px;
+}
+
+.profile input:focus {
+    background: rgb(217, 215, 215);
+}
+
+.sec-1 h1 {
+    font-size: 35px;
+    font-family: Montserrat;
+    font-weight: 600;
+    padding: 20px 0px;
+}
+
+.profile-edit {
+    background: rgb(243, 243, 243);
+    padding: 30px;
+}
+
+.profile {
+}
+
+.profile input {
+    width: 100%;
+    height: 45px;
+    padding: 0px 15px;
+    border: 1px solid rgba(187, 179, 179, 0.43);
+    border-radius: 7px;
+    outline: none;
+}
+
+.profile h6 {
+    font-size: 18px;
+    font-family: Montserrat;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.38);
+    margin: 0px;
+}
+
+.profile input::placeholder {
+    color: rgba(0, 0, 0, 0.76);
+    font-weight: 500;
+}
+
+.profile-button {
+    text-align: end;
+}
+
+.profile-button button {
+    width: 170px;
+    height: 45px;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 45px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.82);
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon span {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    font-size: 25px;
+    width: 53px;
+    height: 45px;
+    padding-top: 0px;
+    text-align: center;
+    background: white;
+    border: 1px solid rgb(225, 222, 222);
+    border-radius: 7px 0px 0px 7px;
+}
+
+.profile.input-icon input {
+    padding-left: 65px;
+}
+
+.input-icon span i {
+    color: rgb(151, 151, 151);
+}
+
+.accounts-features {
+    background: rgb(243, 243, 243);
+    padding: 20px 20px 0px;
+}
+
+.sec-2 h1 {
+    padding-top: 30px;
+    padding-bottom: 20px;
+    font-size: 35px;
+    font-family: Montserrat;
+    font-weight: 600;
+}
+
+.feature h6 {
+    font-size: 18px;
+    font-family: Montserrat;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.38);
+}
+
+.feature {
+    position: relative;
+    padding: 10px 0px;
+}
+
+span.lock i {
+    position: absolute;
+    right: 0px;
+    font-size: 40px;
+    color: rgb(151, 151, 151);
+}
+
+#check-1:checked ~ .lock {
+    display: none;
+}
+
+.check-lable input:checked ~ .lock {
+    display: none;
+}
+
+.check-lable input {
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgb(207, 207, 207);
+    cursor: pointer;
+}
+
+.check-lable {
+    display: flex;
+    align-items: center;
+}
+
+.feature label {
+    font-size: 17px;
+    font-family: Montserrat;
+    font-weight: 600;
+    padding-left: 8px;
+    margin-bottom: 0px;
+}
+
+.feature p {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.row.feature-border {
+    border-bottom: 1px solid rgb(229, 228, 228);
+    margin-bottom: 30px;
+}
+
+.col-lg-8.check-col {
+    padding-bottom: 20px;
+}
+
+.col-lg-12.button-feature {
+    padding-right: 75px;
+}
+
+span.HEADING {
+    font-size: 13px;
+    color: rgba(118, 116, 116, 0.59);
+}
+
+.sec-4 {
+    padding-bottom: 60px;
+}
+
+.subscription {
+    background: rgb(243, 243, 243);
+    padding: 20px 20px 0px;
+}
+
+.sec-3 h1 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    font-size: 35px;
+    font-family: Montserrat;
+    font-weight: 600;
+}
+
+.sub-method h6 {
+    font-size: 18px;
+    font-family: Montserrat;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.38);
+}
+
+.sub-method {
+    padding: 20px 0px;
+}
+
+.sub-method h5 {
+    text-align: end;
+    font-size: 18px;
+    font-family: Montserrat;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.38);
+}
+
+.sub-method p {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.sub-method label {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.sub-method input {
+    width: 18px;
+    height: 18px;
+    border-radius: 60px;
+}
+
+.sub-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+.sub-check label {
+    margin-bottom: 0px;
+    padding: 0px 0px 0px 9px;
+}
+
+.sub-method span i {
+    color: rgb(0, 0, 120);
+    font-size: 35px;
+    padding-right: 10px;
+}
+
+.sub-method span {
+    font-size: 19px;
+    display: flex;
+    align-items: end;
+}
+
+.history table {
+    width: 100%;
+}
+
+tr.head-edit th {
+    font-size: 20px;
+    font-family: Montserrat;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.38);
+    padding: 30px 0px 30px 20px;
+    background: rgb(243, 243, 243);
+}
+
+table.history-edit tr td {
+    font-size: 17px;
+    font-weight: 500;
+    border-bottom: 2px solid rgb(243, 243, 243);
+    padding: 20px 0px 20px 20px;
+}
+
+tr {
+    border: 1px solid rgb(243, 243, 243);
+}
+
+.sec-4 h1 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 35px;
+    font-family: Montserrat;
+    font-weight: 600;
+}
+
+.profile.input-icon input:focus {
+    background: rgb(225, 222, 222);
+}

@@ -1,0 +1,4 @@
+
+
+export const FAVOURITE_BOOKS = 'FAVOURITE_BOOKS';
+export const LIBRARY_BOOKS = 'LIBRARY_BOOKS';
