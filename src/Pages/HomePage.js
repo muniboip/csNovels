@@ -782,7 +782,7 @@ const HomePage = ({books_reducer,library_reducer}) => {
           </div>
         </div>
         <div>
-          <button onClick={openModal}>Open Modal</button>
+          {/* <button onClick={openModal}>Open Modal</button> */}
           <Modal
             isOpen={modalIsOpen}
             onAfterOpen={afterOpenModal}
@@ -957,7 +957,7 @@ const HomePage = ({books_reducer,library_reducer}) => {
         </div>
 
         <div>
-          <button onClick={()=>setSignupIsOpen(true)}>Open Modal</button>
+          {/* <button onClick={()=>setSignupIsOpen(true)}>Open Modal</button> */}
           <Modal
             isOpen={signupmodalIsOpen}
             onAfterOpen={afterOpenModal}
