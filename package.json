@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.24.0",
     "discord-oauth2": "^2.9.0",
+    "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-countdown": "^2.3.2",

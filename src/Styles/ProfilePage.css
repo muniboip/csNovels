@@ -116,6 +116,10 @@ a.nav-link.hover-effect.active::after {
     padding-top: 80px;
 }
 
+.sec-3 {
+    padding-top: 80px;
+}
+
 .row.profile-sec {
     padding-bottom: 20px;
 }
@@ -322,6 +326,7 @@ span.HEADING {
     text-align: end;
     font-size: 18px;
     font-family: Montserrat;
+    cursor: pointer;
     font-weight: 700;
     color: rgba(0, 0, 0, 0.38);
 }
@@ -383,6 +388,7 @@ table.history-edit tr td {
     font-weight: 500;
     border-bottom: 2px solid rgb(243, 243, 243);
     padding: 20px 0px 20px 20px;
+    text-transform: uppercase;
 }
 
 tr {

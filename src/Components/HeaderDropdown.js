@@ -1,31 +1,39 @@
 import React, { useState } from "react";
 import StarRatings from "react-star-ratings";
 import CSGO from "../Assets/Images/Go.png";
-function HeaderDropdown({closeDropDown}) {
+import { useNavigate } from "react-router-dom";
+function HeaderDropdown({ closeDropDown }) {
+  const navigate = useNavigate();
   const [options, setOptions] = useState([
     {
       id: 1,
       name: "my profile",
+      link: "profile",
     },
     {
       id: 2,
       name: "subscription",
+      link: "",
     },
     {
       id: 3,
       name: "favorites",
+      link: "",
     },
     {
       id: 4,
       name: "invite friends",
+      link: "",
     },
     {
       id: 5,
       name: "contact support",
+      link: "",
     },
     {
       id: 6,
       name: "sign out",
+      link: "",
     },
   ]);
 
@@ -34,7 +42,10 @@ function HeaderDropdown({closeDropDown}) {
       <div className="dropdown-pointer" />
       {/* User Logged In Div  */}
       <div className="image-and-info-div">
-        <div className="user-acc-circle-dropdown" onClick={()=>closeDropDown(false)}>
+        <div
+          className="user-acc-circle-dropdown"
+          onClick={() => closeDropDown(false)}
+        >
           <p className="user-acc-label-dropdown">C</p>
         </div>
 
@@ -53,13 +64,26 @@ function HeaderDropdown({closeDropDown}) {
           </div>
         </div>
       </div>
+
       {/* CS+ Advertisment  */}
       <div className="cs-plus-image-div">
         <img src={CSGO} />
       </div>
+
       {/* Drop Down Menu Items  */}
       {options.map((ele, idx) => {
-        return <p className="dropdown-options-label">{ele.name}</p>;
+        return (
+          <p
+            className="dropdown-options-label"
+            onClick={() => {
+              if (ele?.link !== "") {
+                navigate(`/${ele?.link}`, { replace: true });
+              }
+            }}
+          >
+            {ele.name}
+          </p>
+        );
       })}
     </div>
   );
