@@ -1,11 +1,28 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-function FooterLinksMapper({ item, onClick }) {
+function FooterLinksMapper({ item, mode,  }) {
+  const navigate = useNavigate();
+  let bookName = item?.Title || item.label;
   return (
-    <a href="#" className="link-item">
-      {item.label.length > 20
-        ? `${item?.label?.substring(0, 27)}...`
-        : item?.label}
+    <a
+      href="#"
+      className="link-item"
+      onClick={(e) => {
+        e.preventDefault();
+        if (mode === "categories") {
+          navigate("/search", { state: { genre: item?.label || item?.Title } });
+        } else if (mode === "sortBy") {
+          navigate(`/book`, {
+            replace: true,
+            state: {
+              book: item,
+            },
+          });
+        }
+      }}
+    >
+      {bookName?.length > 20 ? `${bookName?.substring(0, 27)}...` : bookName}
     </a>
   );
 }

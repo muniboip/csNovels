@@ -4,20 +4,44 @@
   align-items: center;
   flex-direction: column;
   background-color: white;
-  width: 450px;
-  padding: 120px 30px 50px 30px;
-  /* border-top: 4px solid rgb(248, 178, 0); */
-  /* color: goldenrod; */
-  /* border-radius: 30px !important; */
+  width: 477px;
+  /* padding: 119px 1px 0px 0px; */
+  padding: 131px 22px 8px 20px;
 }
 
+.forget-pass-modal-css {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  width: 450px;
+  padding: 0px 30px 5px 30px;
+}
 
-/* modal hamza css  */
+.reset-info {
+  color: #999999a6;
+}
+
 .modal-css h2 {
   font-size: 25px;
   margin-top: 20px !important;
   margin-bottom: 0;
+}
 
+.forget-pass-modal-css .submit-button {
+  color: #fff;
+  background-color: #0069d9;
+  border-color: #0062cc;
+  width: 155px;
+  height: 45px;
+  font-size: 14px;
+}
+
+.forget-pass-modal-css h2 {
+  font-size: 25px;
+  margin-top: 20px !important;
+  margin-bottom: 0;
 }
 p.modal1text {
   font-weight: 700;
@@ -33,7 +57,6 @@ h1.signup-top {
   font-size: 26px;
   margin-top: 0;
   width: 100%;
-  margin-left: -40px;
 }
 
 .popup-form input {
@@ -44,6 +67,16 @@ h1.signup-top {
   border-radius: 0;
   position: relative;
   margin-bottom: 30px;
+}
+
+.forget-pass-modal-css input {
+  font-size: 15px;
+  color: black;
+  border: none;
+  border-bottom: 2px solid #9999;
+  border-radius: 0;
+  position: relative;
+  margin-bottom: 0px;
 }
 .popup-form input:focus {
   border-color: #5478ed;
@@ -69,6 +102,11 @@ span.forgot-pass {
   font-weight: 700;
 }
 
+.desc-box-ratings {
+  align-items: center !important;
+  display: flex;
+}
+
 .forget {
   font-weight: 700;
   color: #6282ee;
@@ -86,8 +124,6 @@ form.poppup-2 label {
   font-size: 17px;
 }
 /* modal hamza css  end*/
-
-
 
 .google-logIn-div {
   display: flex;
@@ -112,8 +148,8 @@ form.poppup-2 label {
   width: 100%;
   padding-right: 20px;
   letter-spacing: 2px;
-    font-weight: 700;
-    color: #666;
+  font-weight: 700;
+  color: #666;
 }
 .discord-logIn-div {
   background-color: #202225;
@@ -143,10 +179,10 @@ form.poppup-2 label {
   margin-top: 10px;
 }
 .discord-Icon img {
-  filter: brightness(0) invert(1);  
+  filter: brightness(0) invert(1);
 }
 
-.email-logIn-div{
+.email-logIn-div {
   background-color: #202225;
   color: white;
   display: flex;
@@ -159,11 +195,11 @@ form.poppup-2 label {
   margin-top: 10px;
   cursor: pointer;
 }
-.email-Icon{
+.email-Icon {
   margin-left: 15px;
   margin-top: 10px;
 }
-.email-login-p{
+.email-login-p {
   text-align: center;
   width: 100%;
   margin-left: auto;
@@ -176,20 +212,25 @@ form.poppup-2 label {
 .modal-css hr {
   display: none;
 }
+
+.forget-pass-modal-css hr {
+  display: none;
+}
+
 .text-color p {
   font-size: 18px;
   font-weight: 700;
   color: #999;
   margin-bottom: 5px;
 }
-.create-account-div{
+.create-account-div {
   background-color: #c3c5c7;
   color: #202225;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-weight:bold;
+  font-weight: bold;
   width: 200px;
   border-radius: 50px;
   border: 1px solid transparent;
@@ -197,13 +238,12 @@ form.poppup-2 label {
   cursor: pointer;
   color: #444;
 }
-.border{
-  background-color:gold;
+.border {
+  background-color: gold;
   margin-top: -10px;
   width: max-content;
   display: none;
   /* width: 450px; */
-
 }
 .text-color p {
   font-size: 18px;
@@ -214,7 +254,7 @@ form.poppup-2 label {
 }
 
 .ReactModal__Content:before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -266,9 +306,9 @@ p.discord-logIn-p a {
   font-weight: bold;
   margin: 0 auto;
   letter-spacing: 2px;
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
 }
 .modal-css svg {
   width: 20px;
@@ -277,6 +317,15 @@ p.discord-logIn-p a {
   margin-top: -115px;
   cursor: pointer;
 }
+
+.forget-pass-modal-css svg {
+  width: 20px;
+  height: 20px;
+  margin-left: 444px;
+  /* margin-top: -24px; */
+  cursor: pointer;
+}
+
 .heading-div {
   display: flex;
   flex-direction: column;
@@ -350,7 +399,7 @@ p.discord-logIn-p a {
   flex-direction: column;
   margin-bottom: 20px;
 }
-.category dropdown-menushow{
+.category dropdown-menushow {
   background-color: black;
   color: whitesmoke;
 }
@@ -363,7 +412,7 @@ p.discord-logIn-p a {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'montserrat';
+  font-family: "montserrat";
   padding-bottom: 50px;
 }
 .book-desc-box {
@@ -394,7 +443,7 @@ p.discord-logIn-p a {
   box-shadow: 0 17px 20px -12px #f6c35aba;
 }
 h1.book-head {
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
   font-size: 38px;
 }
 
@@ -410,7 +459,8 @@ h1.book-head {
 
 span.head {
   font-size: 18px;
-  font-family: 'montserrat-medium';
+  text-transform: capitalize;
+  font-family: "montserrat-medium";
 }
 
 .urban .head {
@@ -435,7 +485,7 @@ span.stars i:last-child {
 }
 span.rate {
   font-size: 36px;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
   margin: 0 20px;
 }
 
@@ -455,7 +505,7 @@ button.read-btn a {
   color: white;
   font-size: 18px;
   text-transform: uppercase;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
 }
 
 span.heart i {
@@ -480,17 +530,17 @@ img.book-image {
   color: gray;
   text-transform: uppercase;
   font-size: 20px;
-  font-family: 'montserrat-medium';
+  font-family: "montserrat-medium";
 }
 
 .book-tabs li a.active {
   font-size: 20px;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
 }
 h1.description-head {
   font-size: 30px;
   text-transform: capitalize;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
   margin-top: 50px;
 }
 
@@ -503,14 +553,14 @@ p.description-text {
 h1.books-head {
   font-size: 30px;
   text-transform: capitalize;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
   margin-top: 30px;
   margin-bottom: 20px;
 }
 .review h1.review-head {
   font-size: 30px;
   text-transform: capitalize;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
   margin-top: 30px;
   margin-bottom: 20px;
 }
@@ -543,7 +593,7 @@ h1.books-head {
 
 h3.review-subhead {
   font-size: 16px;
-  font-family: 'montserrat-bold';
+  font-family: "montserrat-bold";
   margin-top: 15px;
   margin-bottom: 0;
 }
@@ -582,14 +632,14 @@ button.review-btn {
 .review-tabs li a {
   color: gray;
   text-transform: uppercase;
-  font-family: 'montserrat-medium';
+  font-family: "montserrat-medium";
   border: none !important;
 }
 
 .review-tabs li a.active {
   border: none;
   border-bottom: 2px solid #436bec !important;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 .review-tabs li a.active:hover {
   border-bottom: 2px solid #436bec !important;
@@ -599,7 +649,6 @@ button.review-btn {
   background: transparent !important;
   border: none !important;
   color: gray !important;
-
 }
 img.comment-head-img {
   width: auto;
@@ -611,6 +660,8 @@ img.comment-head-img {
 
 h3.comment-box-head {
   font-size: 18px;
+  margin-bottom: 0;
+  text-transform: capitalize;
 }
 .stars-3 i {
   font-size: 15px;
@@ -719,7 +770,7 @@ img.profile-image {
 
 span.l-r-head {
   font-size: 18px;
-  font-family: 'montserrat-medium';
+  font-family: "montserrat-medium";
 }
 
 .l-r-headcolor {
@@ -752,18 +803,19 @@ h3.a-t-subhead {
 }
 span.numbercount {
   font-size: 20px;
-  font-family: 'montserrat-medium';
+  font-family: "montserrat-medium";
 }
 
 h1.volume-head {
   font-size: 20px;
+  text-transform: capitalize;
 }
 
 h3.volume-time {
   font-size: 17px;
   margin-top: 12px;
   color: #808080cf;
-  margin-bottom: 0
+  margin-bottom: 0;
 }
 .a-t_row .row {
   flex: 48%;
@@ -779,10 +831,9 @@ h3.volume-time {
   background: #d3d3d32e;
 }
 
-
 /*==== book page  end====*/
 
-@media (max-width: 1200px){
+@media (max-width: 1200px) {
   .book-page .container {
     max-width: 90vw;
   }
@@ -791,74 +842,74 @@ h3.volume-time {
   }
 
   span.head {
-      font-size: 15px;
+    font-size: 15px;
   }
 
   .stars i {
-      font-size: 30px;
+    font-size: 30px;
   }
 
   span.rate {
-      font-size: 30px;
+    font-size: 30px;
   }
 
   span.rating {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   button.read-btn a {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   span.heart i {
-      font-size: 17px;
+    font-size: 17px;
   }
   h1.description-head {
     font-size: 25px;
-}
+  }
 
-p.description-text {
+  p.description-text {
     font-size: 15px;
-}
+  }
 
-h1.books-head {
+  h1.books-head {
     font-size: 25px;
-}
+  }
 
-.review h1.review-head {
+  .review h1.review-head {
     font-size: 25px;
-}
+  }
 
-.stars-3 i {
+  .stars-3 i {
     font-size: 14px;
-}
+  }
 
-.stars-2 i {
+  .stars-2 i {
     margin: 0 2px;
-}
+  }
 
-ul.comment-list li {
+  ul.comment-list li {
     font-size: 16px;
-}
+  }
 
-.row.comment-row-2 {
+  .row.comment-row-2 {
     margin-top: 0;
-}
+  }
 
-span.time {
+  span.time {
     font-size: 17px;
-}
+  }
 
-span.like {
+  span.like {
     font-size: 16px;
-}
+  }
 
-span.replies {
+  span.replies {
     font-size: 15px;
-}
-img.book-image {
-  width: 100%;
-}
+  }
+  img.book-image {
+    width: 100%;
+  }
 }
 @media (max-width: 991px) {
   .book-desc-box {
@@ -866,169 +917,171 @@ img.book-image {
   }
 
   h1.book-head {
-      font-size: 19px;
+    font-size: 19px;
   }
 
   span.head {
-      font-size: 12px;
+    font-size: 12px;
   }
 
   .stars i {
-      font-size: 23px;
+    font-size: 23px;
   }
 
   span.rate {
-      font-size: 25px;
-      margin: 0 10px;
+    font-size: 25px;
+    margin: 0 10px;
   }
 
   span.rating {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   button.read-btn {
-      padding: 6px 21px;
+    padding: 6px 21px;
   }
 
   button.read-btn a {
-      font-size: 12px;
+    font-size: 12px;
   }
 
   span.heart i {
-      font-size: 14px;
-      padding: 10px;
+    font-size: 14px;
+    padding: 10px;
   }
 
   img.book-image {
-      width: 100%;
+    width: 100%;
   }
 
   .col-md-9.box-desc-row {
-      margin: 2px 0px 2px 15px;
-      padding: 7px 22px;
+    margin: 2px 0px 2px 15px;
+    padding: 7px 22px;
   }
 
   .book-tabs {
-      margin-top: 30px;
+    margin-top: 30px;
   }
 
   .book-tabs li a.active {
-      font-size: 14px;
-      border-radius: 15px;
+    font-size: 14px;
+    border-radius: 15px;
   }
 
   .book-tabs a {
-      font-size: 14px;
+    font-size: 14px;
   }
   h1.description-head {
     font-size: 22px;
   }
 
   p.description-text {
-      font-size: 13px;
-      line-height: 20px;
-      margin-bottom: 30px;
+    font-size: 13px;
+    line-height: 20px;
+    margin-bottom: 30px;
   }
 
   h1.books-head {
-      font-size: 22px;
-      margin-top: 10px;
+    font-size: 22px;
+    margin-top: 10px;
   }
 
   .review h1.review-head {
-      font-size: 22px;
+    font-size: 22px;
   }
 
   .col-md-6.revoew-col .review-head {
-      margin-bottom: 10px;
+    margin-bottom: 10px;
   }
 
   .stars-2 i {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .row.review-row textarea {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   button.review-btn {
-      font-size: 13px;
+    font-size: 13px;
   }
 
   .col-md-6.revoew-col ~ div {
-      padding: 15px 30px;
+    padding: 15px 30px;
   }
 
   h3.comment-box-head {
-      font-size: 16px;
+    font-size: 16px;
   }
 
   .stars-3 i {
-      font-size: 13px;
+    font-size: 13px;
   }
 
   p.comment {
-      font-size: 14px;
+    font-size: 14px;
   }
-  
-ul.comment-list li {
-  font-size: 13px;
-  text-align: left;
-}
 
-span.time {
-  font-size: 15px;
-}
+  ul.comment-list li {
+    font-size: 13px;
+    text-align: left;
+  }
 
-span.replies {
-  font-size: 13px;
-}
+  span.time {
+    font-size: 15px;
+  }
 
-span.like {
-  font-size: 14px;
-}
+  span.replies {
+    font-size: 13px;
+  }
 
-span.like i {
-  font-size: 17px;
-}
+  span.like {
+    font-size: 14px;
+  }
 
-span.comment i {
-  font-size: 17px;
-}
+  span.like i {
+    font-size: 17px;
+  }
 
-a.dots {
-  font-size: 30px;
-}
-.review-tabs li a {
-  font-size: 14px;
-}
-h1.volume-head {
-  font-size: 14px;
-}
+  span.comment i {
+    font-size: 17px;
+  }
 
-span.numbercount {
-  font-size: 14px;
-}
+  a.dots {
+    font-size: 30px;
+  }
+  .review-tabs li a {
+    font-size: 14px;
+  }
+  h1.volume-head {
+    font-size: 14px;
+  }
 
-h3.volume-time {
-  font-size: 13px;
-}
+  span.numbercount {
+    font-size: 14px;
+  }
 
-.a-t_row .row {
-  padding: 15px 0;
-}
+  h3.volume-time {
+    font-size: 13px;
+  }
 
-h3.a-t-subhead {
-  margin-bottom: 10px;
-  font-size: 16px;
-  margin-top: 30px;
-}
+  .a-t_row .row {
+    padding: 15px 0;
+  }
 
-
+  h3.a-t-subhead {
+    margin-bottom: 10px;
+    font-size: 16px;
+    margin-top: 30px;
+  }
 }
 
 @media (max-width: 767px) {
   .modal-css {
+    width: 270px;
+    height: 740px;
+  }
+  .forget-pass-modal-css {
     width: 270px;
     height: 740px;
   }
@@ -1058,7 +1111,18 @@ h3.a-t-subhead {
     margin: 0 auto;
     padding: 120px 0 50px 0;
   }
+  .forget-pass-modal-css {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 120px 0 50px 0;
+  }
   .modal-css h2 {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  .forget-pass-modal-css h2 {
     text-align: center;
     font-size: 18px;
   }
@@ -1066,196 +1130,191 @@ h3.a-t-subhead {
     margin-top: 10px;
     text-align: center;
   }
-  .modal-css h2 {
-    text-align: center;
-    font-size: 18px;
-  }
 
   .google-logIn-p {
-      font-size: 13px;
-      line-height: 31px;
+    font-size: 13px;
+    line-height: 31px;
   }
 
   p.discord-logIn-p a {
-      font-size: 12px;
-      line-height: 26px;
+    font-size: 12px;
+    line-height: 26px;
   }
 
   .email-login-p {
-      font-size: 11px;
-      line-height: 32px;
+    font-size: 11px;
+    line-height: 32px;
   }
   .google-logIn-div {
     width: 100%;
     margin-top: 0;
-}
-.text-color p {
-  margin: 15px 0;
-}
-h1.signup-top {
-  margin: 0;
-  font-size: 20px;
-}
-.text-color p {
-  font-size: 15px;
-}
-.forget {
-  text-align: center;
-}
-.book-desc-box {
-  padding: 30px 20px 0px 20px;
-}
+  }
+  .text-color p {
+    margin: 15px 0;
+  }
+  h1.signup-top {
+    margin: 0;
+    font-size: 20px;
+  }
+  .text-color p {
+    font-size: 15px;
+  }
+  .forget {
+    text-align: center;
+  }
+  .book-desc-box {
+    padding: 30px 20px 0px 20px;
+  }
 
-img.book-image {
-  width: auto;
-}
+  img.book-image {
+    width: auto;
+  }
 
-h1.book-head {
-  text-align: center;
-  font-size: 16px;
-  margin-top: 20px;
-}
+  h1.book-head {
+    text-align: center;
+    font-size: 16px;
+    margin-top: 20px;
+  }
 
-span.head {
-  font-size: 11px;
-}
+  span.head {
+    font-size: 11px;
+  }
 
-.day i {
-  font-size: 12px;
-}
+  .day i {
+    font-size: 12px;
+  }
 
-svg.mp-book-chapter-icon {width: 10px;}
+  svg.mp-book-chapter-icon {
+    width: 10px;
+  }
 
-.day .head {
-  margin: 0 5px;
-}
+  .day .head {
+    margin: 0 5px;
+  }
 
-.chapter .head {
-  margin-left: 4px;
-}
+  .chapter .head {
+    margin-left: 4px;
+  }
 
-.col-md-9.box-desc-row {
-  padding: 9px 15px;
-  max-width: 300px;
-  margin: 10px auto;
-}
-.stars i {
-  font-size: 18px;
-}
+  .col-md-9.box-desc-row {
+    padding: 9px 15px;
+    max-width: 300px;
+    margin: 10px auto;
+  }
+  .stars i {
+    font-size: 18px;
+  }
 
-span.rate {
-  font-size: 20px;
-}
+  span.rate {
+    font-size: 20px;
+  }
 
-span.rating {
-  font-size: 12px;
-}
-.desc-box-ratings {
-  text-align: center;
-}
-.desc-box-ratings {
-  text-align: center;
-}
+  span.rating {
+    font-size: 12px;
+  }
+  .desc-box-ratings {
+    text-align: center;
+    align-items: center !important;
+  }
 
-.read-buttons {
-  text-align: center;
-}
+  .read-buttons {
+    text-align: center;
+  }
 
-.book-tabs {
-  width: 100%;
-  justify-content: center;
-}
-h1.description-head {
-  font-size: 20px;
-  text-align: center;
-  margin-top: 40px;
-}
+  .book-tabs {
+    width: 100%;
+    justify-content: center;
+  }
+  h1.description-head {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 40px;
+  }
 
-p.description-text {
-  text-align: center;
-  font-size: 12px;
-}
+  p.description-text {
+    text-align: center;
+    font-size: 12px;
+  }
 
-h1.books-head {
-  text-align: center;
-  font-size: 20px;
-  margin-top: 0;
-}
+  h1.books-head {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 0;
+  }
 
-.books {
-  text-align: center;
-}
+  .books {
+    text-align: center;
+  }
 
-.review h1.review-head {
-  font-size: 20px;
-  text-align: center;
-}
+  .review h1.review-head {
+    font-size: 20px;
+    text-align: center;
+  }
 
-.row.review-row {
-  padding: 30px 0;
-}
+  .row.review-row {
+    padding: 30px 0;
+  }
 
-.col-md-6.revoew-col ~ div {
-  padding-bottom: 0;
-  padding-top: 20px;
-  border: none;
-}
+  .col-md-6.revoew-col ~ div {
+    padding-bottom: 0;
+    padding-top: 20px;
+    border: none;
+  }
 
-button.review-btn {
-  margin: 0 auto;
-}
-img.profile-image {
-  width: 40px;
-  height: 40px;
-}
+  button.review-btn {
+    margin: 0 auto;
+  }
+  img.profile-image {
+    width: 40px;
+    height: 40px;
+  }
 
-h3.comment-box-head {
-  font-size: 14px;
-  margin-bottom: 0;
-}
+  h3.comment-box-head {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
 
-.stars i {
-  font-size: 13px;
-}
+  .stars i {
+    font-size: 13px;
+  }
 
-img.comment-head-img {
-  height: 15px;
-}
+  img.comment-head-img {
+    height: 15px;
+  }
 
-p.comment {
-  font-size: 12px;
-}
+  p.comment {
+    font-size: 12px;
+  }
 
-ul.comment-list li {
-  font-size: 12px;
-}
-.row.comment-row-2 .col-md-7 {
-  line-height: 0;
-}
+  ul.comment-list li {
+    font-size: 12px;
+  }
+  .row.comment-row-2 .col-md-7 {
+    line-height: 0;
+  }
 
-.row.comment-row-2 {
-  margin: 10px 0;
-}
-span.replies {
-  font-size: 12px;
-}
-h1.volume-head {
-  font-size: 13px;
-}
-.a-t_row .row {
-  flex: 100% 1;
-  max-width: 100%;
-}
-span.l-r-head {
-  font-size: 14px;
-}
-.l-r-headcolor {
-  margin-left: 6px;
-}
-span.comment i {
-  margin-right: 10px;
-}
-
+  .row.comment-row-2 {
+    margin: 10px 0;
+  }
+  span.replies {
+    font-size: 12px;
+  }
+  h1.volume-head {
+    font-size: 13px;
+  }
+  .a-t_row .row {
+    flex: 100% 1;
+    max-width: 100%;
+  }
+  span.l-r-head {
+    font-size: 14px;
+  }
+  .l-r-headcolor {
+    margin-left: 6px;
+  }
+  span.comment i {
+    margin-right: 10px;
+  }
 }
 
 /* media query  */
@@ -1269,7 +1328,7 @@ span.comment i {
   }
 
   p.discord-logIn-p a {
-      font-size: 11px;
+    font-size: 11px;
   }
   .forget {
     text-align: center;
@@ -1283,32 +1342,32 @@ span.comment i {
   }
 
   .book-page .container {
-      max-width: 100vw;
+    max-width: 100vw;
   }
 
   span.head {
-      font-size: 10px;
+    font-size: 10px;
   }
 
   .row.review-row textarea {
-      font-size: 12px;
+    font-size: 12px;
   }
 
   ul.comment-list li {
-      font-size: 11px;
+    font-size: 11px;
   }
 
   span.time {
-      font-size: 14px;
+    font-size: 14px;
   }
 
   span.like {
-      font-size: 12px;
-      margin-right: 10px;
+    font-size: 12px;
+    margin-right: 10px;
   }
 
   span.comment i {
-      margin-right: 5px;
+    margin-right: 5px;
   }
   span.l-r-head {
     font-size: 14px;
@@ -1317,5 +1376,5 @@ span.comment i {
   .a-t_row .row {
     flex: 100% 0;
     max-width: 100%;
-}
+  }
 }

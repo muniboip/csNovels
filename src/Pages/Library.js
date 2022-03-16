@@ -7,21 +7,21 @@ import MostWantedNovelsMapper from "../Components/MostWantedNovelsMapper";
 import LibraryNovelsMapper from "../Components/LibraryNovelsMapper";
 import {connect} from 'react-redux';
 import * as actions from '../store/actions/actions';
-// import { books_reducer } from "../store/reducers/books_reducer";
+// import { booksReducer } from "../store/reducers/booksReducer";
 
 
-const Library = ({library_reducer}) => {
+const Library = ({libraryReducer}) => {
   const [library, setLibrary] = useState([]);
 
   useEffect(() => {
-    setLibrary(library_reducer);
-    console.log(library_reducer,"ooooooooo",library)
+    setLibrary(libraryReducer);
+    console.log(libraryReducer,"ooooooooo",library)
     // console.log(library)
     // alert("SAD")
     // console.log("SAD")
-    // console.log(books_reducer, "books_reducer",library_reducer,"library_reducer action")
-  }, [library_reducer]);
-  // console.log(library_reducer)
+    // console.log(booksReducer, "booksReducer",libraryReducer,"libraryReducer action")
+  }, [libraryReducer]);
+  // console.log(libraryReducer)
   return (
     <>
       <Header />
@@ -55,7 +55,7 @@ const Library = ({library_reducer}) => {
   );
 };
 
-const mapstatetoprops = ({books_reducer,library_reducer})=>{
-  return {books_reducer,library_reducer};
+const mapstatetoprops = ({booksReducer,libraryReducer})=>{
+  return {booksReducer,libraryReducer};
 }
 export default connect(mapstatetoprops,actions)(Library);

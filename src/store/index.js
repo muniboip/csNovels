@@ -1,21 +1,29 @@
-import {createStore, combineReducers, applyMiddleware} from 'redux';
-import {books_reducer} from './reducers/books_reducer';
-import {library_reducer} from './reducers/library_reducer'
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { booksReducer } from "./reducers/booksReducer";
+import { libraryReducer } from "./reducers/libraryReducer";
+import { authReducer } from "./reducers/authReducer";
 import thunk from "redux-thunk";
-import { persistStore, persistReducer } from 'redux-persist'
+import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const presistConfig = {
-    key:'root',
-    storage:storage,
-    whitelist:['library_reducer']
-}
+  key: "root",
+  storage: storage,
+  whitelist: ["authReducer","booksReducer"],
+};
 
-const rootReducer = combineReducers({books_reducer,library_reducer});
+const rootReducer = combineReducers({
+  authReducer,
+  booksReducer,
+  libraryReducer,
+});
 const persistedReducer = persistReducer(presistConfig, rootReducer);
 
-const store = createStore(persistedReducer,{},applyMiddleware(thunk));
+const store = createStore(
+  persistedReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);
 let persistor = persistStore(store);
 
-
-export {persistor,store};
+export { persistor, store };

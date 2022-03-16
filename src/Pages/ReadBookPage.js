@@ -5,17 +5,43 @@ import BOOK_CARD from "../Assets/Images/book-card.png";
 import Logo from "../Assets/Images/csnovels-logo.svg";
 import CHECK from "../Assets/Images/check.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import InfiniteScroll from "react-infinite-scroll-component";
 import $ from "jquery";
-
+import * as actions from "../store/actions/actions";
 import {
   faTimes,
   faLock,
   faCog,
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
-export const ReadBookPage = () => {
+import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
+import Loader from "react-loader-spinner";
+
+function ReadBookPage({
+  authReducer,
+  booksReducer,
+  getChapterContent,
+  getChapterTitles,
+}) {
   const [fontSize, setFontSize] = useState(14);
+  const [chaptersTitles, setChaptersTitles] = useState(false);
+  const isLogin = authReducer?.isLogin;
+  const [chapterSets, setChapterSets] = useState(null);
   const [toggleContentAndOptions, setToggleContentAndOptions] = useState("");
+  const accessToken = authReducer?.accessToken;
+  const location = useLocation();
+  const bookId = location.state.bookId;
+  const BOOK_IMAGE = location.state.bookImage;
+  const [chaptersRange, setChaptersRange] = useState([]);
+  const BOOK_NAME = location.state.bookName;
+  const [hasMoreData, setHasMoreData] = useState(true);
+  const [selectedRange, setSelectedRange] = useState(null);
+  const [selectedChapterId, setSelectedChapterId] = useState(null);
+
+  useEffect(() => {
+    getChapterTitles(bookId, accessToken);
+  }, []);
 
   const onPressYellowButton = () => {
     $("body").removeClass("black_bg , white_bg");
@@ -23,7 +49,7 @@ export const ReadBookPage = () => {
   };
 
   const onPressBlackButton = () => {
-    $("body").removeClass("yellow_bg, white_bg");
+    $("body").removeClass("yellow_bg , white_bg");
     $("body").toggleClass("black_bg");
   };
 
@@ -55,10 +81,61 @@ export const ReadBookPage = () => {
   useEffect(() => {
     _onPressFontSizeHandler();
   }, [fontSize]);
+
+  useEffect(() => {
+    if (booksReducer?.chaptersTitles?.length > 0) {
+      const CHAPTERS_LENGTH = booksReducer?.chaptersTitles?.length;
+      const CHAPTERS = [...booksReducer?.chaptersTitles];
+      const CHAPTERS_SETS = new Array(
+        Math.ceil(CHAPTERS_LENGTH / Math.trunc(CHAPTERS_LENGTH / 4))
+      )
+        .fill()
+        .map((_) => CHAPTERS?.splice(0, Math.trunc(CHAPTERS_LENGTH / 4)));
+      let RANGE_SETS = [];
+      let lastInnerArrLength = 0;
+      CHAPTERS_SETS?.map((ele, idx) => {
+        RANGE_SETS.push(
+          `${lastInnerArrLength + 1}-${lastInnerArrLength + ele?.length}`
+        );
+        lastInnerArrLength = lastInnerArrLength + ele?.length;
+      });
+      setChaptersRange(
+        RANGE_SETS?.map((ele, idx) => ({ index: idx, set: ele }))
+      );
+      console.log(CHAPTERS_SETS);
+      console.log(RANGE_SETS);
+      setChapterSets(CHAPTERS_SETS);
+      setChaptersTitles(CHAPTERS_SETS[0]);
+      setSelectedRange({ index: 0, set: RANGE_SETS[0] });
+      setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
+    }
+  }, [booksReducer?.chaptersTitles]);
+
+  useEffect(() => {
+    if (selectedChapterId) {
+      getChapterContent(selectedChapterId, bookId, accessToken);
+    }
+  }, [selectedChapterId]);
+
+  const getOtherChapters = () => {
+    getChapterContent(selectedChapterId, bookId, accessToken);
+  };
+
+  useEffect(() => {
+    let newList = [];
+
+    chaptersRange?.filter((ele, idx) => {
+      if (ele?.index === selectedRange?.index) {
+        newList = chapterSets[idx];
+      }
+    });
+    setChaptersTitles(newList);
+  }, [selectedRange]);
+
   return (
     <>
       <Header />
-      <div className="read-book-body" style={{ backgroundColor: "red" }}>
+      <div className="read-book-body">
         <section className="side_bar_func">
           <div className="icons_sidebar">
             <div className="hamburger">
@@ -88,25 +165,27 @@ export const ReadBookPage = () => {
           </div>
         </section>
         <section className="table-"></section>
-        <section className="section-1">
+        <section className="section-1 my_readbook_sec1">
           <div className="row">
             <div className="col-lg-6 left-header">
               <div className="logo">
                 <img src={Logo} className="img-fluid" alt="" />
               </div>
               <div className="book-title">
-                <h3>The Ancients World / Characters as of chapter 41</h3>
+                <h3>{`${BOOK_NAME} / Characters as of ${booksReducer?.chapterContent[0]?.content}`}</h3>
               </div>
             </div>
             <div className=" col-lg-6 right-header">
-              <a href="#" className="btn-sm">
-                SIGN IN
-              </a>
+              {!isLogin && (
+                <a href="#" className="btn-sm">
+                  SIGN IN
+                </a>
+              )}
             </div>
           </div>
         </section>
         <section
-          className={`chapter-sec ${
+          className={`chapter-sec my_readbook_sec2 ${
             toggleContentAndOptions === "display_tables"
               ? "display_tables"
               : toggleContentAndOptions === "display_options"
@@ -116,88 +195,48 @@ export const ReadBookPage = () => {
         >
           <div className="container">
             <div className="book_img">
-              <img src={BOOK_CARD} className="img-fluid" alt="" />
+              <img src={BOOK_IMAGE} className="img-fluid" alt="book-image" />
               <span className="original">Original</span>
             </div>
             <div className="book_text">
-              <h3>The Ancients World</h3>
-              <h2>
+              <h3>{BOOK_NAME}</h3>
+              {/* <h2>
                 Author: <span>easyread</span>
-              </h2>
-              <h4>© Webnovel</h4>
+              </h2> */}
+              <h4>© CSNovels</h4>
             </div>
             <div className="hr_book">
               <img src={BOOK_CARD} className="img-fluid" alt="" />
             </div>
+
+            {/* Book Content Paragraphs  */}
+            {/* <InfiniteScroll
+              dataLength={booksReducer?.chapterContent?.length}
+              scrollThreshold={"200px"}
+              next={() => getOtherChapters()}
+              hasMore={hasMoreData}
+              inverse={true}
+              loader={
+                <div className="mt-3 mb-3 d-flex justify-content-center align-items-center">
+                  <Loader
+                    type="TailSpin"
+                    color="darkgrey"
+                    height={40}
+                    width={40}
+                  />
+                </div>
+              }
+            > */}
             <div className="chapter_content">
-              <h3> Characters as of chapter 41</h3>
-              <p>
-                (Cera Adamo) - The son of Violet Adamo and Christian Adamo. Cera
-                is the main character of the story and returned 5 years into the
-                past after using a world item in Ancients World. Cera used his
-                meta knowledge to take the best offensive and defensive class in
-                Ancients World. His class is called The Son of Arch-Angel
-                Michael. The lore behind the class is you are the long lost son
-                of Amelia, a human woman, and Arch-Angel Michael. The grade of
-                the class is divine which is the highest possible level. Cera
-                used a reward that he got from a mission called a guild token
-                and sold it, the benefits of legacy and higher classes are
-                incredible. They do come with downsides however, Cera's class
-                receives half exp and takes twice as long to level up. He also
-                is unable to join guilds, which is why he sold the guild token
-                for a ridiculous amount of money. His family was falling apart
-                slowly because of crippling debt, now they can live there life
-                however they please. Cera is on his way to find The Hermit Flint
-                at this point in the story, he intends to use the exp from the
-                rewards to make up for lost time in the city of eclipse and the
-                trial of Sword Saint Monrell.
-              </p>
-              <p>
-                Cera is the one responsible for reviving the fairy kingdom and
-                awaking The Holy Willow Tree. He also awoke Fenrir by proxy, the
-                history of Fenrir can be read in Chapter 22. Cera also retrieved
-                a legendary item from the Ancient Ruins of the Dryads in a quest
-                to help the rebellion in the country of Zenith. The legendary
-                item didn't fit his class and he had no intention to actually
-                keep it. All of this can be read between chapters 10 and 15.
-                After his time in his starting city. Blue Grass, was complete he
-                made his way to the country of Vedersfall and the city of
-                eclipse. Here he took the trial of Sword Saint Monrell and
-                received 2 powerful skills and an incredible legendary sword
-                called The Witness. All of this can be read between chapters 30
-                and 38. Cera is now searching for the mysterious hermit Flint.
-              </p>
-              <p>
-                (Christian Adamo) - The father of Cera and husband of Violet.
-                Christian Adamo is a hard working man who worked from dawn to
-                dusk to keep his family afloat. He worked at a factory everyday
-                since the first born child, Hailey Adamo, came into there lives.
-                Christian never bothered Cera about how much he gamed and spent
-                time in his room because Cera always found a way to help
-                financially. This is a trait missing his his favorite child
-                Hailey, he clearly spoiled her a little to much and now there is
-                conflict between Violet and Hailey. Christian no longer works
-                anymore since the guild token Cera sold set them up for life, he
-                now spends all his time with his wife making up for lost time
-                between the two of them. They have already paid off there debt
-                and are moving to a bigger house in a better neighborhood.
-              </p>
-              <p>
-                (Violet Adamo) - The mother of Cera and wife of Christian.
-                Violet Adamo is a loving and hardworking mother despite working
-                full time just like her husband to provide for the family.
-                Violet loved being a mother when Hailey was first born, but her
-                favorite of the three children she has is Cera. Violet and
-                Hailey are at war right now because Hailey refuses to clean up
-                her act and start acting like an adult. After Cera successfully
-                sold his guild token Violet no longer knows what to do with her
-                life. All financial responsibilities are gone because they are
-                filthy rich now. Cera was very adamant to both his parents to
-                splurge money beyond anything they ever dreamed. However they
-                are still adjusting to the new life style and are still trying
-                to budget, old habits die hard they say.
-              </p>
+              <h3>
+                {`${booksReducer?.chapterContent[0]?.content}: ${chaptersTitles?.[0]?.title}`}
+              </h3>
+              {booksReducer?.chapterContent?.map(
+                (ele, idx) =>
+                  idx !== 0 && <p className="mt-2">{ele?.content}</p>
+              )}
             </div>
+            {/* </InfiniteScroll> */}
           </div>
 
           <div className="table_content visible_table">
@@ -210,28 +249,32 @@ export const ReadBookPage = () => {
                 }}
               />
             </span>
-            <span> Volume 0:Auxiliary Volume</span>
+            <span> Volume 1</span>
             <ul className="chapter_headings">
-              <li>
-                <a href="#">Characters as of chapter 41</a>
-              </li>
-              <li>
-                <a href="#">Information about the leveling system, class...</a>
-              </li>
-              <li>
-                <a href="#">I have come up with a great idea!!</a>
-              </li>
-              <li>
-                <a href="#">I've changed the cover picture</a>
-              </li>
-              <li>
-                <a href="#">Read this if you want</a>
-              </li>
-              <li>
-                <a href="#">Story is back and with a new writing style!</a>
-              </li>
+              {chaptersTitles?.length > 0 &&
+                chaptersTitles?.map((ele, idx) => {
+                  return (
+                    <li>
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedChapterId(ele?._id);
+                        }}
+                        style={{
+                          color:
+                            selectedChapterId === ele?._id ? "#3b66f5" : "#000",
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {`${ele?.name?.match(/(\d+)/)[0]}.`}&nbsp; &nbsp;
+                        {`${ele?.title}`}
+                      </a>
+                    </li>
+                  );
+                })}
             </ul>
-            <ul className="chapter-count">
+            {/* <ul className="chapter-count">
               <li className="lock">
                 <a href="#">Prologue </a>
                 <FontAwesomeIcon
@@ -253,21 +296,26 @@ export const ReadBookPage = () => {
               <li>
                 <a href="#">Slaying monsters and getting another quest </a>
               </li>
-            </ul>
+            </ul> */}
             <div className="chapters_range">
               <ul>
-                <li>
-                  <a href="#">1-100</a>
-                </li>
-                <li>
-                  <a href="#">101-200</a>
-                </li>
-                <li>
-                  <a href="#">201-300</a>
-                </li>
-                <li>
-                  <a href="#">301-383</a>
-                </li>
+                {chaptersRange?.length > 0 &&
+                  chaptersRange?.map((ele, idx) => (
+                    <li>
+                      <a
+                        className={
+                          selectedRange?.index == ele?.index && "blue-line"
+                        }
+                        href="#"
+                        onClick={(e) => {
+                          setSelectedRange(ele);
+                          e.preventDefault();
+                        }}
+                      >
+                        {ele.set}
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>
@@ -340,4 +388,13 @@ export const ReadBookPage = () => {
       </div>
     </>
   );
+}
+
+const mapStateToProps = ({ authReducer, booksReducer }) => {
+  return {
+    authReducer,
+    booksReducer,
+  };
 };
+
+export default connect(mapStateToProps, actions)(ReadBookPage);

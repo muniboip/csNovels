@@ -9,77 +9,94 @@ const BillingComponent = () => {
 
           <div class="subscription">
             <div class="row feature-border">
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h6>YOUR CURRENT PLAN</h6>
+              <div className="col-lg-8 my_subs_div_1">
+                <div class="col-lg-4">
+                  <div class="sub-method">
+                    <h6>YOUR CURRENT PLAN</h6>
+                  </div>
                 </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="sub-method">
-                  <p> CS Pro, $9 per month</p>
-                </div>
-              </div>
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h5>Change plan</h5>
-                </div>
-              </div>
-            </div>
-            <div class="row feature-border">
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h6>BILLING CYCLE</h6>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="sub-method">
-                  <p>your will be charge $9 on Feb 12 2022</p>
-                  <div class="sub-check">
-                    <input type="checkbox" id="check-5" />{" "}
-                    <label for="check-5">Enable automatic renewel</label>
+                <div class="col-lg-8">
+                  <div class="sub-method">
+                    <p> CS Pro, $9 per month</p>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-3">
-                <div class="sub-method"></div>
-              </div>
-            </div>
-            <div class="row feature-border">
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h6>PAYMENT INFORMATION</h6>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="sub-method">
-                  <span>
-                    <i class="fab fa-cc-visa"></i> visa ending in 123
-                  </span>
-                </div>
-              </div>
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h5>Change Method</h5>
+              <div className="col-lg-4 my_subs_div_2">
+                <div class="col-lg-12">
+                  <div class="sub-method">
+                    <h5>Change plan</h5>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="row feature-border">
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h6>CANCEL</h6>
+              <div className="col-lg-8 my_subs_div_1">
+                <div class="col-lg-4">
+                  <div class="sub-method">
+                    <h6>BILLING CYCLE</h6>
+                  </div>
+                </div>
+                <div class="col-lg-8">
+                  <div class="sub-method">
+                    <p>your will be charge $9 on Feb 12 2022</p>
+                    <div class="sub-check">
+                      <input type="checkbox" id="check-5" />{" "}
+                      <label for="check-5">Enable automatic renewel</label>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-lg-6">
-                <div class="sub-method">
-                  <p>Cancel at the ending of billing period</p>
-                </div>
-              </div>
-              <div class="col-lg-3">
-                <div class="sub-method">
-                  <h5>Cancel Subscription</h5>
+              <div className="col-lg-4 my_subs_div_2">
+                <div class="col-lg-12">
+                  <div class="sub-method"></div>
                 </div>
               </div>
             </div>
+            <div class="row feature-border">
+              <div className="col-lg-8 my_subs_div_1">
+                <div class="col-lg-4">
+                  <div class="sub-method">
+                    <h6>PAYMENT INFORMATION</h6>
+                  </div>
+                </div>
+                <div class="col-lg-8">
+                  <div class="sub-method">
+                    <span>
+                      <i class="fab fa-cc-visa"></i> visa ending in 123
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4 my_subs_div_2">
+                <div class="col-lg-12">
+                  <div class="sub-method">
+                    <h5>Change Method</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row feature-border">
+              <div className="col-lg-8 my_subs_div_1">
+                <div class="col-lg-4">
+                  <div class="sub-method">
+                    <h6>CANCEL</h6>
+                  </div>
+                </div>
+                <div class="col-lg-8">
+                  <div class="sub-method">
+                    <p>Cancel at the ending of billing period</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4 my_subs_div_2">
+                <div class="col-lg-12">
+                  <div class="sub-method">
+                    <h5>Cancel Subscription</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import StarRatings from "react-star-ratings";
 import CSGO from "../Assets/Images/Go.png";
-import { useNavigate } from "react-router-dom";
-function HeaderDropdown({ closeDropDown }) {
+import {  useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import * as actions from "../store/actions/actions";
+import { baseUrl } from "../config";
+
+function HeaderDropdown({ closeDropDown, logout, authReducer }) {
   const navigate = useNavigate();
-  const [options, setOptions] = useState([
+
+  const options = [
     {
       id: 1,
       name: "my profile",
@@ -13,7 +18,7 @@ function HeaderDropdown({ closeDropDown }) {
     {
       id: 2,
       name: "subscription",
-      link: "",
+      link: "subscription",
     },
     {
       id: 3,
@@ -22,46 +27,56 @@ function HeaderDropdown({ closeDropDown }) {
     },
     {
       id: 4,
-      name: "invite friends",
-      link: "",
-    },
-    {
-      id: 5,
       name: "contact support",
       link: "",
     },
     {
-      id: 6,
+      id: 5,
       name: "sign out",
       link: "",
     },
-  ]);
-
+  ];
   return (
-    <div className="header-dropdown">
+    <div className="header-dropdown" onMouseLeave={() => closeDropDown(false)}>
       <div className="dropdown-pointer" />
       {/* User Logged In Div  */}
       <div className="image-and-info-div">
-        <div
-          className="user-acc-circle-dropdown"
-          onClick={() => closeDropDown(false)}
-        >
-          <p className="user-acc-label-dropdown">C</p>
-        </div>
+        {authReducer?.userData?.profile_img ? (
+          <img
+            style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: 50,
+            }}
+            onClick={() => closeDropDown(false)}
+            src={`${baseUrl}/public/${authReducer?.userData?.profile_img?.name}`}
+          />
+        ) : (
+          <div
+            className="user-acc-circle-dropdown"
+            onClick={() => closeDropDown(false)}
+          >
+            <p className="user-acc-label-dropdown">
+              {authReducer?.userData?.firstName?.substring(0, 1)}
+            </p>
+          </div>
+        )}
 
         <div className="user-acc-info-div">
-          <p className="username-dropdown">CannedSplam</p>
-          <p className="user-email-dropdown">admin@cannesplam.com</p>
-          <div className="d-flex flex-row align-items-center">
-            <StarRatings
-              starDimension={"12"}
-              rating={1}
-              starRatedColor="orange"
-              numberOfStars={1}
-              name="rating"
-            />
-            <p className="user-acc-type-dropdown">CS PRO</p>
-          </div>
+          <p className="username-dropdown">{authReducer?.userData?.username || authReducer?.userData?.firstName}</p>
+          <p className="user-email-dropdown">{authReducer?.userData?.email}</p>
+          {authReducer?.userData?.subscription && (
+            <div className="d-flex flex-row align-items-center">
+              <StarRatings
+                starDimension={"12"}
+                rating={1}
+                starRatedColor="orange"
+                numberOfStars={1}
+                name="rating"
+              />
+              <p className="user-acc-type-dropdown">CS PRO</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -76,7 +91,10 @@ function HeaderDropdown({ closeDropDown }) {
           <p
             className="dropdown-options-label"
             onClick={() => {
-              if (ele?.link !== "") {
+              if (ele?.name === "sign out") {
+                logout();
+                navigate("/", { replace: true });
+              } else if (ele?.link !== "") {
                 navigate(`/${ele?.link}`, { replace: true });
               }
             }}
@@ -89,4 +107,8 @@ function HeaderDropdown({ closeDropDown }) {
   );
 }
 
-export default HeaderDropdown;
+const mapStateToProps = ({ authReducer }) => {
+  return { authReducer };
+};
+
+export default connect(mapStateToProps, actions)(HeaderDropdown);

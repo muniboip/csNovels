@@ -1,40 +1,89 @@
 import React, { useEffect, useState } from "react";
 import Loader from "react-loader-spinner";
 import Header from "../Components/Header";
+import { useLocation } from "react-router-dom";
 import book from "../Assets/Images/book-card.png";
 import { Book } from "@mui/icons-material";
 import Footer from "../Components/Footer";
+import * as actions from "../store/actions/actions";
+import { imageUrl } from "../config";
+import { connect } from "react-redux";
+import SignInSignUpModal from "../Components/SignInSignUpModal";
+import AuthModal from "../Components/AuthModal";
+import DiscordOauth2 from "discord-oauth2";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { toast } from "react-toastify";
 
-function SearchPage() {
-  const [activeGenreOfNovels, setActiveGenreOfNovels] = useState("");
-  const [activeContentType, setActiveContentType] = useState("");
-  const [activeContentStatus, setActiveContentStatus] = useState("");
-  const [activeSortBy, setActiveSortBy] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState(dummyCards);
+function SearchPage({
+  authReducer,
+  booksReducer,
+  getFilteredBooks,
+  favoriteThisBook,
+  emptyFilteredBooks,
+}) {
+  const accessToken = authReducer?.accessToken;
+  const location = useLocation();
+  const isLogin = authReducer?.isLogin;
+  const [genre, setGenre] = useState(location?.state?.genre || "all");
+  const [contentType, setContentType] = useState("all");
+  const [contentStatus, setContentStatus] = useState(
+    location?.state?.contentStatus || "all"
+  );
+  const [sortBy, setSortBy] = useState(location?.state?.sortBy || "popular");
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+  const [pageNo, setPageNo] = useState(1);
+  const [hasMoreData, setHasMoreData] = useState(true);
 
   useEffect(() => {
-    console.log({ activeGenreOfNovels });
-    console.log({ activeContentType });
-    console.log({ activeContentStatus });
-    console.log({ activeSortBy });
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-  }, [
-    activeGenreOfNovels,
-    activeContentType,
-    activeContentStatus,
-    activeSortBy,
-    isLoading,
-  ]);
-useEffect(() => {
-  console.log(data)
+    emptyFilteredBooks();
+    _onChangeGenre();
+  }, [genre, sortBy, contentStatus]);
 
-}, [data])
+  useEffect(() => {
+    setData(booksReducer?.filteredBooks);
+  }, [booksReducer?.filteredBooks]);
+
+  const getPaginatedData = () => {
+    const data = {
+      cat: genre,
+      status: contentStatus,
+      orderBy: sortBy,
+      pageNo: pageNo,
+      userId: authReducer?.userData?._id || undefined,
+    };
+
+    getFilteredBooks(data, accessToken, setHasMoreData);
+    setPageNo(pageNo + 1);
+  };
+
+  const favoriteBookHandler = (_id) => {
+    const data = {
+      bookId: _id,
+    };
+    favoriteThisBook(data, accessToken, "filteredBooks");
+  };
+
+  const _onChangeGenre = () => {
+    let PAGE_NO = 1;
+    const data = {
+      cat: genre,
+      status: contentStatus,
+      orderBy: sortBy,
+      pageNo: PAGE_NO,
+      userId: authReducer?.userData?._id || undefined,
+    };
+
+    setIsLoading(true);
+    getFilteredBooks(data, accessToken, setHasMoreData).then(() => {
+      setIsLoading(false);
+    });
+    setPageNo(PAGE_NO + 1);
+  };
+
   return (
     <>
-      <Header />
+      <Header  />
       <div className="search-page">
         <div className="container">
           <div className="row">
@@ -47,15 +96,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("all");
+                          setGenre("all");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "all" && "darkgrey",
+                            background: genre == "all" && "darkgrey",
 
-                            color: activeGenreOfNovels == "all" && "white",
+                            color: genre == "all" && "white",
                           }}
                           className={`nav-link `}
                           href="#"
@@ -66,15 +117,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("urban");
+                          setGenre("urban");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "urban" && "darkgrey",
+                            background: genre == "urban" && "darkgrey",
 
-                            color: activeGenreOfNovels == "urban" && "white",
+                            color: genre == "urban" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -85,15 +138,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("eastern");
+                          setGenre("eastern");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "eastern" && "darkgrey",
+                            background: genre == "eastern" && "darkgrey",
 
-                            color: activeGenreOfNovels == "eastern" && "white",
+                            color: genre == "eastern" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -104,15 +159,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("games");
+                          setGenre("games");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "games" && "darkgrey",
+                            background: genre == "games" && "darkgrey",
 
-                            color: activeGenreOfNovels == "games" && "white",
+                            color: genre == "games" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -123,15 +180,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("fantasy");
+                          setGenre("fantasy");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "fantasy" && "darkgrey",
+                            background: genre == "fantasy" && "darkgrey",
 
-                            color: activeGenreOfNovels == "fantasy" && "white",
+                            color: genre == "fantasy" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -142,15 +201,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("sci-fi");
+                          setGenre("sci-fi");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "sci-fi" && "darkgrey",
+                            background: genre == "sci-fi" && "darkgrey",
 
-                            color: activeGenreOfNovels == "sci-fi" && "white",
+                            color: genre == "sci-fi" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -161,15 +222,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("horror");
+                          setGenre("horror");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "horror" && "darkgrey",
+                            background: genre == "horror" && "darkgrey",
 
-                            color: activeGenreOfNovels == "horror" && "white",
+                            color: genre == "horror" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -180,15 +243,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("sports");
+                          setGenre("sports");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "sports" && "darkgrey",
+                            background: genre == "sports" && "darkgrey",
 
-                            color: activeGenreOfNovels == "sports" && "white",
+                            color: genre == "sports" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -199,15 +264,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("action");
+                          setGenre("action");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "action" && "darkgrey",
+                            background: genre == "action" && "darkgrey",
 
-                            color: activeGenreOfNovels == "action" && "white",
+                            color: genre == "action" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -218,15 +285,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("war");
+                          setGenre("war");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "war" && "darkgrey",
+                            background: genre == "war" && "darkgrey",
 
-                            color: activeGenreOfNovels == "war" && "white",
+                            color: genre == "war" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -237,16 +306,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("realistic");
+                          setGenre("realistic");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "realistic" && "darkgrey",
+                            background: genre == "realistic" && "darkgrey",
 
-                            color:
-                              activeGenreOfNovels == "realistic" && "white",
+                            color: genre == "realistic" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -257,15 +327,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("history");
+                          setGenre("history");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "history" && "darkgrey",
+                            background: genre == "history" && "darkgrey",
 
-                            color: activeGenreOfNovels == "history" && "white",
+                            color: genre == "history" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -276,15 +348,17 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveGenreOfNovels("acg");
+                          setGenre("acg");
+                          setContentStatus("all");
+                          setContentType("all");
+                          setSortBy("popular");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeGenreOfNovels == "acg" && "darkgrey",
+                            background: genre == "acg" && "darkgrey",
 
-                            color: activeGenreOfNovels == "acg" && "white",
+                            color: genre == "acg" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -307,15 +381,14 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentType("all");
+                          setContentType("all");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeContentType == "all" && "darkgrey",
+                            background: contentType == "all" && "darkgrey",
 
-                            color: activeContentType == "all" && "white",
+                            color: contentType == "all" && "white",
                           }}
                           className="nav-link active"
                           href="#"
@@ -326,15 +399,15 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentType("translate");
+                          setContentType("translate");
                         }}
                       >
                         <a
                           style={{
                             background:
-                              activeContentType == "translate" && "darkgrey",
+                              contentType == "translate" && "darkgrey",
 
-                            color: activeContentType == "translate" && "white",
+                            color: contentType == "translate" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -345,15 +418,14 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentType("original");
+                          setContentType("original");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeContentType == "original" && "darkgrey",
+                            background: contentType == "original" && "darkgrey",
 
-                            color: activeContentType == "original" && "white",
+                            color: contentType == "original" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -364,15 +436,14 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentType("mtl");
+                          setContentType("mtl");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeContentType == "mtl" && "darkgrey",
+                            background: contentType == "mtl" && "darkgrey",
 
-                            color: activeContentType == "mtl" && "white",
+                            color: contentType == "mtl" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -390,15 +461,14 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentStatus("all");
+                          setContentStatus("all");
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeContentStatus == "all" && "darkgrey",
+                            background: contentStatus == "all" && "darkgrey",
 
-                            color: activeContentStatus == "all" && "white",
+                            color: contentStatus == "all" && "white",
                           }}
                           className="nav-link active"
                           href="#"
@@ -409,16 +479,15 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentStatus("completed");
+                          setContentStatus("completed");
                         }}
                       >
                         <a
                           style={{
                             background:
-                              activeContentStatus == "completed" && "darkgrey",
+                              contentStatus == "completed" && "darkgrey",
 
-                            color:
-                              activeContentStatus == "completed" && "white",
+                            color: contentStatus == "completed" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -429,15 +498,15 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveContentStatus("ongoing");
+                          setContentStatus("ongoing");
                         }}
                       >
                         <a
                           style={{
                             background:
-                              activeContentStatus == "ongoing" && "darkgrey",
+                              contentStatus == "ongoing" && "darkgrey",
 
-                            color: activeContentStatus == "ongoing" && "white",
+                            color: contentStatus == "ongoing" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -457,15 +526,15 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveSortBy("popular");
+                          setSortBy("popular");
                           setIsLoading(true);
                         }}
                       >
                         <a
                           style={{
-                            background: activeSortBy == "popular" && "darkgrey",
+                            background: sortBy == "popular" && "darkgrey",
 
-                            color: activeSortBy == "popular" && "white",
+                            color: sortBy == "popular" && "white",
                           }}
                           className="nav-link active"
                           href="#"
@@ -473,38 +542,37 @@ useEffect(() => {
                           Popular
                         </a>
                       </li>
-                      <li
+                      {/* <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveSortBy("recommended");
+                          setSortBy("recommended");
                           setIsLoading(true);
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeSortBy == "recommended" && "darkgrey",
+                            background: sortBy == "recommended" && "darkgrey",
 
-                            color: activeSortBy == "recommended" && "white",
+                            color: sortBy == "recommended" && "white",
                           }}
                           className="nav-link"
                           href="#"
                         >
                           Recommended
                         </a>
-                      </li>
+                      </li> */}
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveSortBy("rating");
+                          setSortBy("rating");
                           setIsLoading(true);
                         }}
                       >
                         <a
                           style={{
-                            background: activeSortBy == "rating" && "darkgrey",
+                            background: sortBy == "rating" && "darkgrey",
 
-                            color: activeSortBy == "rating" && "white",
+                            color: sortBy == "rating" && "white",
                           }}
                           className="nav-link"
                           href="#"
@@ -515,16 +583,15 @@ useEffect(() => {
                       <li
                         className="nav-item"
                         onClick={() => {
-                          setActiveSortBy("time-updated");
+                          setSortBy("timeUpdate");
                           setIsLoading(true);
                         }}
                       >
                         <a
                           style={{
-                            background:
-                              activeSortBy == "time-updated" && "darkgrey",
+                            background: sortBy == "timeUpdate" && "darkgrey",
 
-                            color: activeSortBy == "time-updated" && "white",
+                            color: sortBy == "timeUpdate" && "white",
                           }}
                           className="nav-link"
                         >
@@ -535,84 +602,122 @@ useEffect(() => {
                   </div>
                 </div>
                 <div className="sorting-content">
-                  <div className="row">
-                    {isLoading ? (
-                      <div className="loader">
-                        <Loader
-                          type="TailSpin"
-                          color="darkgrey"
-                          height={100}
-                          width={100}
-                        />
-                      </div>
-                    ) : (
-                      dummyCards.map((item, index) => {
-                        // console.log(item);
-                        return (
-                          <div key={index} className="col-lg-6"
-                          onClick={() => {
-                            setData({...data,...item.isFavorite=!item.isFavorite});
-                          }}>
-                            <div className="novel-box">
-                              <div className="row">
-                                <div className="col-4">
-                                  <a href="">
-                                    <img
-                                      className="featured-img"
-                                      src={book}
-                                      alt=""
-                                    ></img>
-                                  </a>
-                                </div>
-                                <div className="col-8">
-                                  <a href="#">
-                                    <h1 className="novel-heading">
-                                      {item.title}
-                                    </h1>
-                                  </a>
-                                  <p className="novel-excerpt">
-                                    {item.description}
-                                  </p>
-                                  <div className="row rating-chapter">
-                                    <div className="col-10">
-                                      <span className="rating">
-                                        <i className="fas fa-star"></i>
-                                        {item.rating}
-                                      </span>
-                                      <span className="chapter">
-                                        <svg
-                                          viewBox="0 0 24 24"
-                                          fill="none"
-                                          className="mr4 fs16"
+                  {isLoading ? (
+                    <div className="loader">
+                      <Loader
+                        type="TailSpin"
+                        color="darkgrey"
+                        height={100}
+                        width={100}
+                      />
+                    </div>
+                  ) : data?.length > 0 ? (
+                    <InfiniteScroll
+                      dataLength={data?.length}
+                      scrollThreshold={"200px"}
+                      next={() => getPaginatedData()}
+                      hasMore={hasMoreData}
+                      loader={
+                        <div className="mt-3 mb-3 d-flex justify-content-center align-items-center">
+                          <Loader
+                            type="TailSpin"
+                            color="darkgrey"
+                            height={40}
+                            width={40}
+                          />
+                        </div>
+                      }
+                    >
+                      <div className="row">
+                        {data?.map((item, index) => {
+                          return (
+                            <div key={index} className="col-lg-6">
+                              <div className="novel-box">
+                                <div className="row">
+                                  <div className="col-4">
+                                    <a href="">
+                                      <img
+                                        className="featured-img"
+                                        src={`${imageUrl}/${item?.image?.name}`}
+                                        alt=""
+                                      ></img>
+                                    </a>
+                                  </div>
+                                  <div className="col-8">
+                                    <a href="#">
+                                      <h1 className="novel-heading">
+                                        {item?.Title}
+                                      </h1>
+                                    </a>
+                                    <p className="novel-excerpt">
+                                      {item?.Description}
+                                    </p>
+                                    <div className="row rating-chapter">
+                                      <div className="p-0 col-10">
+                                        <span className="rating">
+                                          <i className="fas fa-star"></i>
+                                          {item?.avgRate}
+                                        </span>
+                                        <span className="chapter">
+                                          <svg
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            className="mr4 fs16"
+                                          >
+                                            <path
+                                              fill-rule="evenodd"
+                                              clip-rule="evenodd"
+                                              d="M4 2h10l6 6v14H4V2zm4 4h4v2H8V6zm8 6v-2H8v2h8z"
+                                              fill="#000"
+                                            ></path>
+                                          </svg>
+                                          {`${item?.chapterCount} Chapters`}
+                                        </span>
+                                      </div>
+
+                                      {item?.isLike ? (
+                                        <div
+                                          className="col-2 star"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (isLogin) {
+                                              !isLoading &&
+                                                favoriteBookHandler(item?._id);
+                                            } else {
+                                              toast.info("Login Required!");
+                                            }
+                                          }}
                                         >
-                                          <path
-                                            fill-rule="evenodd"
-                                            clip-rule="evenodd"
-                                            d="M4 2h10l6 6v14H4V2zm4 4h4v2H8V6zm8 6v-2H8v2h8z"
-                                            fill="#000"
-                                          ></path>
-                                        </svg>{" "}
-                                        {`${item.chapters} Chapters`}
-                                      </span>
+                                          <i className="fas fa-heart"></i>
+                                        </div>
+                                      ) : (
+                                        <div
+                                          className="col-2 star"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (isLogin) {
+                                              !isLoading &&
+                                                favoriteBookHandler(item?._id);
+                                            } else {
+                                              toast.info("Login Required!");
+                                            }
+                                          }}
+                                        >
+                                          <i class="far fa-heart"></i>
+                                        </div>
+                                      )}
                                     </div>
-                                    {item.isFavorite ? (
-                                      <div className="col-2 star">
-                                        <i className="fas fa-heart"></i>
-                                      </div>
-                                    ) : (
-                                      <div className="col-2 star">
-                                        <i class="far fa-heart"></i>
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
+                          );
+                        })}
+                      </div>
+                    </InfiniteScroll>
+                  ) : (
+                    <h3>No Books</h3>
+                  )}
                 </div>
               </div>
             </div>
@@ -624,107 +729,110 @@ useEffect(() => {
   );
 }
 
-export default SearchPage;
+const mapStateToProps = ({ booksReducer, authReducer }) => {
+  return { booksReducer, authReducer };
+};
+export default connect(mapStateToProps, actions)(SearchPage);
 
-const dummyCards = [
-  {
-    _id: 1,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 2,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 3,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 4,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 5,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 6,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 7,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 8,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 9,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: false,
-  },
-  {
-    _id: 10,
-    image: Book,
-    title: "My Vampire System",
-    description:
-      "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
-    rating: 4.63,
-    chapters: 1331,
-    isFavorite: true,
-  },
-];
+// const dummyCards = [
+//   {
+//     _id: 1,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 2,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 3,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 4,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 5,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 6,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 7,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 8,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 9,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: false,
+//   },
+//   {
+//     _id: 10,
+//     image: Book,
+//     title: "My Vampire System",
+//     description:
+//       "The human Race is at war with the Vicious Dalki and when they needed help more than ever, THEY started to come forward.",
+//     rating: 4.63,
+//     chapters: 1331,
+//     isFavorite: true,
+//   },
+// ];
