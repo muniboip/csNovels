@@ -27,6 +27,7 @@ export const subscription = async (token, interval, product) => {
       interval: interval,
       product: product,
     };
+    
     const response = await axios.post(`${apiUrl}/subscription/create`, data);
     console.log(response);
   } catch (err) {
@@ -34,6 +35,31 @@ export const subscription = async (token, interval, product) => {
     console.log(err.response);
   }
 };
+export const Presubscription = async (token, interval, product,accessToken) => {
+  try {
+    const data = {
+      "token": token,
+      "interval": interval,
+      "product": product,
+    };
+    const header= { 
+      headers:{
+      'Authorization': `Bearer ${accessToken}`, 
+      'Content-Type': 'application/json'}
+    }
+    const response = await axios.post(`${apiUrl}/subscription/createPre`, data,header);
+    if(response.data.success){
+      return response
+    }else{
+    toast.error(response.data.msg);
+    }
+    
+  } catch (err) {
+    toast.error(err.response.data.msg);
+    console.log(err.response);
+  }
+};
+
 export const getpackage = async () => {
   try {
     const response = await axios.get(`${apiUrl}/admin/packages/gets`);   

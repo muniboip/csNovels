@@ -116,7 +116,7 @@ h4.modal-title {
 }
 
 button.btn.us-active-btn {
-    background: green;
+    background:  rgb(228, 164, 25);
     width: 100%;
     margin-bottom: 10px;
     height: 70px;
@@ -125,7 +125,7 @@ button.btn.us-active-btn {
 }
 
 button.btn.us-active-btn:hover {
-    border: 2px solid green;
+    border: 2px solid rgb(228, 164, 25);
     background: white;
     color: black;
 }

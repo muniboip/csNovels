@@ -31,6 +31,7 @@ import {
   Route,
   Link,
 } from "react-router-dom";
+import Stripe from "./Components/Stripe";
 
 function App() {
   return (
@@ -48,6 +49,8 @@ function App() {
             <Route path="/ReadBookPage" element={<ReadBookPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/subscription" element={<Subscription />} />
+            <Route path="/Stripe" element={< Stripe/>} />
+
             {/* <Route path="/search">
           <SearchPage />
         </Route> */}
