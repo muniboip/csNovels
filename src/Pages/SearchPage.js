@@ -13,16 +13,28 @@ import AuthModal from "../Components/AuthModal";
 import DiscordOauth2 from "discord-oauth2";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
-
+import {getSearchedBooks} from '../store/actions/actions'
 function SearchPage({
   authReducer,
   booksReducer,
   getFilteredBooks,
   favoriteThisBook,
-  emptyFilteredBooks,
-}) {
-  const accessToken = authReducer?.accessToken;
+  emptyFilteredBooks 
+}) {  
   const location = useLocation();
+  const [field,setfield]= useState("")
+  useEffect(async ()=>{
+    console.log(location.state.search)    
+    setfield(location.state.search)
+  },[location.state.search])
+
+  useEffect(async ()=>{
+    console.log(authReducer.useData);
+    getSearchedBooks(field,authReducer.useData._id)
+    console.log("API HIT");
+  },[field])
+
+  const accessToken = authReducer?.accessToken;  
   const isLogin = authReducer?.isLogin;
   const [genre, setGenre] = useState(location?.state?.genre || "all");
   const [contentType, setContentType] = useState("all");
@@ -34,13 +46,14 @@ function SearchPage({
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
-
+  
   useEffect(() => {
     emptyFilteredBooks();
     _onChangeGenre();
   }, [genre, sortBy, contentStatus]);
 
   useEffect(() => {
+    console.log(booksReducer);
     setData(booksReducer?.filteredBooks);
   }, [booksReducer?.filteredBooks]);
 

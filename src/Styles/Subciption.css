@@ -72,11 +72,9 @@ span.span1 {
   font-size: 44px;
   font-family: "Montserrat-extrabold";
 }
-.modal-title{
+.modal-title {
   font-family: "Montserrat-extrabold";
   font-size: 20px;
-
-
 }
 .free {
   width: 150px;
@@ -108,7 +106,7 @@ span.span1 {
   color: black;
 }
 .sign-up.current {
-  cursor:pointer;
+  cursor: pointer;
 }
 .sign-up.current .free-cs button {
   color: #ffc23d;
@@ -182,16 +180,69 @@ ul.add li {
   color: BLACK;
   background: #ffc23d;
 }
+.close {
+  font-size: 40px;
+  margin-right: 20px;
+}
+.modal{
+  margin-top: 20%;
+}
+.modal-content{
+  border-radius: 15px ;  
+}
+.ElementsApp, .ElementsApp .InputElement {
+  border: #ffc23d 10px solid;
+}
+.stripe .StripeElement{
 
+margin-top: 20px;
+margin-left: 40px;
+}
+.stripe button{
+  margin-left: 10%;
+  width: 10%;
+  height: 40px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: larger;
+  size: 30px;
+  margin-top: 20px;
+  border-radius: 10px;
+  background-color: #ffc23d;
+  color: white;
+
+
+
+}
+.stripe{
+  
+width: 80%;
+margin-left: 12%;
+height: 200px;
+}
+
+.stripe h1{
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: 10px;
+  font-family: "Montserrat-semiBold";
+
+}
+.StripeElement{
+  margin-top: 10px;
+
+  width: 80%;
+}
 ul.add {
   padding-left: 22px;
 }
 .modal-con h1 {
   text-align: center;
+  font-weight: bold;
 }
-.last-btn{
-    width: 100%;
-    justify-content: center;
+.last-btn {
+  width: 100%;
+  justify-content: center;
 }
 /*  */
 

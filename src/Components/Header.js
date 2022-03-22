@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../Assets/Images/csnovels-logo.svg";
 import CS from "../Assets/Images/cs.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,6 +15,9 @@ import { baseUrl } from "../config";
 function Header({ authReducer }) {
   const [text, setText] = useState("");
   const [mode, setMode] = useState("login");
+  useEffect(()=>{
+    
+  },[text])
   const [showDropdown, setShowDropdown] = useState("");
   const navigate = useNavigate();
   const isLogin = useSelector((state) => state?.authReducer?.isLogin);
@@ -32,7 +35,7 @@ function Header({ authReducer }) {
               <img src={CS} className="small-logo" />
             </div>
 
-            <div className="myitem col-md-2 mt-2">
+            <div className="myitem col-md-3 mt-2">
               <div className="cat-label">
                 <svg
                   class="svg-inline-header-cat-icon"
@@ -116,7 +119,7 @@ function Header({ authReducer }) {
                 </div>
               </div>
             </div>
-            <div className="myitem col-md-5">
+            <div className="myitem col-md-4">
               <HeaderSearch setText={setText} text={text} />
             </div>
             {isLogin ? (

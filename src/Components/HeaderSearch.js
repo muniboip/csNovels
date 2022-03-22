@@ -14,7 +14,9 @@ function HeaderSearch({ text, setText }) {
 //   };
   const _isEnterKeyPressed = (e) => {
     if (e.charCode === 13) {
-        navigate("/search")
+        // navigate("/search")
+        navigate("/search", {state:{search:text}})
+
     }
   };
   return (

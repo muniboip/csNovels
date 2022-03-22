@@ -48,6 +48,7 @@ export const Presubscription = async (token, interval, product,accessToken) => {
       'Content-Type': 'application/json'}
     }
     const response = await axios.post(`${apiUrl}/subscription/createPre`, data,header);
+    console.log(response);
     if(response.data.success){
       return response
     }else{
@@ -56,7 +57,24 @@ export const Presubscription = async (token, interval, product,accessToken) => {
     
   } catch (err) {
     toast.error(err.response.data.msg);
-    console.log(err.response);
+    
+  }
+};
+export const getSearchedBooks = (keyword,id) => async dispatch => {
+  try {
+
+      const response = await axios.get(`http://192.168.0.38:8000/api/book/searchBooks?searchValue=${keyword}&userId=${id}`);
+      console.log(response.data)
+      dispatch({
+          type : 'GET_USER',
+          payload : response.data
+      })
+  }
+  catch (e) {
+      dispatch({
+          type: 'GET_ERROR',
+          payload: console.log(e)
+      })
   }
 };
 

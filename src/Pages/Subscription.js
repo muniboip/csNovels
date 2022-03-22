@@ -8,13 +8,14 @@ import { connect } from "react-redux";
 import { Presubscription, getpackage } from "../store/actions/actions";
 import Stripe from "../Components/Stripe";
 import { toast } from "react-toastify";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 function Subscription({ authReducer }) {
   const [isopen, setisopen] = useState(false);
   const [stripemodal, setStripemodal] = useState(false);
   const [packages, setpackages] = useState([]);
   const [modalcontent, setmodalcontent] = useState({});
-  
   const [amount, setAmount] = useState(0);
   const [interval, setinterval] = useState("one-time");
   const [product, setproduct] = useState("");
@@ -24,12 +25,16 @@ function Subscription({ authReducer }) {
     setAmount(modalcontent ? modalcontent.amount : 0);
     setproduct(modalcontent ? modalcontent._id : "");
   }, [modalcontent]);
-  
 
   async function setKey(id) {
-  
-    const data = await Presubscription(id, interval, product, authReducer.accessToken);
-    toast.success(data.data.msg);
+    const data = await Presubscription(
+      id,
+      interval,
+      product,
+      authReducer.accessToken
+    );
+    console.log(data);
+    toast.success(data);
   }
 
   const openModal = () => {
@@ -59,7 +64,19 @@ function Subscription({ authReducer }) {
 
     setpackages(await getpackage());
   }, []);
-  console.log(authReducer);
+  // const options = {
+  //   clientSecret:
+  //     "sk_test_51Kfhd8GAkBzna46j4z8AqKo6pvcSTp7K5i0PVX1sXH6c958hhsEZtXpN02DMoiM2wclh76VnQ9SFshxY0jrgCT2500W6vJgnKu",
+  // };
+  const options = {
+    clientSecret:
+      "pi_3KflWfGAkBzna46j1H8ZAcqp_secret_60Vmr4FPGE9i26sa3jsdz7KGr",
+    appearance: { theme: "Dark" },
+  };
+
+  const stripePromise = loadStripe(
+    "pk_test_51K7J3zEIGUZHqg4AQXRkFcz3FkVbBOa5MxjLqxY5z3EV5QpgJvDPmP285BvNt82FupjcBc8ZranqwU9rafxLKJTR009XtKs28i"
+  );
 
   return (
     <>
@@ -90,13 +107,13 @@ function Subscription({ authReducer }) {
                       setmodalcontent(item);
                     }}
                   >
-                    SIGN UP
+                    UPGRADE
                   </button>
-                  <h1>{item.name}</h1>
+                  <h1>{item.name.toUpperCase()}</h1>
                 </div>
               </div>
             );
-          } else if (authReducer.userData.package.product._id ==item._id) {
+          } else if (authReducer.userData.package?.product._id == item._id) {
             return (
               <div class="sign-up current">
                 <div class="free currt">
@@ -109,13 +126,7 @@ function Subscription({ authReducer }) {
                   <p>charged monthly OR one time payment for 30 day access</p>
                 </div>
                 <div class="free-cs ">
-                  <button
-                    class="btn1"
-                    
-                  >
-                    {" "}
-                    Subscribed
-                  </button>
+                  <button class="btn1"> Subscribed</button>
                   <h1>{item.name}</h1>
                 </div>
               </div>
@@ -169,6 +180,7 @@ function Subscription({ authReducer }) {
       </div>
 
       <Footer />
+
       <Modal
         show={stripemodal}
         onHide={() => {
@@ -177,146 +189,159 @@ function Subscription({ authReducer }) {
       >
         <Stripe setkey={setKey} setStripemodal={setStripemodal} />
       </Modal>
-      <Modal show={isopen} onHide={() => closeModal()} className="Modal">
-        <Modal.Header class="modal-header">
-          <Modal.Title class="modal-title">Choose Amount</Modal.Title>
 
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            onClick={closeModal}
-          >
-            &times;
-          </button>
-        </Modal.Header>
+      <div className="subs-modal">
+        <Modal show={isopen} onHide={() => closeModal()} className="Modal">
+          <Modal.Header class="modal-header">
+            <Modal.Title class="modal-title">Choose Amount</Modal.Title>
 
-        <Modal.Body>
-          <div class="row">
-            <div class="form-group us-form">
-              {modalcontent.amount >= 0 ? (
-                <div className="modal-con">
-                  <h1>{modalcontent.amount}$</h1>
-                  <h1>{modalcontent.name}</h1>
+            <button
+              type="button"
+              className="close"
+              data-dismiss="modal"
+              onClick={closeModal}
+            >
+              &times;
+            </button>
+          </Modal.Header>
+
+          <Modal.Body>
+            <div class="row">
+              <div class="form-group us-form">
+                {modalcontent.amount >= 0 ? (
+                  <div className="modal-con">
+                    <h1>${modalcontent.amount}</h1>
+                    <h1>
+                      {modalcontent.name == "free" ? "Free" : modalcontent.name}
+                    </h1>
+                  </div>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      value={amount}
+                      onChange={(e) => {
+                        setAmount(e.target.value);
+                      }}
+                      class="form-control"
+                      id="amount"
+                    />
+                    <span>$</span>
+                  </>
+                )}{" "}
+              </div>
+            </div>
+            {!modalcontent.amount && modalcontent.amount != 0 ? (
+              <>
+                <div class="row col-row">
+                  <div class="col-lg-4 px-4">
+                    <button
+                      type="button"
+                      class="btn us-active-btn"
+                      onClick={(e) => {
+                        setAmount(5);
+                      }}
+                    >
+                      $5
+                    </button>
+                  </div>
+
+                  <div class="col-lg-4 px-4">
+                    <button
+                      type="button"
+                      class="btn us-active-btn"
+                      onClick={(e) => {
+                        setAmount(10);
+                      }}
+                    >
+                      $10
+                    </button>
+                  </div>
+
+                  <div class="col-lg-4 px-4">
+                    <button
+                      type="button"
+                      class="btn us-active-btn"
+                      onClick={(e) => {
+                        setAmount(25);
+                      }}
+                    >
+                      $25
+                    </button>
+                  </div>
                 </div>
-              ) : (
-                <>
+                <div class="row col-row">
+                  <div class="col-lg-4 px-4">
+                    <button
+                      type="button"
+                      class="btn us-active-btn"
+                      onClick={(e) => {
+                        setAmount(50);
+                      }}
+                    >
+                      $50
+                    </button>
+                  </div>
+                  <div class="col-lg-4 px-4">
+                    <button
+                      type="button"
+                      class="btn us-active-btn"
+                      onClick={(e) => {
+                        setAmount(100);
+                      }}
+                    >
+                      $100
+                    </button>
+                  </div>
+                  <div class="col-lg-4 px-4">
+                    <button
+                      type="button"
+                      class="btn us-active-btn"
+                      onClick={(e) => {
+                        setAmount(250);
+                      }}
+                    >
+                      Custom Amount
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : null}
+            <div class="row">
+              <div class="form-check-inline">
+                <label class="form-check-label">
                   <input
-                    type="text"
-                    value={amount}
-                    onChange={(e) => {
-                      setAmount(e.target.value);
+                    type="checkbox"
+                    style={{
+                      height: "16px",
+                      width: "16px",
+                      marginRight: "10px",
                     }}
-                    class="form-control"
-                    id="amount"
-                  />
-                  <span>$</span>
-                </>
-              )}{" "}
-            </div>
-          </div>
-          {!modalcontent.amount && modalcontent.amount != 0 ? (
-            <>
-              <div class="row col-row">
-                <div class="col-lg-4 px-4">
-                  <button
-                    type="button"
-                    class="btn us-active-btn"
-                    onClick={(e) => {
-                      setAmount(5);
-                    }}
-                  >
-                    $5
-                  </button>
-                </div>
-
-                <div class="col-lg-4 px-4">
-                  <button
-                    type="button"
-                    class="btn us-active-btn"
-                    onClick={(e) => {
-                      setAmount(10);
-                    }}
-                  >
-                    $10
-                  </button>
-                </div>
-
-                <div class="col-lg-4 px-4">
-                  <button
-                    type="button"
-                    class="btn us-active-btn"
-                    onClick={(e) => {
-                      setAmount(25);
-                    }}
-                  >
-                    $25
-                  </button>
-                </div>
+                    onClick={handlechecked}
+                  ></input>{" "}
+                  Subscribe For Monthly
+                </label>
               </div>
-              <div class="row col-row">
-                <div class="col-lg-4 px-4">
-                  <button
-                    type="button"
-                    class="btn us-active-btn"
-                    onClick={(e) => {
-                      setAmount(50);
-                    }}
-                  >
-                    $50
-                  </button>
-                </div>
-                <div class="col-lg-4 px-4">
-                  <button
-                    type="button"
-                    class="btn us-active-btn"
-                    onClick={(e) => {
-                      setAmount(100);
-                    }}
-                  >
-                    $100
-                  </button>
-                </div>
-                <div class="col-lg-4 px-4">
-                  <button
-                    type="button"
-                    class="btn us-active-btn"
-                    onClick={(e) => {
-                      setAmount(250);
-                    }}
-                  >
-                    Custom Amount
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : null}
-          <div class="row">
-            <div class="form-check-inline">
-              <label class="form-check-label">
-                <input type="checkbox" onClick={handlechecked}></input>{" "}
-                Subscribe For Monthly
-              </label>
             </div>
-          </div>
-          <div class="row">
-            {/* <StripeCheckout
+            <div class="row">
+              {/* <StripeCheckout
     stripeKey = 'pk_test_51K7J3zEIGUZHqg4AQXRkFcz3FkVbBOa5MxjLqxY5z3EV5QpgJvDPmP285BvNt82FupjcBc8ZranqwU9rafxLKJTR009XtKs28i'
     token={handletoken}
     > */}
-            <button
-              type="button"
-              class="btn us-active-btn last-btn"
-              onClick={() => {
-                submit();
-              }}
-            >
-              Continue
-            </button>
-            {/* </StripeCheckout> */}
-          </div>
-        </Modal.Body>
-      </Modal>
+              <button
+                type="button"
+                class="btn us-active-btn last-btn"
+                onClick={() => {
+                  submit();
+                }}
+              >
+                Continue
+              </button>
+              {/* </StripeCheckout> */}
+            </div>
+          </Modal.Body>
+        </Modal>
+      </div>
     </>
   );
 }
