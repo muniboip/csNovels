@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import StarRatings from "react-star-ratings";
 import CSGO from "../Assets/Images/Go.png";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/actions";
 import { baseUrl } from "../config";
@@ -63,7 +63,10 @@ function HeaderDropdown({ closeDropDown, logout, authReducer }) {
         )}
 
         <div className="user-acc-info-div">
-          <p className="username-dropdown">{authReducer?.userData?.username || authReducer?.userData?.firstName}</p>
+          <p className="username-dropdown">
+            {authReducer?.userData?.username ||
+              authReducer?.userData?.firstName}
+          </p>
           <p className="user-email-dropdown">{authReducer?.userData?.email}</p>
           {authReducer?.userData?.subscription && (
             <div className="d-flex flex-row align-items-center">

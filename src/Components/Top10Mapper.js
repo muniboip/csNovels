@@ -5,17 +5,20 @@ import StarRatings from "react-star-ratings";
 import { imageUrl } from "../config";
 import * as actions from "../store/actions/actions";
 
-
-function Top10Mapper({authReducer, item, index, onClick, getBook }) {
+function Top10Mapper({ authReducer, item, index, onClick, getBook }) {
   const navigate = useNavigate();
   return (
     <div
       className="top10Books"
       onClick={() => {
+        getBook(item);
         navigate(`/book`, {
           replace: true,
           state: {
             book: item,
+            bookId: item?._id,
+            bookName: item?.Title,
+            bookImage: `${imageUrl}/${item?.image?.name}`,
           },
         });
       }}
@@ -42,7 +45,7 @@ function Top10Mapper({authReducer, item, index, onClick, getBook }) {
   );
 }
 
-const mapstatetoprops = ({ authReducer, booksReducer,  }) => {
-  return { authReducer, booksReducer,  };
+const mapstatetoprops = ({ authReducer, booksReducer }) => {
+  return { authReducer, booksReducer };
 };
 export default connect(mapstatetoprops, actions)(Top10Mapper);

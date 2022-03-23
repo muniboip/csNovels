@@ -27,7 +27,7 @@ export const subscription = async (token, interval, product) => {
       interval: interval,
       product: product,
     };
-    
+
     const response = await axios.post(`${apiUrl}/subscription/create`, data);
     console.log(response);
   } catch (err) {
@@ -35,54 +35,44 @@ export const subscription = async (token, interval, product) => {
     console.log(err.response);
   }
 };
-export const Presubscription = async (token, interval, product,accessToken) => {
+export const Presubscription = async (
+  token,
+  interval,
+  product,
+  accessToken
+) => {
   try {
     const data = {
-      "token": token,
-      "interval": interval,
-      "product": product,
+      token: token,
+      interval: interval,
+      product: product,
     };
-    const header= { 
-      headers:{
-      'Authorization': `Bearer ${accessToken}`, 
-      'Content-Type': 'application/json'}
-    }
-    const response = await axios.post(`${apiUrl}/subscription/createPre`, data,header);
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.post(
+      `${apiUrl}/subscription/createPre`,
+      data,
+      header
+    );
     console.log(response);
-    if(response.data.success){
-      return response
-    }else{
-    toast.error(response.data.msg);
+    if (response.data.success) {
+      return response;
+    } else {
+      toast.error(response.data.msg);
     }
-    
   } catch (err) {
     toast.error(err.response.data.msg);
-    
-  }
-};
-export const getSearchedBooks = (keyword,id) => async dispatch => {
-  try {
-
-      const response = await axios.get(`http://192.168.0.38:8000/api/book/searchBooks?searchValue=${keyword}&userId=${id}`);
-      console.log(response.data)
-      dispatch({
-          type : 'GET_USER',
-          payload : response.data
-      })
-  }
-  catch (e) {
-      dispatch({
-          type: 'GET_ERROR',
-          payload: console.log(e)
-      })
   }
 };
 
 export const getpackage = async () => {
   try {
-    const response = await axios.get(`${apiUrl}/admin/packages/gets`);   
-    return response.data.data
-    
+    const response = await axios.get(`${apiUrl}/admin/packages/gets`);
+    return response.data.data;
   } catch (err) {
     toast.error(err.response.data.msg);
     console.log(err.response);
@@ -522,3 +512,21 @@ export const postReview =
       console.log(err);
     }
   };
+
+export const getSearchedBooks = (keyword, userId) => async (dispatch) => {
+  try {
+    const response = await axios.get(
+      `${apiUrl}/book/searchBooks?searchValue=${keyword}&userId=${userId}`
+    );
+    console.log("...................", response.data.data);
+    if (response.data.success) {
+      dispatch({
+        type: types.GET_SEARCHED_BOOKS,
+        payload: response.data.data,
+      });
+    }
+  } catch (err) {
+    toast.error(`Something went wrong in searching.`);
+      console.log(err);
+  }
+};

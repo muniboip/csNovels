@@ -6,17 +6,20 @@ import "../src/Styles/Footer.css";
 import "../src/Styles/Style.css";
 import "../src/Styles/clientStyles.css";
 import "../src/Styles/Subciption.css";
-import "./css/style.css"
+import "../src/Styles/BookSearch.css";
+
+import "./css/style.css";
 // import '../../cannedsplam/src/App.css'
 import "../src/App.css";
 import "./Styles/ProfilePage.css";
 // import HomePage from "./Pages/HomePage";
-import SearchPage from "./Pages/SearchPage";
+import FilterBooks from "./Pages/FilterBooks";
 import HomePage from "./Pages/HomePage";
 import Library from "./Pages/Library";
 import Books from "./Pages/books";
 import ReadBookPage from "./Pages/ReadBookPage";
 import Subscription from "./Pages/Subscription";
+import BookSearch from "./Pages/BookSearch";
 // import ProfilePage from "./Pages/ProfilePage"
 import ProfilePage from "./Pages/Profile/ProfilePage";
 import { Provider } from "react-redux";
@@ -36,23 +39,24 @@ import Stripe from "./Components/Stripe";
 function App() {
   return (
     // <HomePage />
-    // <SearchPage />
+    // <FilterBooks />
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ToastContainer />
         <Router>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/search" element={<SearchPage />} />
+            <Route path="/search" element={<FilterBooks />} />
+            <Route path="/bookSearch" element={<BookSearch />} />
             <Route path="/library" element={<Library />} />
             <Route path="/book" element={<Books />} />
             <Route path="/ReadBookPage" element={<ReadBookPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/subscription" element={<Subscription />} />
-            <Route path="/Stripe" element={< Stripe/>} />
+            <Route path="/Stripe" element={<Stripe />} />
 
             {/* <Route path="/search">
-          <SearchPage />
+          <FilterBooks />
         </Route> */}
           </Routes>
         </Router>

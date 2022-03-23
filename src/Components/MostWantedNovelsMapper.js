@@ -14,6 +14,7 @@ function MostWantedNovelsMapper({
   favoriteBookHandler,
   isLoading,
   authReducer,
+  getBook,
 }) {
   // const [data, setData] = useState();
   const navigate = useNavigate();
@@ -23,7 +24,16 @@ function MostWantedNovelsMapper({
       <div
         className="mp-image-and-text-container"
         onClick={() => {
-          navigate(`/ReadBookPage`, { replace: true });
+          getBook(item);
+          navigate(`/book`, {
+            replace: true,
+            state: {
+              book:item,
+              bookId: item?._id,
+              bookName: item?.Title,
+              bookImage: `${imageUrl}/${item?.image?.name}`,
+            },
+          });
         }}
       >
         <img

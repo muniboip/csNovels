@@ -2,39 +2,24 @@ import React, { useEffect, useState } from "react";
 import Loader from "react-loader-spinner";
 import Header from "../Components/Header";
 import { useLocation } from "react-router-dom";
-import book from "../Assets/Images/book-card.png";
-import { Book } from "@mui/icons-material";
-import Footer from "../Components/Footer";
 import * as actions from "../store/actions/actions";
+import Footer from "../Components/Footer";
 import { imageUrl } from "../config";
 import { connect } from "react-redux";
-import SignInSignUpModal from "../Components/SignInSignUpModal";
-import AuthModal from "../Components/AuthModal";
-import DiscordOauth2 from "discord-oauth2";
+import { useNavigate } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
-import {getSearchedBooks} from '../store/actions/actions'
-function SearchPage({
+function FilterBooks({
   authReducer,
   booksReducer,
   getFilteredBooks,
   favoriteThisBook,
-  emptyFilteredBooks 
-}) {  
+  getBook,
+  emptyFilteredBooks,
+}) {
   const location = useLocation();
-  const [field,setfield]= useState("")
-  useEffect(async ()=>{
-    console.log(location.state.search)    
-    setfield(location.state.search)
-  },[location.state.search])
-
-  useEffect(async ()=>{
-    console.log(authReducer.useData);
-    getSearchedBooks(field,authReducer.useData._id)
-    console.log("API HIT");
-  },[field])
-
-  const accessToken = authReducer?.accessToken;  
+  const navigate = useNavigate();
+  const accessToken = authReducer?.accessToken;
   const isLogin = authReducer?.isLogin;
   const [genre, setGenre] = useState(location?.state?.genre || "all");
   const [contentType, setContentType] = useState("all");
@@ -46,14 +31,13 @@ function SearchPage({
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
-  
+
   useEffect(() => {
     emptyFilteredBooks();
     _onChangeGenre();
   }, [genre, sortBy, contentStatus]);
 
   useEffect(() => {
-    console.log(booksReducer);
     setData(booksReducer?.filteredBooks);
   }, [booksReducer?.filteredBooks]);
 
@@ -96,7 +80,7 @@ function SearchPage({
 
   return (
     <>
-      <Header  />
+      <Header />
       <div className="search-page">
         <div className="container">
           <div className="row">
@@ -644,24 +628,37 @@ function SearchPage({
                       <div className="row">
                         {data?.map((item, index) => {
                           return (
-                            <div key={index} className="col-lg-6">
-                              <div className="novel-box">
+                            <div
+                              key={index}
+                              className="col-lg-6 "
+                             
+                            >
+                              <div className="novel-box"
+                               onClick={() => {
+                                getBook(item);
+                                navigate(`/book`, {
+                                  replace: true,
+                                  state: {
+                                    bookId: item?._id,
+                                    bookName: item?.Title,
+                                    bookImage: `${imageUrl}/${item?.image?.name}`,
+                                  },
+                                });
+                              }}
+                              >
                                 <div className="row">
                                   <div className="col-4">
-                                    <a href="">
-                                      <img
-                                        className="featured-img"
-                                        src={`${imageUrl}/${item?.image?.name}`}
-                                        alt=""
-                                      ></img>
-                                    </a>
+                                    <img
+                                      className="featured-img"
+                                      src={`${imageUrl}/${item?.image?.name}`}
+                                      alt=""
+                                    ></img>
                                   </div>
                                   <div className="col-8">
-                                    <a href="#">
-                                      <h1 className="novel-heading">
-                                        {item?.Title}
-                                      </h1>
-                                    </a>
+                                    <h1 className="novel-heading">
+                                      {item?.Title}
+                                    </h1>
+
                                     <p className="novel-excerpt">
                                       {item?.Description}
                                     </p>
@@ -745,7 +742,7 @@ function SearchPage({
 const mapStateToProps = ({ booksReducer, authReducer }) => {
   return { booksReducer, authReducer };
 };
-export default connect(mapStateToProps, actions)(SearchPage);
+export default connect(mapStateToProps, actions)(FilterBooks);
 
 // const dummyCards = [
 //   {

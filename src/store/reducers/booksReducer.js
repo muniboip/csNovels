@@ -6,10 +6,10 @@ import {
   EMPTY_FILTERED_BOOKS,
   GET_CHAPTERS_TITLES,
   GET_ONE_CHAPTER,
+  GET_SEARCHED_BOOKS,
   GET_BOOKMARKS,
   GET_BOOK,
 } from "../actions/actionType";
-import BOOK_CARD from "../../Assets/Images/book-card.png";
 
 const initialState = {
   books: [],
@@ -19,6 +19,7 @@ const initialState = {
   chaptersTitles: [],
   bookmarks: [],
   chapterContent: [],
+  searchedBooks: [],
 };
 
 export function booksReducer(state = initialState, action) {
@@ -118,6 +119,12 @@ export function booksReducer(state = initialState, action) {
       return {
         ...state,
         bookmarks: action.payload,
+      };
+
+    case GET_SEARCHED_BOOKS:
+      return {
+        ...state,
+        searchedBooks: action.payload,
       };
     default:
       return state;

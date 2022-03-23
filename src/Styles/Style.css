@@ -1186,6 +1186,7 @@ span.chapter svg path {
 }
 .novel-box {
   margin-bottom: 1.5rem;
+  cursor: pointer;
 }
 span.rating i {
   margin-right: 5px;

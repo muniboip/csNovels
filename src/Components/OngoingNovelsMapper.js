@@ -34,6 +34,7 @@ function OngoingNovelsMapper({
           navigate(`/book`, {
             replace: true,
             state: {
+              book:item,
               bookId: item?._id,
               bookName: item?.Title,
               bookImage: `${imageUrl}/${item?.image?.name}`,

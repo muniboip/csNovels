@@ -253,7 +253,7 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                     </button>
                   </div>
                 </div>
-                <ul class="nav nav-tabs review-tabs">
+                {/* <ul class="nav nav-tabs review-tabs">
                   <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#Liked">
                       Liked
@@ -264,7 +264,7 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                       Newest
                     </a>
                   </li>
-                </ul>
+                </ul> */}
                 <div class="tab-content liked-content">
                   <div class="tab-pane fade active show" id="Liked">
                     {allReviews?.map((ele) => (
