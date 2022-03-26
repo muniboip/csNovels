@@ -6,7 +6,9 @@ import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 import { composeWithDevTools } from "redux-devtools-extension";
+import devToolsEnhancer from 'remote-redux-devtools';
 
+const composedEnhancer = composeWithDevTools()
 const presistConfig = {
   key: "root",
   storage: storage,
@@ -21,8 +23,14 @@ const rootReducer = combineReducers({
 const persistedReducer = persistReducer(presistConfig, rootReducer);
 
 const store = createStore(
+  
   persistedReducer,
-  composeWithDevTools(applyMiddleware(thunk))
+  
+
+  composeWithDevTools(applyMiddleware(thunk)),
+ 
+
+
 );
 let persistor = persistStore(store);
 

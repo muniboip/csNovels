@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 import * as actions from "../store/actions/actions";
 
 function SignInSignUpModal({
@@ -43,6 +44,7 @@ function SignInSignUpModal({
       setIsLoading(false);
     });
   };
+  const navigate = useNavigate();
 
   const handleSignUp = () => {
     setIsLoading(true);
@@ -55,6 +57,7 @@ function SignInSignUpModal({
       firstName: firstName,
     };
     userSignUp(data, onSuccess).then(() => {
+      navigate("/subscription",{state:{signup : true}})
       setIsLoading(false);
     });
   };

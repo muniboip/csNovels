@@ -6,6 +6,9 @@
   font-family: Nunito Sans,SF Pro Text,SF Pro Icons,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
   background-color: #f5f6fc;
 } */
+.search{
+  /* height: 500px !important; */
+}
 .search_main{
   display: flex;
   justify-content: center;
@@ -90,6 +93,10 @@
   justify-content: center;
   align-items: center;
   margin-top: 2%;
+  
+}
+.card_body{
+height: 100%;
 }
 .img_div{
   border: 2px solid black;

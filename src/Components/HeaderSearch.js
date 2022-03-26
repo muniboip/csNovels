@@ -1,13 +1,19 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { connect } from "react-redux";
+
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-
-function HeaderSearch({ text, setText }) {
+import * as actions  from "../store/actions/actions"
+function HeaderSearch({ getSearchedBooks,authReducer,text, setText }) {
   const navigate = useNavigate();
+  const userId = authReducer?.userData?._id;
   const _isEnterKeyPressed = (e) => {
     if (e.charCode === 13) {
-      // navigate("/search")
+      console.log("ABC");
+      navigate("/")
+      getSearchedBooks(text, userId);
+
       navigate("/bookSearch", { state: { search: text } });
     }
   };
@@ -31,4 +37,13 @@ function HeaderSearch({ text, setText }) {
   );
 }
 
-export default HeaderSearch;
+const mapStateToProps = ({ booksReducer, authReducer }) => {
+  return {
+    booksReducer,
+    authReducer,
+  };
+};
+
+export default connect(mapStateToProps, actions)(HeaderSearch);
+
+

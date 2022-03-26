@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect , useState } from "react";
 import "../Styles/ReadbookPage.css";
 import Header from "../Components/Header";
 import BOOK_CARD from "../Assets/Images/book-card.png";
@@ -17,12 +17,14 @@ import {
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Loader from "react-loader-spinner";
+import { BreakfastDining } from "@mui/icons-material";
 
 function ReadBookPage({
   authReducer,
   booksReducer,
   getChapterContent,
   getChapterTitles,
+  getChapterContentforscroller,
 }) {
   const [fontSize, setFontSize] = useState(14);
   const [chaptersTitles, setChaptersTitles] = useState(false);
@@ -38,8 +40,14 @@ function ReadBookPage({
   const [hasMoreData, setHasMoreData] = useState(true);
   const [selectedRange, setSelectedRange] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
+  const [data, setdata] = useState([]);
+  const [view, setview] = useState([]);
+  const [index, setindex] = useState(0);
+  const [hasMore, sethasMore] = useState(true);
 
   useEffect(() => {
+    console.log("2");
+
     getChapterTitles(bookId, accessToken);
   }, []);
 
@@ -79,10 +87,19 @@ function ReadBookPage({
   };
 
   useEffect(() => {
+    console.log("3");
+
     _onPressFontSizeHandler();
   }, [fontSize]);
 
-  useEffect(() => {
+  useEffect(async () => {
+    console.log("4");
+    booksReducer.chaptersTitles.map(async (item,index)=>{
+      const v = await getChapterContentforscroller(item._id,bookId,accessToken)       
+      setview([...view,v])
+      
+    })
+    
     if (booksReducer?.chaptersTitles?.length > 0) {
       const CHAPTERS_LENGTH = booksReducer?.chaptersTitles?.length;
       const CHAPTERS = [...booksReducer?.chaptersTitles];
@@ -93,6 +110,7 @@ function ReadBookPage({
         .map((_) => CHAPTERS?.splice(0, Math.trunc(CHAPTERS_LENGTH / 4)));
       let RANGE_SETS = [];
       let lastInnerArrLength = 0;
+
       CHAPTERS_SETS?.map((ele, idx) => {
         RANGE_SETS.push(
           `${lastInnerArrLength + 1}-${lastInnerArrLength + ele?.length}`
@@ -102,28 +120,83 @@ function ReadBookPage({
       setChaptersRange(
         RANGE_SETS?.map((ele, idx) => ({ index: idx, set: ele }))
       );
-      console.log(CHAPTERS_SETS);
-      console.log(RANGE_SETS);
+      console.log(booksReducer.chaptersTitles[0].name, "=====================");
+      getChapterContent(
+        booksReducer.chaptersTitles[0]._id,
+        bookId,
+        accessToken
+      );
+
       setChapterSets(CHAPTERS_SETS);
       setChaptersTitles(CHAPTERS_SETS[0]);
       setSelectedRange({ index: 0, set: RANGE_SETS[0] });
       setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
     }
   }, [booksReducer?.chaptersTitles]);
-
+  console.log(view);
   useEffect(() => {
+    console.log("5");
+
     if (selectedChapterId) {
       getChapterContent(selectedChapterId, bookId, accessToken);
     }
   }, [selectedChapterId]);
-
+console.log(booksReducer);
   const getOtherChapters = () => {
-    getChapterContent(selectedChapterId, bookId, accessToken);
+    console.log("Chapter titles");
+    // booksReducer.chaptersTitles.map((l, i) => {
+    //   if (data[data.length - 1]) {
+    //     if (l.name == data[data.length - 1][0].content) {
+    //       console.log(chaptersTitles[i]);
+    //       getChapterContent(chaptersTitles[i + 1]._id, bookId, accessToken);
+    //       return;
+    //     }
+    //   }
+    // });
+    // console.log(booksReducer.chaptersTitles.indexOf({_id:data[data.length-1]._id}));
+    // const content = booksReducer?.chapterContent;
+    // if(content.length==0 ){
+    //   sethasMore(false)
+    // }
+    // console.log(content[0].content == data[data.length - 1][0].content);
+    // console.log(data[data.length - 1][0]);
+    // console.log(content[0]);
+    // if (content[0].content == data[data.length - 1][0].content) {
+    // } else {
+    //   const dumb = [...data];
+    //   console.log(dumb);
+    //   dumb[dumb.length] = content;
+    //   setdata(dumb);
+    // }
+    // console.log(data);
+    // setindex(index + 1);
   };
+  console.log(booksReducer);
+  useEffect(() => {
+    console.log("6");
+    const content = booksReducer?.chapterContent;
+    // console.log(content[0].content == data[data.length - 1][0].content);
+    // console.log(data[data.length - 1][0]);
+    // console.log(content[0]);
+    if (data.length > 0) {
+      if (content[0].content != data[data.length - 1][0].content) {
+        const dumb = [...data];
+        dumb[dumb.length] = content;
+        setdata(dumb);
+      }
+    } else {
+      const dumb = [...data];
+      dumb[dumb.length] = content;
+      setdata(dumb);
+    }
+
+    console.log(data);
+  }, [booksReducer?.chapterContent]);
 
   useEffect(() => {
-    let newList = [];
+    console.log("7");
 
+    let newList = [];
     chaptersRange?.filter((ele, idx) => {
       if (ele?.index === selectedRange?.index) {
         newList = chapterSets[idx];
@@ -132,6 +205,18 @@ function ReadBookPage({
     setChaptersTitles(newList);
   }, [selectedRange]);
 
+  const BookReading = (books) => {
+    books = books.book;
+    return (
+      <>
+        <h3>{`${books[0]?.content}: Title`}</h3>
+
+        {books.map(
+          (ele, idx) => idx !== 0 && <p className="mt-2">{ele?.content}</p>
+        )}
+      </>
+    );
+  };
   return (
     <>
       <Header />
@@ -228,14 +313,42 @@ function ReadBookPage({
               }
             > */}
             <div className="chapter_content">
-              <h3>
+              <InfiniteScroll
+                dataLength={100} //This is important field to render the next data
+                next={getOtherChapters}
+                // onScroll={getOtherChapters}
+                hasMore={hasMore}
+                loader={<h4>Loading...</h4>}
+                endMessage={
+                  <p style={{ textAlign: "center" }}>
+                    <b>Yay! You have seen it all</b>
+                  </p>
+                }
+                // below props only if you need pull down functionality
+                // refreshFunction={this.refresh}
+                // pullDownToRefresh
+                // pullDownToRefreshThreshold={50}
+                // pullDownToRefreshContent={
+                //   <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+                // }
+                // releaseToRefreshContent={
+                //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+                // }
+              >
+                {booksReducer?.chapterContent.map((item, index) => {
+                  return <BookReading book={item} />;
+                })}
+              </InfiniteScroll>
+            </div>
+
+            {/* <h3>
                 {`${booksReducer?.chapterContent[0]?.content}: ${chaptersTitles?.[0]?.title}`}
               </h3>
               {booksReducer?.chapterContent?.map(
                 (ele, idx) =>
                   idx !== 0 && <p className="mt-2">{ele?.content}</p>
               )}
-            </div>
+            </div> */}
             {/* </InfiniteScroll> */}
           </div>
 

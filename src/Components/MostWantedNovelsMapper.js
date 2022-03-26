@@ -31,7 +31,7 @@ function MostWantedNovelsMapper({
               book:item,
               bookId: item?._id,
               bookName: item?.Title,
-              bookImage: `${imageUrl}/${item?.image?.name}`,
+              bookImage: `${imageUrl}${item?.image?.name}`,
             },
           });
         }}

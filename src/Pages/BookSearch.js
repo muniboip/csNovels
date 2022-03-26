@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import * as actions from "../store/actions/actions";
 import StarRatings from "react-star-ratings/build/star-ratings";
-import Buttons from "./Buttons";
 import Header from "../Components/Header";
+import Datanotexist from '../Assets/Images/Datanotexist.png'
+import { imageUrl } from "../config";
 // import "../Styles/BookSearch.css";
 const baseurl = `http://192.168.0.38:8000/public/`;
 
@@ -12,7 +13,6 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
   const [searchText, setSearchText] = useState("");
   const userId = authReducer?.userData?._id;
   const location = useLocation();
-
   const search = (f) => {
     f.preventDefault();
     if (f.charCode === 13) {
@@ -20,17 +20,21 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
       console.log("--==-=");
     }
   };
-
-  useEffect(() => {
-    getSearchedBooks(location.state.search, userId);
+  useEffect(async () => {  
+    console.log("SEARCH");
+    console.log(location?.state?.search);  
+    await getSearchedBooks(location?.state?.search, userId);  
+    location.state.search = ""
   }, []);
 
   useEffect(() => {
     console.log(searchText);
   }, [searchText]);
+  console.log(booksReducer.searchedBooks.length);
   return (
     <>
       <Header />
+      <div className="container search" style={booksReducer.searchedBooks.length == 1? {height: "500px"}:null}>
 
       <div className="search_main">
         <div className="search_input">
@@ -66,7 +70,7 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
             }}
             onKeyPress={(f) => {
               if (f.charCode === 13) {
-                console.log("API HIT")
+                console.log("API HIT");
                 getSearchedBooks(searchText, userId);
               }
             }}
@@ -77,7 +81,7 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
 
       {/* <Buttons /> */}
 
-      {booksReducer?.searchedBooks?.length > 0 &&
+      {booksReducer?.searchedBooks?.length > 0 ? (
         booksReducer?.searchedBooks?.map((item, index) => {
           const { Title, image, categories } = item;
 
@@ -87,7 +91,7 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
                 <div className="geeks">
                   <img
                     className="img"
-                    src={`${baseurl}${image?.name}`}
+                    src={`${imageUrl}${image?.name}`}
                     alt="adoptedsoldier"
                   />
                 </div>
@@ -117,7 +121,16 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
               </div>
             </div>
           );
-        })}
+        })
+      ) : (
+        <div className="data-not">
+          {/* <h3>Your Search: {searchText} does not match any book.</h3> */}
+          <img src={Datanotexist}/>
+        </div>
+      )}
+      
+      
+</div>
     </>
   );
 };

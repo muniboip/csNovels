@@ -3,6 +3,7 @@ import { apiUrl } from "../../config";
 import * as types from "./actionType";
 import { toast } from "react-toastify";
 import { accordionActionsClasses } from "@mui/material";
+import { useDispatch } from "react-redux";
 
 export const userLogin = (data, loginSuccess) => async (dispatch) => {
   try {
@@ -35,6 +36,7 @@ export const subscription = async (token, interval, product) => {
     console.log(err.response);
   }
 };
+
 export const Presubscription = async (
   token,
   interval,
@@ -58,16 +60,93 @@ export const Presubscription = async (
       data,
       header
     );
-    console.log(response);
-    if (response.data.success) {
-      return response;
-    } else {
-      toast.error(response.data.msg);
-    }
+    return response;
   } catch (err) {
     toast.error(err.response.data.msg);
   }
 };
+export const customSubscription = async(token, interval, amount, accessToken)=>{
+  try {
+    console.log(token,interval,amount);
+
+    const data = {
+      token: token,
+      interval: interval,
+      amount: amount,
+    };
+    console.log(data);
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    
+
+    const response = await axios.post(
+      `${apiUrl}/subscription/createCustom`,
+      data,
+      header
+    );
+    return response
+}catch(err){
+  toast.err(err.response.data.msg)
+}
+}
+export const updatecustomSubscription = async(token, interval, amount, accessToken)=>{
+  try {
+    console.log(token,interval,amount);
+
+    const data = {
+      token: token,
+      interval: interval,
+      amount: amount,
+    };
+    console.log(data);
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    
+
+    const response = await axios.post(
+      `${apiUrl}/subscription/updateCustom`,
+      data,
+      header
+    );
+    return response
+}catch(err){
+  toast.err(err.response.data.msg)
+}
+}
+export const Updatesubscription =
+  async (token, interval, product, accessToken) =>{
+    try {
+      const data = {
+        token: token,
+        interval: interval,
+        product: product,
+      };
+      const header = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(data);
+
+      const response = await axios.post(
+        `${apiUrl}/subscription/updatePre`,
+        data,
+        header
+      );
+      return response
+  }catch(err){
+    toast.err(err.response.data.msg)
+  }
+}
 
 export const getpackage = async () => {
   try {
@@ -260,6 +339,7 @@ export const getChapterTitles = (id, token) => async (dispatch) => {
 
   try {
     const response = await axios.get(URL, authHeader);
+
     if (response?.data?.success) {
       dispatch({
         type: types.GET_CHAPTERS_TITLES,
@@ -297,6 +377,39 @@ export const getChapterContent =
       console.log("Chapter Content Fetching Failed. ", err);
     }
   };
+
+export const getChapterContentforscroller = async (
+  chapterId,
+  bookId,
+  token
+) => {
+  const URL = `${apiUrl}/book/getSingleBookByBookId/${bookId}/${chapterId}`;
+  const authHeader = {
+    headers: {
+      Authorization: "Bearer " + token,
+      Accept: "application/json",
+    },
+  };
+
+  try {
+    const response = await axios.get(URL, authHeader);
+    if (response?.data?.success) {
+      if (response?.data?.data.length > 0) {
+        // console.log(response?.data?.data);
+
+        return response.data.data;
+        // dispatch({
+        //   type: types.GET_ONE_CHAPTER,
+        //   payload: response.data.data,
+        // });
+      } else {
+        toast.info("This chapter has no content.");
+      }
+    }
+  } catch (err) {
+    console.log("Chapter Content Fetching Failed. ", err);
+  }
+};
 
 export const forgetPassword = (email, onSuccess) => async (dispatch) => {
   const data = {
@@ -527,6 +640,6 @@ export const getSearchedBooks = (keyword, userId) => async (dispatch) => {
     }
   } catch (err) {
     toast.error(`Something went wrong in searching.`);
-      console.log(err);
+    console.log(err);
   }
 };

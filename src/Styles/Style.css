@@ -1184,6 +1184,18 @@ span.chapter svg path {
 .sorting-content {
   margin-top: 2rem;
 }
+
+
+span.iconTick{
+  background:  rgb(228, 164, 25) !important;
+  background-image: none !important; 
+  
+}
+.iconTick {
+  background-image: none !important;
+  background-color:  rgb(228, 164, 25) !important; 
+
+}
 .novel-box {
   margin-bottom: 1.5rem;
   cursor: pointer;

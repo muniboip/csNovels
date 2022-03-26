@@ -1,3 +1,4 @@
+import { Satellite } from "@mui/icons-material";
 import {
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
@@ -5,6 +6,8 @@ import {
   UPDATE_FEATURES,
   UPLOAD_PROFILE_IMAGE,
   UPLOAD_PROFILE_INFORMATIONS,
+  SUBSCRIPTION,
+  UPDATE_SUBSCRIPTION
 } from "../actions/actionType";
 
 const initialData = {
@@ -60,6 +63,16 @@ export const authReducer = (state = initialData, action) => {
         userData: null,
         accessToken: "",
       };
+    case SUBSCRIPTION:         
+      return {
+        ...state,
+        userData:{
+          ...state.userData,
+          package: action?.payload
+        }
+      };
+
+    
 
     default:
       return state;
