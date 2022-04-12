@@ -35,6 +35,9 @@ import {
   Link,
 } from "react-router-dom";
 import Stripe from "./Components/Stripe";
+import { RefundPolicy } from "./Pages/RefundPolicy";
+import { UserAgreement } from "./Pages/UserAgreement";
+import { PrivacyPolicy } from "./Pages/PrivacyPolicy";
 
 function App() {
   return (
@@ -54,6 +57,9 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="/Stripe" element={<Stripe />} />
+            <Route path="UserAgreement" element={<UserAgreement/>}/>
+            <Route path="RefundPolicy" element={<RefundPolicy/>}/>
+            <Route path="PrivacyPolicy" element={<PrivacyPolicy/>}/>
 
             {/* <Route path="/search">
           <FilterBooks />

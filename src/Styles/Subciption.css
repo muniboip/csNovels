@@ -162,10 +162,18 @@ ul.add li {
   padding-top: 0px;
   color: white;
 }
-.custom {
+.custome {
   width: 30% !important;
   margin-left: 70%;
 }
+.customText{
+  display: block;
+  color: red;
+  margin-left: 65%;
+  width:40%;
+  text-align: center;
+}
+
 #amount {
   font-size: 20px;
 }
@@ -190,31 +198,57 @@ ul.add li {
 border: none !important;
 box-shadow: none !important; 
 text-shadow: none !important;
-font-size: 20px !important;
+font-size: 30px !important;
 padding: 1px !important;
-
-font-family: "Gill Sans", sans-serif !important;
-
+width: max-content !important;
+font-family: "Montserrat-SemiBold" !important;
+letter-spacing: 2px;
 font-weight: 400 !important;
-
+position: relative;
+margin-left: auto;
+margin-right: auto;
+}
+.token{
+  width: 60%;
+  height: 50px;  
+  /* font-style: none; */
+  background:  black !important; 
+  margin-left: 20%;
+  margin-top: 10px;
+  text-align: center;
+  border-radius: 15px !important;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+}
+.submittext{
+  margin-left: auto;
+margin-right: auto;
 }
 span.iconTick{
   background:  rgb(228, 164, 25) !important;
   background-image: none !important;   
+}
+.form-check-inline{
+  border: 3px solid rgb(228, 164, 25);
+  border-radius: 50px;
+  width: 80%;
+}
+.form-check-inline h1{
+  margin-left: auto;
+margin-right: auto;
+font-size: 50px;
+font-family: "Montserrat-ExtraBold" !important;
+}
+.editlogo{
+  width: 25px;
+  height: 25px;
 }
 
 .iconTick {
   background-image: none !important;
   background-color:  rgb(228, 164, 25) !important; 
 
-}
-.token{
-  width: 24%;
-  height: 45px;  
-  font-style: none;
-  background:  rgb(228, 164, 25) !important; 
-  margin-left: 38%;
-  margin-top: 10px;
 }
 .closestripmodal{
   float: right;
@@ -275,13 +309,85 @@ height: 200px;
 ul.add {
   padding-left: 22px;
 }
+.modal-con{
+  margin-left: auto;
+  margin-right: auto;  
+}
+.amountcontainer{
+  margin-left: auto;
+  margin-right: auto;  
+  display: flex;
+  flex-direction: column;
+}
+.modal-con input{
+  border: none;
+  text-align: center;
+  font-size: 60px;
+  font-weight: bold;    
+  
+  font-family:  "Montserrat-ExtraBold" !important;
+
+  
+  padding-right: 15px;
+  justify-content: center;
+  
+
+
+
+
+}
+
+.modal-con .amountcontainer{
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;  
+}
 .modal-con h1 {
   text-align: center;
+  display: flex;
+  padding-right: 15px;
+  justify-content: center;
   font-weight: bold;
+  font-size: 60px;
+  font-family:  "Montserrat-ExtraBold";
+}
+.modal-con span {
+  
+  margin-left: 55%;  
+  margin-top: 5%;
+  font-family:  "Montserrat-Bold";
+}
+.amountcontainer p {
+
+  margin-left: 5%;
+}
+.form-group {
+  width: 80% !important; 
+}
+
+hr{
+  background-color: #ffc23d;
+  height: 2px;
+  width: 100%;
+  
+  line-height: 0px;
+  margin-top: 0px !important;
+
+}
+.edittag{
+  margin-left: 20%;
+}
+.amount{
+  width: 100%;
 }
 .last-btn {
   width: 100%;
+
   justify-content: center;
+}
+.checkbox-subscribe{
+  margin-top: 20px;
 }
 /*  */
 
@@ -512,7 +618,9 @@ ul.add {
     padding-right: 0;
   }
 }
-
+.modal-footer-text{
+  padding: 5px;
+}
 @media (max-width: 319px) {
   .subcription h1 {
     font-size: 36px;

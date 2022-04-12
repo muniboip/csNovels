@@ -1212,6 +1212,9 @@ span.rating i {
 .side-bar-tabs .nav-link {
   display: inline-block;
 }
+.prof-img{
+
+}
 
 /*======= searchbar page end===========*/
 
@@ -1721,6 +1724,18 @@ span.rating i {
     font-size: 18px;
     padding: 2px 4px;
   }
+  .prof-subs{
+    flex-direction: column;
+    display: flex;
+  }
+  .prof-subs h2{
+    font-size: 20px;
+  }
+  .prof-subs p{
+    font-size: 15px;
+
+  }
+
 
   .timer-and-free-book-details .row {
   }
@@ -2655,6 +2670,31 @@ span.rating i {
     font-size: 16px;
   }
 }
+.subcancelbtn{
+  width: 30%;  
+  display: flex;
+}
+.subcancelbtn button{
+  margin-left: 10px;
+}
+.canceltext{
+  justify-content: center;
+  text-align: center;
+}
+.modal-dialog{
+width:50% !important;
+}
+.cancel{
+  height: 45px !important;
+  justify-content: center !important;
+  text-align: center !important;
+  vertical-align: center;
+}
+.cancelbtn{
+  height: 45px;
+  width: min-content;  
+}
+
 
 @media (max-width: 768px) {
   .section-div.most_popular .row.center-most-popular-in-mobile.spacing-adjust {

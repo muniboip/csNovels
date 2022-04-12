@@ -84,9 +84,9 @@ function HeaderDropdown({ closeDropDown, logout, authReducer }) {
       </div>
 
       {/* CS+ Advertisment  */}
-      <div className="cs-plus-image-div">
+      {/* <div className="cs-plus-image-div">
         <img src={CSGO} />
-      </div>
+      </div> */}
 
       {/* Drop Down Menu Items  */}
       {options.map((ele, idx) => {

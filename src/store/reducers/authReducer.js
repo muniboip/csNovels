@@ -7,6 +7,7 @@ import {
   UPLOAD_PROFILE_IMAGE,
   UPLOAD_PROFILE_INFORMATIONS,
   SUBSCRIPTION,
+  GET_SUBSCRIPTION_HISTORY,
   UPDATE_SUBSCRIPTION
 } from "../actions/actionType";
 
@@ -72,8 +73,7 @@ export const authReducer = (state = initialData, action) => {
         }
       };
 
-    
-
+   
     default:
       return state;
   }

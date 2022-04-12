@@ -19,6 +19,7 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import { apiUrl, baseUrl } from "../../config";
 import AdSense from "react-adsense";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage({
   favoriteThisBook,
@@ -36,6 +37,8 @@ function ProfilePage({
   const accessToken = authReducer?.accessToken;
   const [favoriteBooks, setFavoriteBooks] = useState([]);
   const imageRef = useRef();
+  var navigate = useNavigate();
+
 
   // Edit Profile States
   const [email, setEmail] = useState("");
@@ -177,6 +180,7 @@ function ProfilePage({
                       : USER_IMG
                   }
                   alt="user-image"
+                  className="prof-img"
                 />
                 <div
                   onClick={() => imageRef.current.click()}
@@ -285,6 +289,8 @@ function ProfilePage({
               <div className="package-info-div">
                 <img src={CS_PRO} style={{ marginRight: "50px" }} />
                 <img src={CS_PLUS} />
+
+              
               </div>
               <FavoritesComp title="RECENTLY READ" />
               <div className="section-div most_popular">

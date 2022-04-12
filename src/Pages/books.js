@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const book = location.state.book;
+  const book = location?.state?.book;
   const accessToken = authReducer?.accessToken;
   const bookId = location.state.book?._id;
   const [review, setReview] = useState("");
@@ -23,8 +23,10 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
   const [isLoading, setIsLoading] = useState(false);
   let CHECK = 0;
   const [allReviews, setAllReviews] = useState(book?.rates);
-
+console.log(book);
+console.log(bookId);
   useEffect(() => {
+    console.log("Munib");
     getChapterTitles(bookId, accessToken);
   }, []);
 
@@ -136,7 +138,7 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i> */}
                     <StarRatings
-                      rating={book?.totalRates}
+                      rating={book?.totalRates ===null? 0 :book?.totalRates }
                       starRatedColor="orange"
                       numberOfStars={5}
                       starSpacing="2px"
@@ -154,7 +156,14 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        navigate("/ReadBookPage", {
+                        console.log('====================================');
+                        console.log(book.chapters);
+                        console.log(book.chapters[0]);
+                        console.log(book.chapters[0]._id);
+
+                        console.log('====================================');
+                        // navigate(`/ReadBookPage/${book?._id}/${book.chapters[0]._id}`)
+                        navigate(`/ReadBookPage`, {
                           replace: true,
                           state: {
                             bookId: book?._id,

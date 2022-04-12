@@ -20,14 +20,14 @@ body {
   width: 160px;
   height: 160px;
   border-radius: 50%;
-  border: 2px solid;
+  
   position: relative;
-  bottom: -30px;
+  
 }
 
 .header {
   background: rgb(243, 243, 243);
-  padding-top: 30px;
+ padding: 10px 0 10px 0 ;
 }
 
 span.span-star {
@@ -44,6 +44,7 @@ span.span-star {
   color: gold;
 }
 
+
 .choose-image-div {
   position: absolute;
   display: flex;
@@ -52,7 +53,7 @@ span.span-star {
   background-color: white;
   padding: 5px;
   border-radius: 25px;
-  top: 143px;
+  top: 110px;
   left: 125px;
   cursor: pointer;
   border: 1px solid black;
@@ -271,6 +272,17 @@ span.lock i {
 #check-1:checked ~ .lock {
   display: none;
 }
+.check-1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20%;
+}
+
+
+.check-1 .text{
+  margin-left: 15px;
+}
 
 .check-lable input:checked ~ .lock {
   display: none;
@@ -281,11 +293,14 @@ span.lock i {
   height: 20px;
   border: 1px solid rgb(207, 207, 207);
   cursor: pointer;
+  visibility: hidden;
+  display: flex;
 }
 
 .check-lable {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .feature label {
@@ -640,6 +655,7 @@ tr {
     font-size: 11px;
     text-align: center;
     position: relative;
+
   }
 
   ul.navbar-nav.ml-auto.header-bar.my_prof_nav li.nav-item a::after {

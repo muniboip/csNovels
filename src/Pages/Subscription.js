@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { Modal } from "react-bootstrap";
@@ -19,6 +19,14 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripeCheckout from "react-stripe-checkout";
 import auth from "surge/lib/middleware/auth";
+import ClipLoader from "react-spinners/ClipLoader";
+import { css } from "@emotion/react";
+import edit_modify_icon from "../Assets/Images/edit_modify_icon.png";
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 function Subscription({ authReducer }) {
   const dispatch = useDispatch();
@@ -26,16 +34,20 @@ function Subscription({ authReducer }) {
   const [stripemodal, setStripemodal] = useState(false);
   const [packages, setpackages] = useState([]);
   const [modalcontent, setmodalcontent] = useState({});
-  const [amount, setAmount] = useState("");
-  const [interval, setinterval] = useState("one-time");
+  const [amount, setAmount] = useState("0");
+  const [interval, setinterval] = useState("monthly");
+  const [checked, setchecked] = useState(true);
   const [product, setproduct] = useState("");
   const [load, setload] = useState(true);
+  const [customdisabled, setcustomdisabled] = useState(false);
+  let [loading, setLoading] = useState(true);
+  let [color, setColor] = useState("#ffffff");
+  const [updateamount, setupdateamount] = useState(false);
+
   var navigate = useNavigate();
 
   const [isSubscribe, setisSubscribe] = useState(true);
   useEffect(() => {
-    console.log(modalcontent);
-
     setAmount(modalcontent.amount ? modalcontent.amount : "");
     setproduct(modalcontent ? modalcontent._id : "");
   }, [modalcontent]);
@@ -49,27 +61,46 @@ function Subscription({ authReducer }) {
     setisopen(false);
   };
 
-  // const submit = async () => {
-  //   setisopen(false);
-  //   setStripemodal(true);
-  // };
-  function handlechecked() {
-    interval == "one-time" ? setinterval("monthly") : setinterval("one-time");
-  }
+  const getPackages = async () => {
+    const data = await getpackage();
+
+    if (location?.state?.signup) {
+      return data;
+    } else {
+      var val = [];
+      data.map((item) => {
+        if (!item.free) {
+          val.push(item);
+        }
+      });
+      return val;
+    }
+  };
   useEffect(async () => {
     if (!authReducer.isLogin) {
       navigate("/");
     }
-    // console.log(JSON.parse(localStorage.getItem("package")), "=========");
-    setpackages(await getpackage());
+
+    setpackages(await getPackages());
   }, [load]);
+  useEffect(() => {
+    console.log(modalcontent);
+  }, [modalcontent]);
   useEffect(async () => {
     if (!authReducer.isLogin) {
       navigate("/");
     }
-    // console.log(JSON.parse(localStorage.getItem("package")), "====");
-    setpackages(await getpackage());
+
+    setpackages(await getPackages());
+
+    if (
+      authReducer.userData?.package?.amount == 15 ||
+      authReducer.userData?.package?.amount == 9
+    ) {
+      setcustomdisabled(true);
+    }
   }, []);
+
   useEffect(() => {
     if (
       modalcontent.amount != 9 &&
@@ -82,60 +113,27 @@ function Subscription({ authReducer }) {
     }
   }, [amount]);
 
-  // const options = {
-  //   clientSecret:
-  //     "sk_test_51Kfhd8GAkBzna46j4z8AqKo6pvcSTp7K5i0PVX1sXH6c958hhsEZtXpN02DMoiM2wclh76VnQ9SFshxY0jrgCT2500W6vJgnKu",
-  // };
-  // const options = {
-  //   clientSecret:
-  //     "pi_3KflWfGAkBzna46j1H8ZAcqp_secret_60Vmr4FPGE9i26sa3jsdz7KGr",
-  //   appearance: { theme: "Dark" },
-  // };
+  useEffect(() => {
+    if (checked == false) {
+      setinterval("one-time");
+    } else {
+      setinterval("monthly");
+    }
+  }, [checked]);
 
-  // const stripePromise = loadStripe(
-  //   "pk_test_51K7J3zEIGUZHqg4AQXRkFcz3FkVbBOa5MxjLqxY5z3EV5QpgJvDPmP285BvNt82FupjcBc8ZranqwU9rafxLKJTR009XtKs28i"
-  // );
-  // async function handleToken(token) {
-  //   console.log(token);
-
-  //   setkey(token.id);
-  //   setStripemodal(false);
-  //      Presubscription(
-  //     token.id,
-  //       interval,
-  //     product,
-  //     accessToken
-  //   )
-  //   // const response = await axios.post(
-  //   //   "https://ry7v05l6on.sse.codesandbox.io/checkout",
-  //   //   { token, product }
-  //   // );
-  //   // const { status } = response.data;
-  //   // console.log("Response:", response.data);
-  //   // if (status === "success") {
-  //   //   toast("Success! Check email for details", { type: "success" });
-  //   // } else {
-  //   //   toast("Something went wrong", { type: "error" });
-  //   // }
-  // }
   async function handleToken(token) {
     var response;
     if (
-      !authReducer.userData.package &&
+      !authReducer.userData?.package &&
       modalcontent.product != "Custom Product"
     ) {
-      console.log("1");
       response = await Presubscription(
         token.id,
         interval,
         product,
         authReducer.accessToken
       );
-    } else  if (
-      
-      modalcontent.product != "Custom Product"
-    ) {
-      console.log("sa");
+    } else if (modalcontent.product != "Custom Product") {
       response = await Updatesubscription(
         token.id,
         interval,
@@ -143,21 +141,16 @@ function Subscription({ authReducer }) {
         authReducer.accessToken
       );
     } else if (
-      !authReducer.userData.package &&
+      !authReducer.userData?.package &&
       modalcontent.product == "Custom Product"
-      
     ) {
-      console.log("3");
       response = await customSubscription(
         token.id,
         interval,
         amount,
         authReducer.accessToken
       );
-      
-    } else  if (
-      modalcontent.product == "Custom Product" 
-    ) {
+    } else if (modalcontent.product == "Custom Product") {
       response = await updatecustomSubscription(
         token.id,
         interval,
@@ -166,10 +159,9 @@ function Subscription({ authReducer }) {
       );
     }
 
-    console.log(response);
     if (response?.data?.success) {
       // localStorage.setItem("package",JSON.stringify(response.data.data))
-      console.log("Data", response?.data.data);
+
       dispatch({
         type: types.SUBSCRIPTION,
         payload: response?.data.data,
@@ -182,43 +174,11 @@ function Subscription({ authReducer }) {
 
       // return response.data
     }
-    // if (response?.data?.success) {
-
-    //   // localStorage.setItem("package",JSON.stringify(response.data.data))
-    //   console.log("Data",response?.data.data);
-    //   dispatch({
-    //       type: types.SUBSCRIPTION,
-    //       payload: response?.data.data,
-    //     });
-    //   toast.success(response.data.msg);
-
-    // } else {
-    //       toast.error(response.data.msg);
-    //   return response.data
-    // }
-
-    // dispatch({
-    //   type: types.SUBSCRIPTION,
-    //   payload: res,
-    // });
+    <ClipLoader color={color} loading={loading} css={override} size={150} />;
 
     setload(!load);
-
-    // setisopen(false);
-
-    // const response = await axios.post(
-    //   "https://ry7v05l6on.sse.codesandbox.io/checkout",
-    //   { token, product }
-    // );
-    // const { status } = response.data;
-    // console.log("Response:", response.data);
-    // if (status === "success") {
-    //   toast("Success! Check email for details", { type: "success" });
-    // } else {
-    //   toast("Something went wrong", { type: "error" });
-    // }
   }
-
+  const date = new Date();
   return (
     <>
       <Header />
@@ -227,8 +187,7 @@ function Subscription({ authReducer }) {
           <h1>Subscription</h1>
         </div>
         {packages.map((item, index) => {
-          console.log(item);
-          if ( item.free && location?.state?.signup) {
+          if (item.free) {
             return (
               <div class="sign-up">
                 <div class="free">free</div>
@@ -255,7 +214,7 @@ function Subscription({ authReducer }) {
                 </div>
               </div>
             );
-          } else if (authReducer.userData.package?.amount == item.amount) {
+          } else if (authReducer.userData?.package?.amount == item.amount) {
             return (
               <div class="sign-up current">
                 <div class="free currt">
@@ -275,7 +234,7 @@ function Subscription({ authReducer }) {
             );
           } else if (
             !item.free &&
-            authReducer.userData.package?.amount != item.amount
+            authReducer.userData?.package?.amount != item.amount
           ) {
             return (
               <div class="sign-up upgrade">
@@ -303,8 +262,8 @@ function Subscription({ authReducer }) {
                       openModal();
                     }}
                   >
-                    {authReducer.userData.package
-                      ? item.amount > authReducer.userData.package.amount
+                    {authReducer.userData?.package
+                      ? item.amount > authReducer.userData?.package.amount
                         ? "UPGRADE"
                         : "DOWNGRADE"
                       : "SUBSCRIBE"}
@@ -313,39 +272,68 @@ function Subscription({ authReducer }) {
                 </div>
               </div>
             );
-          } else if ( authReducer.userData.package.amount != 9 && authReducer.userData.package.amount != 15) {
-            return (
-              <div class="sign-up current">
-                <div class="free currt">
-                  <span class="span1">
-                    ${authReducer.userData.package?.amount}{" "}
-                  </span>
-                </div>
-                <div class="free-acc">
-                  <h2>
-                    Get unlimited access<br></br> to all novels!{" "}
-                  </h2>
-                  <p>charged monthly OR one time payment for 30 day access</p>
-                </div>
-                <div class="free-cs ">
-                  <button class="btn1"> SUBSCRIBED</button>
-                  <h1>Custom</h1>
-                </div>
-              </div>
-            );
           }
         })}
 
-        <button
-          type="button"
-          class="btn us-active-btn custom"
-          onClick={() => {
-            openModal();
-            setmodalcontent({ product: "Custom Product" });
-          }}
-        >
-          CUSTOM{" "}
-        </button>
+        {authReducer.userData.package ? (
+          authReducer.userData?.package?.amount != 9 &&
+          authReducer.userData?.package?.amount != 15 ? (
+            <div class="sign-up current">
+              <div class="free currt">
+                <span class="span1">
+                  ${authReducer.userData?.package?.amount}{" "}
+                </span>
+              </div>
+              <div class="free-acc">
+                <h2>
+                  Get unlimited access<br></br> to all novels!{" "}
+                </h2>
+                <p>charged monthly OR one time payment for 30 day access</p>
+              </div>
+              <div class="free-cs ">
+                <button class="btn1"> SUBSCRIBED</button>
+                <h1>Custom</h1>
+              </div>
+            </div>
+          ) : null
+        ) : null}
+
+        {customdisabled ? (
+          <div className="custom">
+            <button
+              type="button"
+              class="btn us-active-btn custome"
+              disabled
+              onClick={() => {
+                openModal();
+                setmodalcontent({ product: "Custom Product" });
+              }}
+            >
+              CUSTOM{" "}
+            </button>
+          </div>
+        ) : (
+          <div className="custom">
+            <button
+              type="button"
+              class="btn us-active-btn custome"
+              onClick={() => {
+                openModal();
+                setmodalcontent({ product: "Custom Product" });
+                setupdateamount(!updateamount)
+              }}
+            >
+              CUSTOM{" "}
+            </button>
+          </div>
+        )}
+        {customdisabled ? (
+          <span className="customText">
+            first cancel the subscribed package then try custom
+          </span>
+        ) : (
+          ""
+        )}
       </div>
 
       <Footer />
@@ -377,7 +365,7 @@ function Subscription({ authReducer }) {
         <Modal show={isopen} onHide={() => closeModal()} className="Modal">
           <Modal.Header class="modal-header">
             <Modal.Title class="modal-title">
-              {!modalcontent.amount ? "Choose Amount" : ""}
+              {/* {!modalcontent.amount ? "Choose Amount" : ""} */}
             </Modal.Title>
 
             <button
@@ -393,12 +381,37 @@ function Subscription({ authReducer }) {
           <Modal.Body>
             <div class="row">
               <div class="form-group us-form">
-                {modalcontent.amount >= 0 ? (
-                  <div className="modal-con">
-                    <h1>${modalcontent.amount}</h1>
-                    <h1>{modalcontent.name}</h1>
+                <div className="modal-con">
+                  <div
+                    onClick={() => setupdateamount(!updateamount)}
+                    className="edittag"
+                  >
+                    <img src={edit_modify_icon} className="editlogo" />I want to
+                    donate more
                   </div>
-                ) : (
+                  <div className="amountcontainer">
+                    {updateamount ? (
+                      <input
+                        type="text"
+                        value={amount}
+                        className="inputamount"
+                        onChange={(e) => {
+                          setAmount(e.target.values);
+                        }}
+                      />
+                    ) : (
+                      <h1>${modalcontent.amount}</h1>
+                    )}
+
+                    <span>/m</span>
+                    <hr></hr>
+                    <p style={{ marginTop: "-10px" }}>
+                      Billing cycle will be on the {date.getDate()} of each
+                      month
+                    </p>
+                  </div>
+                </div>
+                {/* ) : (
                   <>
                     <input
                       type="number"
@@ -414,10 +427,10 @@ function Subscription({ authReducer }) {
                       {!isSubscribe ? "Invalid " : "$"}
                     </span>
                   </>
-                )}{" "}
+                )}{" "} */}
               </div>
             </div>
-            {!modalcontent.amount ? (
+            {/* {!modalcontent.amount ? (
               <>
                 <div class="row col-row">
                   <div class="col-lg-4 px-4">
@@ -492,10 +505,13 @@ function Subscription({ authReducer }) {
                   </div>
                 </div>
               </>
-            ) : null}
+            ) : null} */}
             <div class="row">
-              <div class="form-check-inline">
-                <label class="form-check-label">
+              <div class="col-md-12 lg-12 form-check-inline">
+                <h1>{modalcontent.name ? modalcontent.name : "CUSTOM"}</h1>
+
+                
+                {/* <label class="form-check-label">
                   <input
                     type="checkbox"
                     style={{
@@ -503,12 +519,37 @@ function Subscription({ authReducer }) {
                       width: "16px",
                       marginRight: "10px",
                     }}
-                    onClick={handlechecked}
+                    onChange={() => setchecked(!checked)}
                   ></input>{" "}
                   Subscribe For Monthly
-                </label>
+                </label> */}
               </div>
+
             </div>
+            <div class="row">
+
+
+              <div class="col-md-12 lg-12 checkbox-subscribe">
+              <div className="check-lable">
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => setchecked(!checked)}
+                    id="check-1"
+                  />
+                  <span className="lock">
+                    <i className="fas fa-lock-alt"></i>
+                  </span>
+                  <label for="check-1" className="check-1">
+                    <div class="my_chk" onChange={() => setchecked(!checked)}>
+                      <span></span>
+                    </div>
+                    <div className="text">Subscribe For Monthly</div>
+                  </label>
+                </div>
+                           
+</div>
+</div>
             <div class="row">
               {/* <StripeCheckout
     stripeKey = 'pk_test_51K7J3zEIGUZHqg4AQXRkFcz3FkVbBOa5MxjLqxY5z3EV5QpgJvDPmP285BvNt82FupjcBc8ZranqwU9rafxLKJTR009XtKs28i'
@@ -527,13 +568,25 @@ function Subscription({ authReducer }) {
                 <StripeCheckout
                   stripeKey="pk_test_51K7J3zEIGUZHqg4AQXRkFcz3FkVbBOa5MxjLqxY5z3EV5QpgJvDPmP285BvNt82FupjcBc8ZranqwU9rafxLKJTR009XtKs28i"
                   token={handleToken}
-                  label={"SUBSCRIBE"}
+                  label={"CONTINUE"}
                   className="token"
+                  billingAddress={true}
                 />
               ) : null}
+              <p className="submittext">
+                Can cancel anytime in your profile {">"} Billing dashboard
+              </p>
               {/* </StripeCheckout> */}
             </div>
           </Modal.Body>
+          <Modal.Footer>
+            <p className="modal-footer-text">
+              By clicking Continue, I hereby agree that I have read and I agree
+              and consent to the <Link to="/UserAgreement">User Agreement</Link>
+              , its policies, the <Link to="/RefundPolicy">refund policy</Link>{" "}
+              and the <Link to="/PrivacyPolicy">Provacy Policy</Link>
+            </p>
+          </Modal.Footer>
         </Modal>
       </div>
     </>

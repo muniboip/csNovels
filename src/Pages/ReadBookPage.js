@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../Styles/ReadbookPage.css";
 import Header from "../Components/Header";
 import BOOK_CARD from "../Assets/Images/book-card.png";
@@ -17,7 +17,8 @@ import {
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Loader from "react-loader-spinner";
-import { BreakfastDining } from "@mui/icons-material";
+import { AirplanemodeActiveSharp, BreakfastDining } from "@mui/icons-material";
+import { min } from "moment";
 
 function ReadBookPage({
   authReducer,
@@ -33,6 +34,109 @@ function ReadBookPage({
   const [toggleContentAndOptions, setToggleContentAndOptions] = useState("");
   const accessToken = authReducer?.accessToken;
   const location = useLocation();
+  const [chaptercontent, setChaptercontent] = useState([]);
+  const [idIsSelected, setidIsSelected] = useState(false);
+  const [dataOnTop,setDataOnTop] = useState(false)
+  // useEffect(() => {
+
+  //   const arr = [...chaptercontent];
+  //   for (var i = 0; i < chaptercontent.length; i++) {
+  //     if (chaptercontent[i][0].content != booksReducer.chapterContent[0].content) {
+  //       arr[arr.length] = booksReducer.chapterContent;
+  //       setChaptercontent(arr);
+  //       break;
+  //     }
+  //   }
+  // }, [booksReducer.chapterContent]);
+
+  useEffect(() => {
+    if(dataOnTop){
+
+      const arr = [...chaptercontent];
+
+      for (var i = chaptercontent.length; i < 1; i++) {
+        arr[i] = arr[i-1]
+        // if (
+        //   chaptercontent[i][0].content != booksReducer.chapterContent[0].content
+        // ) {
+        //   arr[arr.length] = booksReducer.chapterContent;
+        //   setChaptercontent(arr);
+        //   break;
+        // }
+      }
+      arr[0] =  booksReducer.chapterContent;
+      setChaptercontent(arr);
+      setDataOnTop(false)
+    }else
+    if (idIsSelected) {
+      
+      // setChaptercontent([])
+      
+      // const data =booksReducer?.chapterContent
+      // console.log(data);
+      setChaptercontent([booksReducer?.chapterContent]);
+      window.scrollTo(0, 0)
+      setidIsSelected(false)
+    } else {
+      const arr = [...chaptercontent];
+
+      for (var i = 0; i < chaptercontent.length; i++) {
+        if (
+          chaptercontent[i][0].content != booksReducer.chapterContent[0].content
+        ) {
+          arr[arr.length] = booksReducer.chapterContent;
+          setChaptercontent(arr);
+          break;
+        }
+      }
+    }
+  }, [booksReducer.chapterContent]);
+
+
+
+console.log(chaptercontent);
+  const scrollToEnd = async () => {
+    var key = "";
+    booksReducer?.chaptersTitles.map((e, ind) => {
+      if (e.name === chaptercontent[chaptercontent.length - 1][0].content) {
+        key = ind;
+      }
+    });
+    
+    
+    await getChapterContent(
+      booksReducer?.chaptersTitles[key + 1]._id,
+      bookId,
+      accessToken
+    );
+  };
+  const scrollToTop = async()=>{
+    var key = "";
+    booksReducer?.chaptersTitles.map((e, ind) => {
+      if (e.name === chaptercontent[chaptercontent.length - 1][0].content) {
+        key = ind;
+      }
+    });
+    if(key>0){
+    setDataOnTop(true)
+    await getChapterContent(
+      booksReducer?.chaptersTitles[key - 1]._id,
+      bookId,
+      accessToken
+    );}
+  }
+  window.onscroll = function () {
+    
+    if (
+      window.innerHeight + document.documentElement.scrollTop ==
+      document.documentElement.offsetHeight
+    ) {
+      scrollToEnd();
+    }else if(document.documentElement.scrollTop == 0){
+      scrollToTop()
+    }
+  };
+
   const bookId = location.state.bookId;
   const BOOK_IMAGE = location.state.bookImage;
   const [chaptersRange, setChaptersRange] = useState([]);
@@ -40,15 +144,10 @@ function ReadBookPage({
   const [hasMoreData, setHasMoreData] = useState(true);
   const [selectedRange, setSelectedRange] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
-  const [data, setdata] = useState([]);
-  const [view, setview] = useState([]);
-  const [index, setindex] = useState(0);
-  const [hasMore, sethasMore] = useState(true);
 
   useEffect(() => {
-    console.log("2");
-
     getChapterTitles(bookId, accessToken);
+    setChaptercontent([booksReducer.chapterContent]);
   }, []);
 
   const onPressYellowButton = () => {
@@ -87,18 +186,10 @@ function ReadBookPage({
   };
 
   useEffect(() => {
-    console.log("3");
-
     _onPressFontSizeHandler();
   }, [fontSize]);
 
   useEffect(async () => {
-    console.log("4");
-    booksReducer.chaptersTitles.map(async (item,index)=>{
-      const v = await getChapterContentforscroller(item._id,bookId,accessToken)       
-      setview([...view,v])
-      
-    })
     
     if (booksReducer?.chaptersTitles?.length > 0) {
       const CHAPTERS_LENGTH = booksReducer?.chaptersTitles?.length;
@@ -110,7 +201,6 @@ function ReadBookPage({
         .map((_) => CHAPTERS?.splice(0, Math.trunc(CHAPTERS_LENGTH / 4)));
       let RANGE_SETS = [];
       let lastInnerArrLength = 0;
-
       CHAPTERS_SETS?.map((ele, idx) => {
         RANGE_SETS.push(
           `${lastInnerArrLength + 1}-${lastInnerArrLength + ele?.length}`
@@ -120,82 +210,68 @@ function ReadBookPage({
       setChaptersRange(
         RANGE_SETS?.map((ele, idx) => ({ index: idx, set: ele }))
       );
-      console.log(booksReducer.chaptersTitles[0].name, "=====================");
       getChapterContent(
-        booksReducer.chaptersTitles[0]._id,
+        booksReducer?.chaptersTitles[0]._id,
         bookId,
         accessToken
       );
-
       setChapterSets(CHAPTERS_SETS);
       setChaptersTitles(CHAPTERS_SETS[0]);
       setSelectedRange({ index: 0, set: RANGE_SETS[0] });
       setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
     }
   }, [booksReducer?.chaptersTitles]);
-  console.log(view);
-  useEffect(() => {
-    console.log("5");
 
-    if (selectedChapterId) {
-      getChapterContent(selectedChapterId, bookId, accessToken);
-    }
+  useEffect(async () => {
+    
+    
+    setidIsSelected(true);
+    getChapterContentforscroller(selectedChapterId, bookId, accessToken);
+
+    // setChaptercontent( [booksReducer.chapterContent]);
   }, [selectedChapterId]);
-console.log(booksReducer);
+
   const getOtherChapters = () => {
-    console.log("Chapter titles");
     // booksReducer.chaptersTitles.map((l, i) => {
     //   if (data[data.length - 1]) {
     //     if (l.name == data[data.length - 1][0].content) {
-    //       console.log(chaptersTitles[i]);
     //       getChapterContent(chaptersTitles[i + 1]._id, bookId, accessToken);
     //       return;
     //     }
     //   }
     // });
-    // console.log(booksReducer.chaptersTitles.indexOf({_id:data[data.length-1]._id}));
     // const content = booksReducer?.chapterContent;
     // if(content.length==0 ){
     //   sethasMore(false)
     // }
-    // console.log(content[0].content == data[data.length - 1][0].content);
-    // console.log(data[data.length - 1][0]);
-    // console.log(content[0]);
     // if (content[0].content == data[data.length - 1][0].content) {
     // } else {
     //   const dumb = [...data];
-    //   console.log(dumb);
     //   dumb[dumb.length] = content;
     //   setdata(dumb);
     // }
-    // console.log(data);
     // setindex(index + 1);
   };
-  console.log(booksReducer);
-  useEffect(() => {
-    console.log("6");
-    const content = booksReducer?.chapterContent;
-    // console.log(content[0].content == data[data.length - 1][0].content);
-    // console.log(data[data.length - 1][0]);
-    // console.log(content[0]);
-    if (data.length > 0) {
-      if (content[0].content != data[data.length - 1][0].content) {
-        const dumb = [...data];
-        dumb[dumb.length] = content;
-        setdata(dumb);
-      }
-    } else {
-      const dumb = [...data];
-      dumb[dumb.length] = content;
-      setdata(dumb);
-    }
 
-    console.log(data);
-  }, [booksReducer?.chapterContent]);
+  // useEffect(() => {
+  
+  //   const content = booksReducer?.chapterContent;
+
+  //   if (data.length > 0) {
+  //     if (content[0].content != data[data.length - 1][0].content) {
+  //       const dumb = [...data];
+  //       dumb[dumb.length] = content;
+  //       setdata(dumb);
+  //     }
+  //   } else {
+  //     const dumb = [...data];
+  //     dumb[dumb.length] = content;
+  //     setdata(dumb);
+  //   }
+  // }, [booksReducer?.chapterContent]);
 
   useEffect(() => {
-    console.log("7");
-
+    
     let newList = [];
     chaptersRange?.filter((ele, idx) => {
       if (ele?.index === selectedRange?.index) {
@@ -206,12 +282,12 @@ console.log(booksReducer);
   }, [selectedRange]);
 
   const BookReading = (books) => {
-    books = books.book;
+    
     return (
       <>
-        <h3>{`${books[0]?.content}: Title`}</h3>
+        <h3>{`${books.book[0]?.content}: Title`}</h3>
 
-        {books.map(
+        {books.book?.map(
           (ele, idx) => idx !== 0 && <p className="mt-2">{ele?.content}</p>
         )}
       </>
@@ -269,6 +345,7 @@ console.log(booksReducer);
             </div>
           </div>
         </section>
+
         <section
           className={`chapter-sec my_readbook_sec2 ${
             toggleContentAndOptions === "display_tables"
@@ -291,32 +368,38 @@ console.log(booksReducer);
               <h4>© CSNovels</h4>
             </div>
             <div className="hr_book">
-              <img src={BOOK_CARD} className="img-fluid" alt="" />
+              <img src={BOOK_IMAGE} className="img-fluid" alt="" />
             </div>
 
             {/* Book Content Paragraphs  */}
-            {/* <InfiniteScroll
-              dataLength={booksReducer?.chapterContent?.length}
-              scrollThreshold={"200px"}
-              next={() => getOtherChapters()}
-              hasMore={hasMoreData}
-              inverse={true}
-              loader={
-                <div className="mt-3 mb-3 d-flex justify-content-center align-items-center">
-                  <Loader
-                    type="TailSpin"
-                    color="darkgrey"
-                    height={40}
-                    width={40}
-                  />
-                </div>
-              }
-            > */}
             <div className="chapter_content">
+              <InfiniteScroll
+                dataLength={booksReducer?.chapterContent?.length}
+                scrollThreshold={"200px"}
+                // next={() => scrollToEnd()}
+                hasMore={hasMoreData}
+                inverse={true}
+                loader={
+                  <div className="mt-3 mb-3 d-flex justify-content-center align-items-center">
+                    <Loader
+                      type="TailSpin"
+                      color="darkgrey"
+                      height={40}
+                      width={40}
+                    />
+                  </div>
+                }
+              >
+                {chaptercontent.map((item) => {
+                  return <BookReading book={item} />;
+                })}
+              </InfiniteScroll>
+            </div>
+            {/* <div className="chapter_content">
               <InfiniteScroll
                 dataLength={100} //This is important field to render the next data
                 next={getOtherChapters}
-                // onScroll={getOtherChapters}
+                onScroll={getOtherChapters}
                 hasMore={hasMore}
                 loader={<h4>Loading...</h4>}
                 endMessage={
@@ -335,11 +418,11 @@ console.log(booksReducer);
                 //   <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
                 // }
               >
-                {booksReducer?.chapterContent.map((item, index) => {
-                  return <BookReading book={item} />;
-                })}
+                
+                 <BookReading book={booksReducer?.chapterContent} />;
+                
               </InfiniteScroll>
-            </div>
+            </div> */}
 
             {/* <h3>
                 {`${booksReducer?.chapterContent[0]?.content}: ${chaptersTitles?.[0]?.title}`}
@@ -432,6 +515,7 @@ console.log(booksReducer);
               </ul>
             </div>
           </div>
+
           <div className="table_content display_visible">
             <h4>Display Options</h4>
             <span className="close">

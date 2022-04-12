@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { accordionActionsClasses } from "@mui/material";
 import { useDispatch } from "react-redux";
 
+
 export const userLogin = (data, loginSuccess) => async (dispatch) => {
   try {
     const response = await axios.post(`${apiUrl}/users/login`, data);
@@ -36,7 +37,23 @@ export const subscription = async (token, interval, product) => {
     console.log(err.response);
   }
 };
-
+export const getpackagehistory =async (token) => {
+  try {
+    
+    const header = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.get(`${apiUrl}/subscription/getUserOrder`,header);
+return response.data.data.reverse();
+    
+  } catch (err) {
+    toast.error(err.response.data.msg);
+    console.log(err.response);
+  }
+};
 export const Presubscription = async (
   token,
   interval,
@@ -65,9 +82,74 @@ export const Presubscription = async (
     toast.error(err.response.data.msg);
   }
 };
-export const customSubscription = async(token, interval, amount, accessToken)=>{
+export const Cancelsubs = (accessToken) => async (dispatch) => {
   try {
-    console.log(token,interval,amount);
+  
+
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.delete(
+      `${apiUrl}/subscription/cancel`,
+      {},
+      header
+    );
+    
+    if (response.data.success) {
+      toast.success(response.data.msg);
+      dispatch({
+        type: types.SUBSCRIPTION,
+        payload: null,
+      });
+    } else {
+      toast.error(response.data.msg);
+    }
+  } catch (err) {
+    toast.error(err.response.data.msg);
+  }
+};
+export const Canceltimesubs = async(accessToken)  => {
+  try {
+    
+    console.log(accessToken);
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.delete(
+      `${apiUrl}/subscription/timeTocancel`,
+      
+      header
+    );
+    return response.data
+    // console.log(response.data);
+    // if (response.data.success) {
+    //   toast.success(response.data.msg);
+    //   dispatch({
+    //     type: types.SUBSCRIPTION,
+    //     payload: null,
+    //   });
+    // } else {
+    //   toast.error(response.data.msg);
+    // }
+  } catch (err) {
+    console.log(err);
+    toast.error(err.response.data.msg);
+  }
+};
+export const customSubscription = async (
+  token,
+  interval,
+  amount,
+  accessToken
+) => {
+  try {
+    console.log(token, interval, amount);
 
     const data = {
       token: token,
@@ -81,21 +163,25 @@ export const customSubscription = async(token, interval, amount, accessToken)=>{
         "Content-Type": "application/json",
       },
     };
-    
 
     const response = await axios.post(
       `${apiUrl}/subscription/createCustom`,
       data,
       header
     );
-    return response
-}catch(err){
-  toast.err(err.response.data.msg)
-}
-}
-export const updatecustomSubscription = async(token, interval, amount, accessToken)=>{
+    return response;
+  } catch (err) {
+    toast.err(err.response.data.msg);
+  }
+};
+export const updatecustomSubscription = async (
+  token,
+  interval,
+  amount,
+  accessToken
+) => {
   try {
-    console.log(token,interval,amount);
+    console.log(token, interval, amount);
 
     const data = {
       token: token,
@@ -109,44 +195,47 @@ export const updatecustomSubscription = async(token, interval, amount, accessTok
         "Content-Type": "application/json",
       },
     };
-    
 
     const response = await axios.post(
       `${apiUrl}/subscription/updateCustom`,
       data,
       header
     );
-    return response
-}catch(err){
-  toast.err(err.response.data.msg)
-}
-}
-export const Updatesubscription =
-  async (token, interval, product, accessToken) =>{
-    try {
-      const data = {
-        token: token,
-        interval: interval,
-        product: product,
-      };
-      const header = {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      };
-      console.log(data);
-
-      const response = await axios.post(
-        `${apiUrl}/subscription/updatePre`,
-        data,
-        header
-      );
-      return response
-  }catch(err){
-    toast.err(err.response.data.msg)
+    return response;
+  } catch (err) {
+    toast.err(err.response.data.msg);
   }
-}
+};
+export const Updatesubscription = async (
+  token,
+  interval,
+  product,
+  accessToken
+) => {
+  try {
+    const data = {
+      token: token,
+      interval: interval,
+      product: product,
+    };
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    console.log(data);
+
+    const response = await axios.post(
+      `${apiUrl}/subscription/updatePre`,
+      data,
+      header
+    );
+    return response;
+  } catch (err) {
+    toast.err(err.response.data.msg);
+  }
+};
 
 export const getpackage = async () => {
   try {
@@ -203,9 +292,10 @@ export const getAllBooks = (id, token) => async (dispatch) => {
   };
   try {
     // const URL = `${apiUrl}/book/getAllBooks?category=all&status=all&orderBy=popular&page=1&userId=${id}`
-    const URL = `${apiUrl}/book/getAllBooks?&userId=${id}&limit=0`;
-    const response = await axios.get(URL, header);
-    // const response = await axios.get(`${apiUrl}/book/gets?id=${id}`, header);
+    // const URL = `${apiUrl}/book/getAllBooks?&userId=${id}&limit=20`;
+    const response = await axios.get(`${apiUrl}/book/gets?id=${id}`, header);
+    // const response = await axios.get(URL, header);
+    console.log(response);
     if (response.data.success) {
       dispatch({
         type: types.GET_ALL_BOOKS,
@@ -378,11 +468,11 @@ export const getChapterContent =
     }
   };
 
-export const getChapterContentforscroller = async (
+export const getChapterContentforscroller =  (
   chapterId,
   bookId,
   token
-) => {
+) =>async (dispatch) => {
   const URL = `${apiUrl}/book/getSingleBookByBookId/${bookId}/${chapterId}`;
   const authHeader = {
     headers: {
@@ -397,11 +487,11 @@ export const getChapterContentforscroller = async (
       if (response?.data?.data.length > 0) {
         // console.log(response?.data?.data);
 
-        return response.data.data;
-        // dispatch({
-        //   type: types.GET_ONE_CHAPTER,
-        //   payload: response.data.data,
-        // });
+        // return response.data.data;
+        dispatch({
+          type: types.GET_ONE_CHAPTER,
+          payload: response.data.data,
+        });
       } else {
         toast.info("This chapter has no content.");
       }
@@ -614,6 +704,7 @@ export const postReview =
     };
     try {
       const response = await axios.post(URL, data, header);
+      console.log(response);
       if (response.data.success) {
         toast.success(`Review Posted!`);
         onSuccessPostReview();

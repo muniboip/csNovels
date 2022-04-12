@@ -10,11 +10,11 @@ function HeaderSearch({ getSearchedBooks,authReducer,text, setText }) {
   const userId = authReducer?.userData?._id;
   const _isEnterKeyPressed = (e) => {
     if (e.charCode === 13) {
-      console.log("ABC");
-      navigate("/")
+      
+      console.log(text);
       getSearchedBooks(text, userId);
 
-      navigate("/bookSearch", { state: { search: text } });
+      navigate("/bookSearch");
     }
   };
   return (

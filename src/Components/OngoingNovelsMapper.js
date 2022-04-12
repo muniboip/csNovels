@@ -67,9 +67,7 @@ function OngoingNovelsMapper({
         >
           <path d="M3,12h8c0.6,0,1-0.4,1-1V1c0-0.6-0.4-1-1-1H2C0.9,0,0,0.9,0,2v11c0,1.7,1.3,3,3,3h8c0.6,0,1-0.4,1-1 s-0.4-1-1-1H3c-0.6,0-1-0.4-1-1S2.4,12,3,12z" />
         </svg>
-        <p className="mp-book-chapter-number">{`${
-          item?.chapterCount || item?.chapters
-        } Chapters`}</p>
+        <p className="mp-book-chapter-number">Chapters</p>
         <svg
           onClick={(e) => {
             e.stopPropagation();
