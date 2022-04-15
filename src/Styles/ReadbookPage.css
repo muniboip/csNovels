@@ -95,7 +95,7 @@ a:hover {
 }
 
 .chapter-sec .container {
-  max-width: 40vw;
+  max-width: 70%;
   margin: 0 auto;
   border: 1px solid #e5e5e5;
   background-color: #fff;
@@ -213,7 +213,7 @@ img.img-fluid {
 }
 
 .chapter_content p {
-  font-size: 14px;
+  font-size: 18px;
   line-height: 25px;
   font-weight: 400;
   font-family: "Montserrat", sans-serif;

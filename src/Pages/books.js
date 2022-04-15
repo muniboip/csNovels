@@ -23,10 +23,9 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
   const [isLoading, setIsLoading] = useState(false);
   let CHECK = 0;
   const [allReviews, setAllReviews] = useState(book?.rates);
-console.log(book);
-console.log(bookId);
+
   useEffect(() => {
-    console.log("Munib");
+
     getChapterTitles(bookId, accessToken);
   }, []);
 
@@ -156,12 +155,7 @@ console.log(bookId);
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log('====================================');
-                        console.log(book.chapters);
-                        console.log(book.chapters[0]);
-                        console.log(book.chapters[0]._id);
-
-                        console.log('====================================');
+                      
                         // navigate(`/ReadBookPage/${book?._id}/${book.chapters[0]._id}`)
                         navigate(`/ReadBookPage`, {
                           replace: true,

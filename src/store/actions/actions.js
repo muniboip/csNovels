@@ -4,10 +4,13 @@ import * as types from "./actionType";
 import { toast } from "react-toastify";
 import { accordionActionsClasses } from "@mui/material";
 import { useDispatch } from "react-redux";
+import {  useNavigate } from "react-router-dom";
 
 
 export const userLogin = (data, loginSuccess) => async (dispatch) => {
   try {
+
+
     const response = await axios.post(`${apiUrl}/users/login`, data);
     if (response?.data?.success) {
       dispatch({
@@ -19,11 +22,12 @@ export const userLogin = (data, loginSuccess) => async (dispatch) => {
     }
   } catch (err) {
     toast.error(err.response.data.msg);
-    console.log(err.response);
+    
   }
 };
 export const subscription = async (token, interval, product) => {
   try {
+
     const data = {
       token: token,
       interval: interval,
@@ -31,10 +35,10 @@ export const subscription = async (token, interval, product) => {
     };
 
     const response = await axios.post(`${apiUrl}/subscription/create`, data);
-    console.log(response);
+    
   } catch (err) {
     toast.error(err.response.data.msg);
-    console.log(err.response);
+    
   }
 };
 export const getpackagehistory =async (token) => {
@@ -51,7 +55,7 @@ return response.data.data.reverse();
     
   } catch (err) {
     toast.error(err.response.data.msg);
-    console.log(err.response);
+    
   }
 };
 export const Presubscription = async (
@@ -114,7 +118,7 @@ export const Cancelsubs = (accessToken) => async (dispatch) => {
 export const Canceltimesubs = async(accessToken)  => {
   try {
     
-    console.log(accessToken);
+    
     const header = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -127,7 +131,7 @@ export const Canceltimesubs = async(accessToken)  => {
       header
     );
     return response.data
-    // console.log(response.data);
+    
     // if (response.data.success) {
     //   toast.success(response.data.msg);
     //   dispatch({
@@ -138,7 +142,7 @@ export const Canceltimesubs = async(accessToken)  => {
     //   toast.error(response.data.msg);
     // }
   } catch (err) {
-    console.log(err);
+    
     toast.error(err.response.data.msg);
   }
 };
@@ -149,14 +153,14 @@ export const customSubscription = async (
   accessToken
 ) => {
   try {
-    console.log(token, interval, amount);
+    
 
     const data = {
       token: token,
       interval: interval,
       amount: amount,
     };
-    console.log(data);
+    
     const header = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -181,14 +185,14 @@ export const updatecustomSubscription = async (
   accessToken
 ) => {
   try {
-    console.log(token, interval, amount);
+    
 
     const data = {
       token: token,
       interval: interval,
       amount: amount,
     };
-    console.log(data);
+    
     const header = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -224,7 +228,7 @@ export const Updatesubscription = async (
         "Content-Type": "application/json",
       },
     };
-    console.log(data);
+    
 
     const response = await axios.post(
       `${apiUrl}/subscription/updatePre`,
@@ -237,30 +241,46 @@ export const Updatesubscription = async (
   }
 };
 
-export const getpackage = async () => {
+export const getpackage = async (accessToken) => {
   try {
-    const response = await axios.get(`${apiUrl}/admin/packages/gets`);
+    const header = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    };
+    
+    
+    const response = await axios.get(`${apiUrl}/admin/packages/gets`,{},header);
     return response.data.data;
   } catch (err) {
     toast.error(err.response.data.msg);
-    console.log(err.response);
+    
   }
 };
 
+
 export const userSignUp = (data, loginSuccess) => async (dispatch) => {
   try {
+    
+    
     const response = await axios.post(`${apiUrl}/users/register`, data);
+    
     if (response?.data?.success) {
       dispatch({
         type: types.SIGNUP_REQUEST,
         payload: response?.data?.user,
       });
-      loginSuccess();
+      loginSuccess(true);
+
       toast.success(`Welcome, ${response.data.user.username}`);
+    }else{
+      loginSuccess(false);
+toast.warn(`${response?.data?.msg}`)
     }
   } catch (err) {
-    toast.error(err.response.data.msg);
-    console.log(err.response);
+    toast.error(err?.response?.data.msg);
+    
   }
 };
 
@@ -270,12 +290,12 @@ export const logout = () => (dispatch) => {
       type: types.LOGOUT_REQUEST,
     });
   } catch (err) {
-    console.log(err);
+    
   }
 };
 
 export const lib_book = (books) => async (dispatch) => {
-  console.log(" lib_book action in-----------", books);
+  
   dispatch({
     type: types.LIBRARY_BOOKS,
     // payload: {userName: res.data.title},
@@ -295,7 +315,7 @@ export const getAllBooks = (id, token) => async (dispatch) => {
     // const URL = `${apiUrl}/book/getAllBooks?&userId=${id}&limit=20`;
     const response = await axios.get(`${apiUrl}/book/gets?id=${id}`, header);
     // const response = await axios.get(URL, header);
-    console.log(response);
+    
     if (response.data.success) {
       dispatch({
         type: types.GET_ALL_BOOKS,
@@ -303,7 +323,7 @@ export const getAllBooks = (id, token) => async (dispatch) => {
       });
     }
   } catch (err) {
-    console.log(err.response);
+    
   }
 };
 
@@ -332,7 +352,7 @@ export const getFilteredBooks =
         });
       }
     } catch (err) {
-      console.log(err.response);
+      
     }
   };
 
@@ -362,7 +382,7 @@ export const getFavoriteBooks = (token) => async (dispatch) => {
       });
     }
   } catch (err) {
-    console.log(err.response);
+    
   }
 };
 
@@ -387,7 +407,7 @@ export const favoriteThisBook =
         });
       }
     } catch (err) {
-      console.log(err);
+      
     }
   };
 
@@ -406,14 +426,14 @@ export const getBookChapterContents =
       );
 
       if (response.data.success) {
-        console.log("Content: ", response?.data?.data);
+        
         // dispatch({
         //   type: types.GET_BOOK_CHAPTER_CONTENT,
         //   payload: response?.data?.data,
         // });
       }
     } catch (err) {
-      console.log(err.response);
+      
     }
   };
 
@@ -437,12 +457,13 @@ export const getChapterTitles = (id, token) => async (dispatch) => {
       });
     }
   } catch (err) {
-    console.log("Chapters Titles Fetching Failed. ", err);
+    
   }
 };
 
 export const getChapterContent =
   (chapterId, bookId, token) => async (dispatch) => {
+    if(chapterId && bookId){
     const URL = `${apiUrl}/book/getSingleBookByBookId/${bookId}/${chapterId}`;
     const authHeader = {
       headers: {
@@ -464,42 +485,9 @@ export const getChapterContent =
         }
       }
     } catch (err) {
-      console.log("Chapter Content Fetching Failed. ", err);
-    }
+      
+    }}
   };
-
-export const getChapterContentforscroller =  (
-  chapterId,
-  bookId,
-  token
-) =>async (dispatch) => {
-  const URL = `${apiUrl}/book/getSingleBookByBookId/${bookId}/${chapterId}`;
-  const authHeader = {
-    headers: {
-      Authorization: "Bearer " + token,
-      Accept: "application/json",
-    },
-  };
-
-  try {
-    const response = await axios.get(URL, authHeader);
-    if (response?.data?.success) {
-      if (response?.data?.data.length > 0) {
-        // console.log(response?.data?.data);
-
-        // return response.data.data;
-        dispatch({
-          type: types.GET_ONE_CHAPTER,
-          payload: response.data.data,
-        });
-      } else {
-        toast.info("This chapter has no content.");
-      }
-    }
-  } catch (err) {
-    console.log("Chapter Content Fetching Failed. ", err);
-  }
-};
 
 export const forgetPassword = (email, onSuccess) => async (dispatch) => {
   const data = {
@@ -525,7 +513,7 @@ export const forgetPassword = (email, onSuccess) => async (dispatch) => {
       toast.error(response?.data?.msg);
     }
   } catch (err) {
-    console.log(err?.response);
+    
     toast.error(err.response.data.msg);
   }
 };
@@ -554,7 +542,7 @@ export const uploadImage = (data, token) => async (dispatch) => {
       toast.error(response?.data?.msg);
     }
   } catch (err) {
-    console.log(err?.response);
+    
     toast.error(err.response.data.msg);
   }
 };
@@ -578,7 +566,7 @@ export const profileChanges = (data, token) => async (dispatch) => {
       toast.error(response?.data?.msg);
     }
   } catch (err) {
-    console.log(err?.response);
+    
     toast.error(err.response.data.msg);
   }
 };
@@ -602,7 +590,7 @@ export const updatePassword = (data, token) => async (dispatch) => {
       toast.error(response?.data?.msg);
     }
   } catch (err) {
-    console.log(err?.response);
+    
     toast.error("Something went wrong.");
   }
 };
@@ -630,7 +618,7 @@ export const updateFeatures = (data, token) => async (dispatch) => {
       toast.error("Account Features Updated!");
     }
   } catch (err) {
-    console.log(err?.response);
+    
     toast.error("Something went wrong.");
   }
 };
@@ -654,7 +642,7 @@ export const getBookmarks = (token) => async (dispatch) => {
       });
     }
   } catch (err) {
-    console.log("Failed fetching bookmarks. ", err);
+    
   }
 };
 
@@ -665,7 +653,7 @@ export const getBook = (book) => async (dispatch) => {
       payload: book,
     });
   } catch (err) {
-    console.log(err);
+    
   }
 };
 
@@ -689,7 +677,7 @@ export const googleLogin =
       }
     } catch (err) {
       onLoginFailed();
-      console.log(err);
+      
     }
   };
 
@@ -704,7 +692,7 @@ export const postReview =
     };
     try {
       const response = await axios.post(URL, data, header);
-      console.log(response);
+      
       if (response.data.success) {
         toast.success(`Review Posted!`);
         onSuccessPostReview();
@@ -713,7 +701,7 @@ export const postReview =
       }
     } catch (err) {
       toast.error(`Something went wrong in posting review.`);
-      console.log(err);
+      
     }
   };
 
@@ -722,15 +710,36 @@ export const getSearchedBooks = (keyword, userId) => async (dispatch) => {
     const response = await axios.get(
       `${apiUrl}/book/searchBooks?searchValue=${keyword}&userId=${userId}`
     );
-    console.log("...................", response.data.data);
+    
     if (response.data.success) {
       dispatch({
         type: types.GET_SEARCHED_BOOKS,
         payload: response.data.data,
       });
+    }else{
+    toast.error(`Something went wrong in searching.`);
+
     }
   } catch (err) {
     toast.error(`Something went wrong in searching.`);
-    console.log(err);
+    
   }
 };
+export const getRecentChapter =()=>async (dispatch)=>{
+  try{
+    
+    const response = await axios.get(`${apiUrl}/chapter/recentChapters`)
+    if (response.data.success) {
+      dispatch({
+        type: types.GET_RECENT_CHAPTERS,
+        payload: response.data.data,
+      });
+    }else{
+    toast.error(`Something went wrong in searching.`);
+
+    }
+  }catch (err) {
+    toast.error(`Something went wrong in searching.`);
+    
+  }
+}

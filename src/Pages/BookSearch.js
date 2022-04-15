@@ -1,43 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as actions from "../store/actions/actions";
 import StarRatings from "react-star-ratings/build/star-ratings";
 import Header from "../Components/Header";
 import Datanotexist from "../Assets/Images/Datanotexist.png";
 import { imageUrl } from "../config";
-// import "../Styles/BookSearch.css";
-const baseurl = `http://192.168.0.38:8000/public/`;
 
 const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const userId = authReducer?.userData?._id;
-  const location = useLocation();
-  // const search = (f) => {
-  //   f.preventDefault();
-  //   if (f.charCode === 13) {
-  //     getSearchedBooks(searchText, userId);
 
-  //   }
-  // };
-  // useEffect(async () => {
-  //   console.log("SEARCH");
-  //   console.log(location?.state?.search);
-  //   console.log('====================================');
-  //   console.log(location?.state);
-  //   console.log('====================================');
-  //   if (location?.state?.search) {
-  //     await getSearchedBooks(location?.state?.search, userId);
-  //   } else {
-  //     await getSearchedBooks("", userId);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log(searchText);
-  // }, [searchText]);
-  
   return (
     <>
       <Header />
@@ -61,17 +35,6 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
               </svg>
             </button>
-            {/* <input
-            placeholder="Search anything you like"
-            className="search_inp"
-            // autoComplete="off"
-            onKeyPress={(e) => search(e)}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setSearchText(e.target.value);
-            }}
-            value={searchText}
-          /> */}
 
             <input
               className="search_inp"
@@ -81,7 +44,6 @@ const BookSearch = ({ getSearchedBooks, authReducer, booksReducer }) => {
               }}
               onKeyPress={(f) => {
                 if (f.charCode === 13) {
-                  console.log("API HIT");
                   getSearchedBooks(searchText, userId);
                 }
               }}

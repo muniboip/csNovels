@@ -19,7 +19,7 @@ function FavoritesComp({ title, books, favoriteBookHandler }) {
             key={idx}
             item={item}
             favoriteBookHandler={favoriteBookHandler}
-            onClick={() => console.log("Book Card")}
+          
           />
         ))}
       </div>

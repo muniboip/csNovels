@@ -9,6 +9,7 @@ import {
   GET_SEARCHED_BOOKS,
   GET_BOOKMARKS,
   GET_BOOK,
+  GET_RECENT_CHAPTERS,
 } from "../actions/actionType";
 
 const initialState = {
@@ -69,7 +70,7 @@ export function booksReducer(state = initialState, action) {
     case FAVORITE_THIS_BOOK:
       let bookId = action.payload.data.bookId;
       let bookArrayName = action.payload.bookArrayName;
-      console.log(bookArrayName);
+      
       let index = 0;
 
       let copyArray = [];
@@ -126,6 +127,11 @@ export function booksReducer(state = initialState, action) {
         ...state,
         searchedBooks: action.payload,
       };
+    case GET_RECENT_CHAPTERS:
+      return{
+       ...state,
+        recentChapters: action.payload
+      }
     default:
       return state;
   }

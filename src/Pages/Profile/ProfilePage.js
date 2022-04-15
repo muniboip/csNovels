@@ -35,7 +35,7 @@ function ProfilePage({
   const [headerSelection, setHeaderSelection] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const accessToken = authReducer?.accessToken;
-  const [favoriteBooks, setFavoriteBooks] = useState([]);
+  const [favoriteBooks, setFavoriteBooks] = useState([booksReducer.favoritedBooks]);
   const imageRef = useRef();
   var navigate = useNavigate();
 
@@ -303,7 +303,7 @@ function ProfilePage({
                     <MostWantedNovelsMapper
                       key={idx}
                       item={item}
-                      onClick={() => console.log("Book Card")}
+                    
                     />
                   ))}
                 </div>

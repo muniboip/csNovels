@@ -7,6 +7,7 @@ import * as actions from "../store/actions/actions";
 
 function Top10Mapper({ authReducer, item, index, onClick, getBook }) {
   const navigate = useNavigate();
+  
   return (
     <div
       className="top10Books"
@@ -18,12 +19,12 @@ function Top10Mapper({ authReducer, item, index, onClick, getBook }) {
             book: item,
             bookId: item?._id,
             bookName: item?.Title,
-            bookImage: `${imageUrl}/${item?.image?.name}`,
+            bookImage: `${imageUrl}/${item?.image?.name || item?.Cover?.name}`,
           },
         });
       }}
     >
-      <img src={`${imageUrl}/${item?.image?.name}`} className="top10-image" />
+      <img  src={`${imageUrl}/${item?.image?.name || item?.Cover?.name}`} className="top10-image" />
       <p className={`top10BookColor_${index + 1}`}>
         {index + 1 < 10 ? `0${index + 1}` : index + 1}
       </p>

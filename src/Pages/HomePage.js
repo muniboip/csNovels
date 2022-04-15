@@ -38,12 +38,14 @@ import "../Styles/Mirza.css";
 import SignInSignUpModal from "../Components/SignInSignUpModal";
 import AuthModal from "../Components/AuthModal";
 import { useNavigate } from "react-router-dom";
+import { imageUrl } from "../config";
 
 const HomePage = ({
   authReducer,
   booksReducer,
   favoriteThisBook,
   getAllBooks,
+  getRecentChapter,
 }) => {
   const navigate = useNavigate();
   const accessToken = authReducer?.accessToken;
@@ -186,10 +188,13 @@ const HomePage = ({
 
   useEffect(() => {
     setIsLoading(true);
+    getRecentChapter();
+
     getAllBooks(userId, accessToken).then(() => {
       setIsLoading(false);
     });
   }, []);
+  
 
   useEffect(() => {
     let mostPopularNovels = booksReducer?.books?.filter(
@@ -248,7 +253,7 @@ const HomePage = ({
                   item={item}
                   isLoading={isLoading}
                   favoriteBookHandler={favoriteBookHandler}
-                  onClick={() => console.log("Book Card")}
+                
                 />
               ))}
             </div>
@@ -277,7 +282,7 @@ const HomePage = ({
                   item={item}
                   isLoading={isLoading}
                   favoriteBookHandler={favoriteBookHandler}
-                  onClick={() => console.log("Book Card")}
+                
                 />
               ))}
             </div>
@@ -299,7 +304,7 @@ const HomePage = ({
                     key={idx}
                     item={ele}
                     index={idx}
-                    onClick={() => console.log("Top 10")}
+                    
                   />
                 ))}
               </div>
@@ -314,7 +319,7 @@ const HomePage = ({
                     key={idx}
                     item={ele}
                     index={idx}
-                    onClick={() => console.log("Top 10")}
+                   
                   />
                 ))}
               </div>
@@ -468,7 +473,7 @@ const HomePage = ({
                       item={item}
                       isLoading={isLoading}
                       favoriteBookHandler={favoriteBookHandler}
-                      onClick={() => console.log("Book Card")}
+                      
                     />
                   ))
                 : completed?.map((item, idx) => (
@@ -477,7 +482,7 @@ const HomePage = ({
                       item={item}
                       isLoading={isLoading}
                       favoriteBookHandler={favoriteBookHandler}
-                      onClick={() => console.log("Book Card")}
+                     
                     />
                   ))}
             </div>
@@ -507,22 +512,38 @@ const HomePage = ({
               </tr>
             </thead>
             <tbody>
-              {chapterUpdates.map((item, idx) => (
+              {booksReducer.recentChapters.map((item, idx) => (
                 // <tr key={idx} className={(idx % 2 !== 0 && "color-border"}>
                 <tr key={idx} className={`${idx % 2 !== 0 && "color-border"}`}>
                   <td className="border-0 ">
-                    <p className="table-labels pl-4">{item.name} </p>
+                    <p className="table-labels pl-4">{item.book.Title} </p>
                   </td>
                   <td className="border-0 ">
-                    <p className="table-labels">{item.chapters} </p>
+                    <p className="table-labels">{item.name} </p>
                   </td>
                   <td className="border-0 ">
                     <p className="table-labels">
-                      {moment(item.date).fromNow()}{" "}
+                      {moment(item.createdAt).fromNow()}{" "}
                     </p>
                   </td>
                   <td className="border-0 read-div">
-                    <p className="text-center read-p">READ</p>
+                    <p className="text-center read-p">
+                      <a
+                        onClick={() => {
+                          navigate(`/ReadBookPage`, {
+                            replace: true,
+                            state: {
+                              bookId: item.book?._id,
+                              bookName: item.book?.Title,
+                              bookImage: `${imageUrl}/${item.book?.Cover?.name}`,
+                              chapter : item.name
+                            },
+                          });
+                        }}
+                      >
+                        READ
+                      </a>
+                    </p>
                   </td>
                 </tr>
               ))}

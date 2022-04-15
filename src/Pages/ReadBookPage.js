@@ -19,6 +19,7 @@ import { useLocation } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import { AirplanemodeActiveSharp, BreakfastDining } from "@mui/icons-material";
 import { min } from "moment";
+import { imageUrl } from "../config";
 
 function ReadBookPage({
   authReducer,
@@ -36,7 +37,7 @@ function ReadBookPage({
   const location = useLocation();
   const [chaptercontent, setChaptercontent] = useState([]);
   const [idIsSelected, setidIsSelected] = useState(false);
-  const [dataOnTop,setDataOnTop] = useState(false)
+  const [dataOnTop, setDataOnTop] = useState(false);
   // useEffect(() => {
 
   //   const arr = [...chaptercontent];
@@ -50,12 +51,12 @@ function ReadBookPage({
   // }, [booksReducer.chapterContent]);
 
   useEffect(() => {
-    if(dataOnTop){
-
+    
+    if (dataOnTop) {
       const arr = [...chaptercontent];
 
       for (var i = chaptercontent.length; i < 1; i++) {
-        arr[i] = arr[i-1]
+        arr[i] = arr[i - 1];
         // if (
         //   chaptercontent[i][0].content != booksReducer.chapterContent[0].content
         // ) {
@@ -64,19 +65,15 @@ function ReadBookPage({
         //   break;
         // }
       }
-      arr[0] =  booksReducer.chapterContent;
+      arr[0] = booksReducer.chapterContent;
       setChaptercontent(arr);
-      setDataOnTop(false)
-    }else
-    if (idIsSelected) {
+      setDataOnTop(false);
+    } else if (idIsSelected) {
       
-      // setChaptercontent([])
-      
-      // const data =booksReducer?.chapterContent
-      // console.log(data);
+     
       setChaptercontent([booksReducer?.chapterContent]);
-      window.scrollTo(0, 0)
-      setidIsSelected(false)
+      window.scrollTo(0, 0);
+      setidIsSelected(false);
     } else {
       const arr = [...chaptercontent];
 
@@ -92,9 +89,6 @@ function ReadBookPage({
     }
   }, [booksReducer.chapterContent]);
 
-
-
-console.log(chaptercontent);
   const scrollToEnd = async () => {
     var key = "";
     booksReducer?.chaptersTitles.map((e, ind) => {
@@ -102,38 +96,41 @@ console.log(chaptercontent);
         key = ind;
       }
     });
-    
-    
+
     await getChapterContent(
       booksReducer?.chaptersTitles[key + 1]._id,
       bookId,
       accessToken
     );
   };
-  const scrollToTop = async()=>{
+  const scrollToTop = async () => {
+    
     var key = "";
-    booksReducer?.chaptersTitles.map((e, ind) => {
-      if (e.name === chaptercontent[chaptercontent.length - 1][0].content) {
+    
+    if(chaptercontent.length!=0){
+      booksReducer?.chaptersTitles.map((e, ind) => {
+      if (e.name === chaptercontent[chaptercontent.length - 1][0]?.content) {
         key = ind;
       }
-    });
-    if(key>0){
-    setDataOnTop(true)
-    await getChapterContent(
-      booksReducer?.chaptersTitles[key - 1]._id,
-      bookId,
-      accessToken
-    );}
-  }
+    })
+    if (key > 0) {
+      setDataOnTop(true);
+      await getChapterContent(
+        booksReducer?.chaptersTitles[key - 1]._id,
+        bookId,
+        accessToken
+        );
+      }
+       }
+  };
   window.onscroll = function () {
-    
     if (
       window.innerHeight + document.documentElement.scrollTop ==
       document.documentElement.offsetHeight
     ) {
       scrollToEnd();
-    }else if(document.documentElement.scrollTop == 0){
-      scrollToTop()
+    } else if (document.documentElement.scrollTop == 0) {
+      scrollToTop();
     }
   };
 
@@ -190,7 +187,6 @@ console.log(chaptercontent);
   }, [fontSize]);
 
   useEffect(async () => {
-    
     if (booksReducer?.chaptersTitles?.length > 0) {
       const CHAPTERS_LENGTH = booksReducer?.chaptersTitles?.length;
       const CHAPTERS = [...booksReducer?.chaptersTitles];
@@ -210,23 +206,35 @@ console.log(chaptercontent);
       setChaptersRange(
         RANGE_SETS?.map((ele, idx) => ({ index: idx, set: ele }))
       );
+
+      setChapterSets(CHAPTERS_SETS);
+      setChaptersTitles(CHAPTERS_SETS[0]);
+      setSelectedRange({ index: 0, set: RANGE_SETS[0] });
+      setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
+      let id = booksReducer.chaptersTitles.find((e)=>e.name == location.state.chapter)?._id
+      
+      if (id){
+        getChapterContent(
+          id,
+          bookId,
+          accessToken
+        );
+      }else{
+        
+
       getChapterContent(
         booksReducer?.chaptersTitles[0]._id,
         bookId,
         accessToken
       );
-      setChapterSets(CHAPTERS_SETS);
-      setChaptersTitles(CHAPTERS_SETS[0]);
-      setSelectedRange({ index: 0, set: RANGE_SETS[0] });
-      setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
     }
+    }
+    // }
   }, [booksReducer?.chaptersTitles]);
 
   useEffect(async () => {
-    
-    
     setidIsSelected(true);
-    getChapterContentforscroller(selectedChapterId, bookId, accessToken);
+    getChapterContent(selectedChapterId, bookId, accessToken);
 
     // setChaptercontent( [booksReducer.chapterContent]);
   }, [selectedChapterId]);
@@ -254,7 +262,7 @@ console.log(chaptercontent);
   };
 
   // useEffect(() => {
-  
+
   //   const content = booksReducer?.chapterContent;
 
   //   if (data.length > 0) {
@@ -271,7 +279,6 @@ console.log(chaptercontent);
   // }, [booksReducer?.chapterContent]);
 
   useEffect(() => {
-    
     let newList = [];
     chaptersRange?.filter((ele, idx) => {
       if (ele?.index === selectedRange?.index) {
@@ -282,7 +289,6 @@ console.log(chaptercontent);
   }, [selectedRange]);
 
   const BookReading = (books) => {
-    
     return (
       <>
         <h3>{`${books.book[0]?.content}: Title`}</h3>
@@ -293,6 +299,7 @@ console.log(chaptercontent);
       </>
     );
   };
+
   return (
     <>
       <Header />
@@ -333,7 +340,7 @@ console.log(chaptercontent);
                 <img src={Logo} className="img-fluid" alt="" />
               </div>
               <div className="book-title">
-                <h3>{`${BOOK_NAME} / Characters as of ${booksReducer?.chapterContent[0]?.content}`}</h3>
+                <h3>{`${BOOK_NAME} / Characters as of ${booksReducer.chapterContent[0].content}`}</h3>
               </div>
             </div>
             <div className=" col-lg-6 right-header">
@@ -357,7 +364,14 @@ console.log(chaptercontent);
         >
           <div className="container">
             <div className="book_img">
-              <img src={BOOK_IMAGE} className="img-fluid" alt="book-image" />
+              <img
+                src={`${imageUrl}/${
+                  booksReducer?.book?.image?.name ||
+                  booksReducer?.book?.Cover?.name
+                }`}
+                className="img-fluid"
+                alt="book-image"
+              />
               <span className="original">Original</span>
             </div>
             <div className="book_text">

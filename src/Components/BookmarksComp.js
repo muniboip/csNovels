@@ -19,7 +19,7 @@ function BookmarksComp({ booksReducer, title }) {
           <RenderBookmarks
             key={idx}
             item={item}
-            onClick={() => console.log("Book Card")}
+          
           />
         ))
         :

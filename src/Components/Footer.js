@@ -42,6 +42,8 @@ function Footer({ booksReducer }) {
     {
       _id: 3,
       label: "discord",
+      link: "https://discord.gg/HwMzcdJ"
+  
     },
   ]);
 
@@ -90,9 +92,7 @@ function Footer({ booksReducer }) {
                     mode="categories"
                     item={ele}
                     key={idx}
-                    onClick={() => {
-                      console.log("test");
-                    }}
+                    
                   />
                 ))}
               </div>
@@ -107,9 +107,7 @@ function Footer({ booksReducer }) {
                   mode="sortBy"
                     item={ele}
                     key={idx}
-                    onClick={() => {
-                      console.log("test");
-                    }}
+                  
                   />
                 ))}
               </div>
@@ -123,9 +121,7 @@ function Footer({ booksReducer }) {
                   <FooterLinksMapper
                     item={ele}
                     key={idx}
-                    onClick={() => {
-                      console.log("test");
-                    }}
+                 
                   />
                 ))}
               </div>

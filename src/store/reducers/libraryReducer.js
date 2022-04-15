@@ -9,9 +9,9 @@ const initialState = [];
 export function libraryReducer(state = initialState, action) {
   switch (action.type) {
     case LIBRARY_BOOKS:
-      console.log("libraryReducer action", action);
+      
       let library_array = [action.payload];
-      console.log("libraryReducermmmmmmmmmmm", library_array);
+      
       return library_array;
     default:
       return state;

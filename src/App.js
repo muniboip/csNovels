@@ -25,24 +25,14 @@ import ProfilePage from "./Pages/Profile/ProfilePage";
 import { Provider } from "react-redux";
 import { store, persistor } from "./store/index";
 import { PersistGate } from "redux-persist/integration/react";
-import { ToastContainer, toast } from "react-toastify";
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Switch,
-  Route,
-  Link,
-} from "react-router-dom";
-import Stripe from "./Components/Stripe";
+import { ToastContainer } from "react-toastify";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { RefundPolicy } from "./Pages/RefundPolicy";
 import { UserAgreement } from "./Pages/UserAgreement";
 import { PrivacyPolicy } from "./Pages/PrivacyPolicy";
 
 function App() {
   return (
-    // <HomePage />
-    // <FilterBooks />
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ToastContainer />
@@ -56,10 +46,9 @@ function App() {
             <Route path="/ReadBookPage" element={<ReadBookPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/subscription" element={<Subscription />} />
-            <Route path="/Stripe" element={<Stripe />} />
-            <Route path="UserAgreement" element={<UserAgreement/>}/>
-            <Route path="RefundPolicy" element={<RefundPolicy/>}/>
-            <Route path="PrivacyPolicy" element={<PrivacyPolicy/>}/>
+            <Route path="UserAgreement" element={<UserAgreement />} />
+            <Route path="RefundPolicy" element={<RefundPolicy />} />
+            <Route path="PrivacyPolicy" element={<PrivacyPolicy />} />
 
             {/* <Route path="/search">
           <FilterBooks />

@@ -11,7 +11,7 @@ function HeaderSearch({ getSearchedBooks,authReducer,text, setText }) {
   const _isEnterKeyPressed = (e) => {
     if (e.charCode === 13) {
       
-      console.log(text);
+      
       getSearchedBooks(text, userId);
 
       navigate("/bookSearch");

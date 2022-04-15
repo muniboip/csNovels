@@ -15,13 +15,10 @@ const Library = ({libraryReducer}) => {
 
   useEffect(() => {
     setLibrary(libraryReducer);
-    console.log(libraryReducer,"ooooooooo",library)
-    // console.log(library)
-    // alert("SAD")
-    // console.log("SAD")
-    // console.log(booksReducer, "booksReducer",libraryReducer,"libraryReducer action")
+    
+    
   }, [libraryReducer]);
-  // console.log(libraryReducer)
+  
   return (
     <>
       <Header />
@@ -41,11 +38,11 @@ const Library = ({libraryReducer}) => {
       <div className="container">
         <div className="row">
             {library.map((item, idx) => (
-              // console.log(item)
+              
               <LibraryNovelsMapper
                 key={idx}
                 item={item}
-                onClick={() => console.log("Book Card")}
+               
               />
             ))}
         </div>

@@ -13,12 +13,11 @@ import {
   updatecustomSubscription,
 } from "../store/actions/actions";
 import * as types from "../store/actions/actionType";
-import Stripe from "../Components/Stripe";
+
 import { toast } from "react-toastify";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+
 import StripeCheckout from "react-stripe-checkout";
-import auth from "surge/lib/middleware/auth";
+
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/react";
 import edit_modify_icon from "../Assets/Images/edit_modify_icon.png";
@@ -62,7 +61,7 @@ function Subscription({ authReducer }) {
   };
 
   const getPackages = async () => {
-    const data = await getpackage();
+    const data = await getpackage(authReducer.accessToken);
 
     if (location?.state?.signup) {
       return data;
@@ -76,16 +75,14 @@ function Subscription({ authReducer }) {
       return val;
     }
   };
-  useEffect(async () => {
-    if (!authReducer.isLogin) {
-      navigate("/");
-    }
+  // useEffect(async () => {
+  //   if (!authReducer.isLogin) {
+  //     navigate("/");
+  //   }
 
-    setpackages(await getPackages());
-  }, [load]);
-  useEffect(() => {
-    console.log(modalcontent);
-  }, [modalcontent]);
+  //   setpackages(await getPackages());
+  // }, [load]);
+  
   useEffect(async () => {
     if (!authReducer.isLogin) {
       navigate("/");
@@ -172,13 +169,14 @@ function Subscription({ authReducer }) {
       toast.error(response.data.msg);
       closeModal();
 
-      // return response.data
+      
     }
     <ClipLoader color={color} loading={loading} css={override} size={150} />;
 
     setload(!load);
   }
   const date = new Date();
+  
   return (
     <>
       <Header />

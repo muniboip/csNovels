@@ -56,14 +56,20 @@ function SignInSignUpModal({
       lastName: lastName,
       firstName: firstName,
     };
+  
     userSignUp(data, onSuccess).then(() => {
-      navigate("/subscription",{state:{signup : true}})
       setIsLoading(false);
     });
   };
 
-  const onSuccess = () => {
+  const onSuccess = (status) => {
+    
     setIsVisibleModal(false);
+    if(status){
+      navigate("/subscription",{state:{signup : true}})
+    }
+      
+    
   };
   return (
     <Modal
