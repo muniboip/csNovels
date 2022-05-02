@@ -13,6 +13,9 @@ import {
   faLock,
   faCog,
   faBars,
+  faArrowAltCircleRight,
+  faArrowAltCircleLeft
+
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -20,7 +23,12 @@ import Loader from "react-loader-spinner";
 import { AirplanemodeActiveSharp, BreakfastDining } from "@mui/icons-material";
 import { min } from "moment";
 import { imageUrl } from "../config";
+import { Modal } from "react-bootstrap";
+import AdSense from "react-adsense";
+import { Adsense } from "@ctrl/react-adsense";
 
+import AddComponent from "../Components/Advertisement";
+import {  faBookmark } from "@fortawesome/free-regular-svg-icons";
 function ReadBookPage({
   authReducer,
   booksReducer,
@@ -38,6 +46,8 @@ function ReadBookPage({
   const [chaptercontent, setChaptercontent] = useState([]);
   const [idIsSelected, setidIsSelected] = useState(false);
   const [dataOnTop, setDataOnTop] = useState(false);
+  const [popup, setpopup] = useState(false);
+  const [id, setid] = useState("");
   // useEffect(() => {
 
   //   const arr = [...chaptercontent];
@@ -51,7 +61,6 @@ function ReadBookPage({
   // }, [booksReducer.chapterContent]);
 
   useEffect(() => {
-    
     if (dataOnTop) {
       const arr = [...chaptercontent];
 
@@ -69,8 +78,6 @@ function ReadBookPage({
       setChaptercontent(arr);
       setDataOnTop(false);
     } else if (idIsSelected) {
-      
-     
       setChaptercontent([booksReducer?.chapterContent]);
       window.scrollTo(0, 0);
       setidIsSelected(false);
@@ -90,6 +97,7 @@ function ReadBookPage({
   }, [booksReducer.chapterContent]);
 
   const scrollToEnd = async () => {
+    addvertisementshown();
     var key = "";
     booksReducer?.chaptersTitles.map((e, ind) => {
       if (e.name === chaptercontent[chaptercontent.length - 1][0].content) {
@@ -104,24 +112,24 @@ function ReadBookPage({
     );
   };
   const scrollToTop = async () => {
-    
+    addvertisementshown();
     var key = "";
-    
-    if(chaptercontent.length!=0){
+
+    if (chaptercontent.length != 0) {
       booksReducer?.chaptersTitles.map((e, ind) => {
-      if (e.name === chaptercontent[chaptercontent.length - 1][0]?.content) {
-        key = ind;
-      }
-    })
-    if (key > 0) {
-      setDataOnTop(true);
-      await getChapterContent(
-        booksReducer?.chaptersTitles[key - 1]._id,
-        bookId,
-        accessToken
+        if (e.name === chaptercontent[chaptercontent.length - 1][0]?.content) {
+          key = ind;
+        }
+      });
+      if (key > 0) {
+        setDataOnTop(true);
+        await getChapterContent(
+          booksReducer?.chaptersTitles[key - 1]._id,
+          bookId,
+          accessToken
         );
       }
-       }
+    }
   };
   window.onscroll = function () {
     if (
@@ -211,54 +219,40 @@ function ReadBookPage({
       setChaptersTitles(CHAPTERS_SETS[0]);
       setSelectedRange({ index: 0, set: RANGE_SETS[0] });
       setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
-      let id = booksReducer.chaptersTitles.find((e)=>e.name == location.state.chapter)?._id
-      
-      if (id){
+      let id = booksReducer.chaptersTitles.find(
+        (e) => e.name == location.state.chapter
+      )?._id;
+
+      if (id) {
+        getChapterContent(id, bookId, accessToken);
+      } else {
         getChapterContent(
-          id,
+          booksReducer?.chaptersTitles[0]._id,
           bookId,
           accessToken
         );
-      }else{
-        
-
-      getChapterContent(
-        booksReducer?.chaptersTitles[0]._id,
-        bookId,
-        accessToken
-      );
-    }
+      }
     }
     // }
   }, [booksReducer?.chaptersTitles]);
 
   useEffect(async () => {
+    
     setidIsSelected(true);
     getChapterContent(selectedChapterId, bookId, accessToken);
 
     // setChaptercontent( [booksReducer.chapterContent]);
   }, [selectedChapterId]);
 
-  const getOtherChapters = () => {
-    // booksReducer.chaptersTitles.map((l, i) => {
-    //   if (data[data.length - 1]) {
-    //     if (l.name == data[data.length - 1][0].content) {
-    //       getChapterContent(chaptersTitles[i + 1]._id, bookId, accessToken);
-    //       return;
-    //     }
-    //   }
-    // });
-    // const content = booksReducer?.chapterContent;
-    // if(content.length==0 ){
-    //   sethasMore(false)
-    // }
-    // if (content[0].content == data[data.length - 1][0].content) {
-    // } else {
-    //   const dumb = [...data];
-    //   dumb[dumb.length] = content;
-    //   setdata(dumb);
-    // }
-    // setindex(index + 1);
+  
+  const addvertisementshown = (id) => {
+    if (authReducer?.userData?.package?.product?.name != "CS Plus") {
+      setpopup(true);
+    } else {
+      if (id) {
+        setSelectedChapterId(id);
+      }
+    }
   };
 
   // useEffect(() => {
@@ -277,6 +271,11 @@ function ReadBookPage({
   //     setdata(dumb);
   //   }
   // }, [booksReducer?.chapterContent]);
+  const closeModal = () => {
+    setSelectedChapterId(id);
+
+    setpopup(false);
+  };
 
   useEffect(() => {
     let newList = [];
@@ -340,7 +339,7 @@ function ReadBookPage({
                 <img src={Logo} className="img-fluid" alt="" />
               </div>
               <div className="book-title">
-                <h3>{`${BOOK_NAME} / Characters as of ${booksReducer.chapterContent[0].content}`}</h3>
+                <h3>{`${BOOK_NAME} / Characters as of ${booksReducer?.chapterContent[0]?.content}`}</h3>
               </div>
             </div>
             <div className=" col-lg-6 right-header">
@@ -365,9 +364,8 @@ function ReadBookPage({
           <div className="container">
             <div className="book_img">
               <img
-                src={`${imageUrl}/${
-                  booksReducer?.book?.image?.name ||
-                  booksReducer?.book?.Cover?.name
+                src={`${
+                  booksReducer?.book?.Cover?.url
                 }`}
                 className="img-fluid"
                 alt="book-image"
@@ -384,6 +382,16 @@ function ReadBookPage({
             <div className="hr_book">
               <img src={BOOK_IMAGE} className="img-fluid" alt="" />
             </div>
+            
+            <FontAwesomeIcon icon={faBookmark} onClick={()=>{
+              
+              
+              const chaptertitleId = booksReducer.chaptersTitles.filter((e)=>{return e.name==booksReducer.chapterContent[0].content})
+              
+              actions.createBookmarks(bookId,chaptertitleId[0]._id,authReducer.accessToken)
+            }} />
+<FontAwesomeIcon icon={faArrowAltCircleLeft} onClick={()=>{scrollToTop()}} style={{'font-size': '30px'}}/>
+<FontAwesomeIcon icon={faArrowAltCircleRight} onClick={()=>{scrollToEnd()}} style={{'font-size': '30px'}} />
 
             {/* Book Content Paragraphs  */}
             <div className="chapter_content">
@@ -404,6 +412,16 @@ function ReadBookPage({
                   </div>
                 }
               >
+                {popup ? (
+                  <ins
+                    className="adsbygoogle"
+                    style={{ display: "block" }}
+                    data-ad-client="ca-pub-5004354455774494"
+                    data-ad-slot="7885184093"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"
+                  />
+                ) : null}
                 {chaptercontent.map((item) => {
                   return <BookReading book={item} />;
                 })}
@@ -469,7 +487,9 @@ function ReadBookPage({
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          setSelectedChapterId(ele?._id);
+                          // setSelectedChapterId(ele._id);
+                          setid(ele?._id);
+                          addvertisementshown(ele?._id);
                         }}
                         style={{
                           color:
@@ -597,6 +617,45 @@ function ReadBookPage({
           </div>
         </section>
       </div>
+
+      <Modal show={popup} onHide={() => closeModal()} className="Modal">
+        <Modal.Header class="modal-header">
+          <Modal.Title class="modal-title">
+            {/* {!modalcontent.amount ? "Choose Amount" : ""} */}
+          </Modal.Title>
+          <button
+            type="button"
+            className="close"
+            data-dismiss="modal"
+            onClick={closeModal}
+          >
+            &times;
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+          {/* <Adsense client="ca-pub-5004354455774494" slot="7885184093" /> */}
+          <amp-ad width="100vw" height="320"
+     type="adsense"
+     data-ad-client="ca-pub-5004354455774494"
+     data-ad-slot="3071342394"
+     data-auto-format="rspv"
+     data-full-width="">
+  <div overflow=""></div>
+</amp-ad>
+
+          {/* 
+          <ins
+            className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client="ca-pub-5004354455774494"
+            data-ad-slot="7885184093"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          /> */}
+
+          <AddComponent />
+        </Modal.Body>
+      </Modal>
     </>
   );
 }

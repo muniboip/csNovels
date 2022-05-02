@@ -137,6 +137,7 @@ function ProfilePage({
 
   useEffect(() => {
     setIsLoading(true);
+    
     getFavoriteBooks(accessToken).then(() => {
       getBookmarks(accessToken);
       setIsLoading(false);
@@ -292,7 +293,7 @@ function ProfilePage({
 
               
               </div>
-              <FavoritesComp title="RECENTLY READ" />
+              <FavoritesComp title="RECENTLY READ" accessToken={authReducer.accessToken}/>
               <div className="section-div most_popular">
                 <div className="mp-books-header">
                   <p className="mp-books-header-title">LAST FAVORITED</p>

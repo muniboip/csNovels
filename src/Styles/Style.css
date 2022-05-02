@@ -589,6 +589,8 @@ svg.mp-favorite-heart:active {
 }
 
 .free-book-image {
+  display: flex;
+  flex-direction: row;
   width: 187px;
   height: 248px;
   /* cursor: no; */

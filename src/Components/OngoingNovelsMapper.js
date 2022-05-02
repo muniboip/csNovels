@@ -45,7 +45,7 @@ function OngoingNovelsMapper({
     >
       <div className="og-image-and-text-container">
         <img
-          src={`${imageUrl}/${item?.image?.name || item?.Cover?.name}`}
+          src={` ${item?.Cover?.url}`}
           className="og-book-image"
         />
         {/* <p className="mp-cs-text">CS</p> */}
@@ -71,8 +71,9 @@ function OngoingNovelsMapper({
         <svg
           onClick={(e) => {
             e.stopPropagation();
+
             if (isLogin) {
-              !isLoading && favoriteBookHandler(item?._id);
+              favoriteBookHandler(item);
             } else {
               toast.info("Login Required!");
             }

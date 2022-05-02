@@ -30,6 +30,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { RefundPolicy } from "./Pages/RefundPolicy";
 import { UserAgreement } from "./Pages/UserAgreement";
 import { PrivacyPolicy } from "./Pages/PrivacyPolicy";
+import AddComponent from "./Components/Advertisement";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="UserAgreement" element={<UserAgreement />} />
             <Route path="RefundPolicy" element={<RefundPolicy />} />
             <Route path="PrivacyPolicy" element={<PrivacyPolicy />} />
+            <Route path="/add" element={<AddComponent/>}/>
 
             {/* <Route path="/search">
           <FilterBooks />

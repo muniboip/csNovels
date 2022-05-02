@@ -1,12 +1,30 @@
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import RenderBookmarks from "./RenderBookmarks";
 import BOOK_CARD from "../Assets/Images/book-card.png";
 import { connect } from "react-redux";
+import OngoingNovelsMapper from "./OngoingNovelsMapper";
+import { favoriteThisBook, getBookmarks } from "../store/actions/actions";
 
-function BookmarksComp({ booksReducer, title }) {
-  const bookmarks = booksReducer?.bookmarks;
+function BookmarksComp({ booksReducer,authReducer, title}) {
+useEffect(()=>{
+  getBookmarks(authReducer.accessToken)
+},[])
+const [isLoading, setIsLoading] = useState(false);
+
+
+const favoriteBookHandler = (_id) => {
+  const data = {
+    bookId: _id,
+  };
+
+  setIsLoading(true);
+  favoriteThisBook(data, authReducer.accessToken, "bookmarks")
+};
+
+  const bookmarks = booksReducer.bookmarks;
+
 
   return (
     <div className="section-div ongoing_novel">
@@ -16,10 +34,12 @@ function BookmarksComp({ booksReducer, title }) {
 
       <div className="row row-425 spacing-adjust">
         {bookmarks?.length > 0 ? bookmarks.map((item, idx) => (
-          <RenderBookmarks
+           
+          <OngoingNovelsMapper
             key={idx}
-            item={item}
-          
+            item={item}          
+            favoriteBookHandler={favoriteBookHandler}
+
           />
         ))
         :
@@ -31,9 +51,9 @@ function BookmarksComp({ booksReducer, title }) {
   );
 }
 
-const mapStateToProps = ({ booksReducer }) => {
+const mapStateToProps = ({ booksReducer,authReducer,libraryReducer }) => {
   return {
-    booksReducer,
+    booksReducer,authReducer,libraryReducer
   };
 };
 export default connect(mapStateToProps, null)(BookmarksComp);

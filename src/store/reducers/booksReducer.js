@@ -68,7 +68,7 @@ export function booksReducer(state = initialState, action) {
       };
 
     case FAVORITE_THIS_BOOK:
-      let bookId = action.payload.data.bookId;
+      let bookId = action.payload.data._id;
       let bookArrayName = action.payload.bookArrayName;
       
       let index = 0;
@@ -76,21 +76,21 @@ export function booksReducer(state = initialState, action) {
       let copyArray = [];
       let propertToReplace = null;
 
-      if (bookArrayName === "books") {
-        copyArray = state?.books?.slice();
-        state?.books?.map((ele, idx) => {
+      if (bookArrayName === "bookmarks") {
+        copyArray = state?.bookmarks?.slice();
+        state?.bookmarks?.map((ele, idx) => {
           if (ele?._id === bookId) {
             index = idx;
           }
         });
       } else if (bookArrayName === "favoritedBooks") {
-        copyArray = state?.favoritedBooks?.slice();
-
-        state?.favoritedBooks?.map((ele, idx) => {
-          if (ele?._id === bookId) {
-            index = idx;
-          }
-        });
+        state.favoritedBooks.indexOf()
+        var i = state.favoritedBooks.map(function(e) { return e._id; }).indexOf(bookId);
+        if(i==-1){
+          state.favoritedBooks[state?.favoritedBooks.length] = action.payload.data;
+        }else{
+          state.favoritedBooks.splice(i,1)
+        }
       } else if (bookArrayName === "filteredBooks") {
         copyArray = state?.filteredBooks?.slice();
         state?.filteredBooks?.map((ele, idx) => {
@@ -105,12 +105,11 @@ export function booksReducer(state = initialState, action) {
       if (bookArrayName === "books") {
         propertToReplace = { books: copyArray };
       } else if (bookArrayName === "favoritedBooks") {
-        copyArray.splice(index, 1);
-        propertToReplace = { favoritedBooks: copyArray };
+        propertToReplace = { favoritedBooks: state.favoritedBooks };
       } else if (bookArrayName === "filteredBooks") {
         propertToReplace = { filteredBooks: copyArray };
       }
-
+      
       return {
         ...state,
         ...propertToReplace,
@@ -128,10 +127,10 @@ export function booksReducer(state = initialState, action) {
         searchedBooks: action.payload,
       };
     case GET_RECENT_CHAPTERS:
-      return{
-       ...state,
-        recentChapters: action.payload
-      }
+      return {
+        ...state,
+        recentChapters: action.payload,
+      };
     default:
       return state;
   }

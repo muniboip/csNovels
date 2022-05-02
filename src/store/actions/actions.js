@@ -12,7 +12,16 @@ export const userLogin = (data, loginSuccess) => async (dispatch) => {
 
 
     const response = await axios.post(`${apiUrl}/users/login`, data);
+
     if (response?.data?.success) {
+      if(response.data.user?.bookmark){
+        
+        dispatch({
+          type: types.GET_BOOKMARKS,
+          payload: response?.data?.user.bookmark,
+        });
+     
+      }
       dispatch({
         type: types.LOGIN_SUCCESS,
         payload: response?.data?.user,
@@ -394,12 +403,17 @@ export const favoriteThisBook =
         Accept: "application/json",
       },
     };
+    const bookId={
+      bookId:data._id
+    }
+    
     try {
       const response = await axios.post(
         `${apiUrl}/favoriteBook/favoritOrunfavorite`,
-        data,
+        bookId,
         header
       );
+      
       if (response?.data?.success) {
         dispatch({
           type: types.FAVORITE_THIS_BOOK,
@@ -635,6 +649,30 @@ export const getBookmarks = (token) => async (dispatch) => {
 
   try {
     const response = await axios.get(URL, authHeader);
+    if (response?.data?.success) {
+      dispatch({
+        type: types.GET_BOOKMARKS,
+        payload: response.data.data,
+      });
+    }
+  } catch (err) {
+    
+  }
+};
+
+
+export const createBookmarks = (book,chapter,token) => async (dispatch) => {
+  const URL = `${apiUrl}/bookmark/create`;
+
+  const authHeader = {
+    headers: {
+      Authorization: "Bearer " + token,
+      Accept: "application/json",
+    },
+  };
+const data = {book,chapter}
+  try {
+    const response = await axios.post(URL,data, authHeader);
     if (response?.data?.success) {
       dispatch({
         type: types.GET_BOOKMARKS,

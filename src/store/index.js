@@ -1,7 +1,7 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
 import { booksReducer } from "./reducers/booksReducer";
 import { libraryReducer } from "./reducers/libraryReducer";
 import { authReducer } from "./reducers/authReducer";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web

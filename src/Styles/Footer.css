@@ -81,6 +81,7 @@
 
 .link-item {
   color: rgb(148, 148, 148);
+  
   font-size: 23px;
   text-transform: capitalize;font-family: 'Montserrat-Medium';
 }
@@ -88,6 +89,7 @@
 .link-item:hover {
   text-decoration: none;
   color: rgb(148, 148, 148);
+  font-size: 22.5px;
 }
 @media (max-width: 1366px) {
   .links-heading {

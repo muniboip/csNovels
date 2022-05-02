@@ -13,11 +13,8 @@ import {
   updatecustomSubscription,
 } from "../store/actions/actions";
 import * as types from "../store/actions/actionType";
-
 import { toast } from "react-toastify";
-
 import StripeCheckout from "react-stripe-checkout";
-
 import ClipLoader from "react-spinners/ClipLoader";
 import { css } from "@emotion/react";
 import edit_modify_icon from "../Assets/Images/edit_modify_icon.png";
@@ -26,7 +23,6 @@ const override = css`
   margin: 0 auto;
   border-color: red;
 `;
-
 function Subscription({ authReducer }) {
   const dispatch = useDispatch();
   const [isopen, setisopen] = useState(false);
@@ -34,8 +30,8 @@ function Subscription({ authReducer }) {
   const [packages, setpackages] = useState([]);
   const [modalcontent, setmodalcontent] = useState({});
   const [amount, setAmount] = useState("0");
-  const [interval, setinterval] = useState("monthly");
-  const [checked, setchecked] = useState(true);
+  const [interval, setinterval] = useState("one-time");
+  const [checked, setchecked] = useState(false);
   const [product, setproduct] = useState("");
   const [load, setload] = useState(true);
   const [customdisabled, setcustomdisabled] = useState(false);
@@ -82,7 +78,7 @@ function Subscription({ authReducer }) {
 
   //   setpackages(await getPackages());
   // }, [load]);
-  
+
   useEffect(async () => {
     if (!authReducer.isLogin) {
       navigate("/");
@@ -119,6 +115,7 @@ function Subscription({ authReducer }) {
   }, [checked]);
 
   async function handleToken(token) {
+    
     var response;
     if (
       !authReducer.userData?.package &&
@@ -163,20 +160,18 @@ function Subscription({ authReducer }) {
         type: types.SUBSCRIPTION,
         payload: response?.data.data,
       });
+      closeModal();
       toast.success(response.data.msg);
-      closeModal();
     } else {
-      toast.error(response.data.msg);
       closeModal();
-
-      
+      toast.error(response.data.msg);
     }
     <ClipLoader color={color} loading={loading} css={override} size={150} />;
 
     setload(!load);
   }
   const date = new Date();
-  
+
   return (
     <>
       <Header />
@@ -212,7 +207,7 @@ function Subscription({ authReducer }) {
                 </div>
               </div>
             );
-          } else if (authReducer.userData?.package?.amount == item.amount) {
+          } else if (authReducer.userData?.package?.amount >= item.amount) {
             return (
               <div class="sign-up current">
                 <div class="free currt">
@@ -225,7 +220,10 @@ function Subscription({ authReducer }) {
                   <p>charged monthly OR one time payment for 30 day access</p>
                 </div>
                 <div class="free-cs ">
-                  <button class="btn1"> SUBSCRIBED</button>
+                  <button class="btn1" style={{ cursor: "pointer" }}>
+                    {" "}
+                    SUBSCRIBED
+                  </button>
                   <h1>{item.name}</h1>
                 </div>
               </div>
@@ -256,7 +254,6 @@ function Subscription({ authReducer }) {
                     class="btn3"
                     onClick={() => {
                       setmodalcontent(item);
-
                       openModal();
                     }}
                   >
@@ -273,30 +270,33 @@ function Subscription({ authReducer }) {
           }
         })}
 
-        {authReducer.userData.package ? (
-          authReducer.userData?.package?.amount != 9 &&
-          authReducer.userData?.package?.amount != 15 ? (
-            <div class="sign-up current">
-              <div class="free currt">
-                <span class="span1">
-                  ${authReducer.userData?.package?.amount}{" "}
-                </span>
-              </div>
-              <div class="free-acc">
-                <h2>
-                  Get unlimited access<br></br> to all novels!{" "}
-                </h2>
-                <p>charged monthly OR one time payment for 30 day access</p>
-              </div>
-              <div class="free-cs ">
-                <button class="btn1"> SUBSCRIBED</button>
-                <h1>Custom</h1>
-              </div>
-            </div>
-          ) : null
-        ) : null}
+        {
+          // authReducer.userData.package ? (
+          //   authReducer.userData?.package?.amount != 9 &&
+          //   authReducer.userData?.package?.amount != 15 ? (
+          //     <div class="sign-up current">
+          //       <div class="free currt">
+          //         <span class="span1">
+          //           $
+          //           {/* {authReducer.userData?.package?.amount}{" "} */}
+          //         </span>
+          //       </div>
+          //       <div class="free-acc">
+          //         <h2>
+          //           Get unlimited access<br></br> to all novels!{" "}
+          //         </h2>
+          //         <p>charged monthly OR one time payment for 30 day access</p>
+          //       </div>
+          //       <div class="free-cs ">
+          //         <button class="btn1"> SUBSCRIBED</button>
+          //         <h1>Custom</h1>
+          //       </div>
+          //     </div>
+          //   ) : null
+          // ) : null
+        }
 
-        {customdisabled ? (
+        {/* {customdisabled ? (
           <div className="custom">
             <button
               type="button"
@@ -318,7 +318,7 @@ function Subscription({ authReducer }) {
               onClick={() => {
                 openModal();
                 setmodalcontent({ product: "Custom Product" });
-                setupdateamount(!updateamount)
+                setupdateamount(true)
               }}
             >
               CUSTOM{" "}
@@ -331,7 +331,7 @@ function Subscription({ authReducer }) {
           </span>
         ) : (
           ""
-        )}
+        )} */}
       </div>
 
       <Footer />
@@ -394,7 +394,7 @@ function Subscription({ authReducer }) {
                         value={amount}
                         className="inputamount"
                         onChange={(e) => {
-                          setAmount(e.target.values);
+                          setAmount(e.target.value);
                         }}
                       />
                     ) : (
@@ -508,7 +508,6 @@ function Subscription({ authReducer }) {
               <div class="col-md-12 lg-12 form-check-inline">
                 <h1>{modalcontent.name ? modalcontent.name : "CUSTOM"}</h1>
 
-                
                 {/* <label class="form-check-label">
                   <input
                     type="checkbox"
@@ -522,13 +521,10 @@ function Subscription({ authReducer }) {
                   Subscribe For Monthly
                 </label> */}
               </div>
-
             </div>
             <div class="row">
-
-
               <div class="col-md-12 lg-12 checkbox-subscribe">
-              <div className="check-lable">
+                <div className="check-lable">
                   <input
                     type="checkbox"
                     checked={checked}
@@ -545,9 +541,8 @@ function Subscription({ authReducer }) {
                     <div className="text">Subscribe For Monthly</div>
                   </label>
                 </div>
-                           
-</div>
-</div>
+              </div>
+            </div>
             <div class="row">
               {/* <StripeCheckout
     stripeKey = 'pk_test_51K7J3zEIGUZHqg4AQXRkFcz3FkVbBOa5MxjLqxY5z3EV5QpgJvDPmP285BvNt82FupjcBc8ZranqwU9rafxLKJTR009XtKs28i'

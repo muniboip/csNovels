@@ -11,7 +11,7 @@ import SignInSignUpModal from "./SignInSignUpModal";
 import AuthModal from "./AuthModal";
 import ForgetPasswordModal from "./ForgetPasswordModal";
 import { baseUrl } from "../config";
-
+import profile from "../Assets/Images/dp-placeholder.jpg"
 function Header({ authReducer }) {
   const [text, setText] = useState("");
   const [mode, setMode] = useState("login");
@@ -132,26 +132,29 @@ function Header({ authReducer }) {
                   community
                 </a>
 
-                {authReducer?.userData?.profile_img?.name ? (
-                  <img
-                    style={{
-                      width: "45px",
-                      height: "45px",
-                      borderRadius: 50,
-                    }}
-                    onClick={() => setShowDropdown(true)}
-                    src={`${baseUrl}/public/${authReducer?.userData?.profile_img?.name}`}
-                  />
+                <img
+                  style={{
+                    width: "45px",
+                    height: "45px",
+                    borderRadius: 50,
+                  }}
+                  onClick={() => setShowDropdown(true)}
+                  src={`${authReducer?.userData?.profile_img ?authReducer?.userData?.profile_img.url : profile}`}
+                />
+                {/* {authReducer?.userData?.profile_img!=null ? (
                 ) : (
                   <div
                     className="user-acc-circle"
-                    onClick={() => setShowDropdown(true)}
+                    onClick={() => {
+                      
+                      setShowDropdown(true)}}
                   >
                     <p className="user-acc-label">
-                      {authReducer?.userData?.firstName?.substring(0, 1)}
+                      
+                      
                     </p>
                   </div>
-                )}
+                )} */}
                 {showDropdown && (
                   <HeaderDropdown closeDropDown={setShowDropdown} />
                 )}

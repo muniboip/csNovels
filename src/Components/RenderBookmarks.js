@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThLarge, faBook } from "@fortawesome/free-solid-svg-icons";
 
 function OngoingNovelsMapper({ item, onClick }) {
+  
   return (
     <div className="col-lg-2 col-md-3 col-sm-4 og-books">
       <div className="og-image-and-text-container">

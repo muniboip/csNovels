@@ -28,7 +28,20 @@ function Footer({ booksReducer }) {
     },
   ]);
 
-  const [popular, setPopular] = useState([]);
+  const [popular, setPopular] = useState([
+    {
+      _id: 1,
+      label: "popular",
+    },
+    {
+      _id: 2,
+      label: "rating",
+    },
+    {
+      _id: 3,
+      label: "last updated",
+    },
+  ]);
 
   const [contact, setContact] = useState([
     {
@@ -42,8 +55,7 @@ function Footer({ booksReducer }) {
     {
       _id: 3,
       label: "discord",
-      link: "https://discord.gg/HwMzcdJ"
-  
+      link: "https://discord.gg/HwMzcdJ",
     },
   ]);
 
@@ -88,12 +100,7 @@ function Footer({ booksReducer }) {
               <div className="links-container">
                 <p className="links-heading">categories</p>
                 {categories.map((ele, idx) => (
-                  <FooterLinksMapper
-                    mode="categories"
-                    item={ele}
-                    key={idx}
-                    
-                  />
+                  <FooterLinksMapper mode="categories" item={ele} key={idx} />
                 ))}
               </div>
             </div>
@@ -102,14 +109,9 @@ function Footer({ booksReducer }) {
             <div className="col-lg-2 col-md-2 col-sm-3">
               <div className="links-container">
                 <p className="links-heading">popular</p>
-                {popular?.map((ele, idx) => (
-                  <FooterLinksMapper
-                  mode="sortBy"
-                    item={ele}
-                    key={idx}
-                  
-                  />
-                ))}
+                {popular?.map((ele, idx) => {
+                   (<FooterLinksMapper mode="sortBy" item={ele} key={idx} />)
+                })}
               </div>
             </div>
 
@@ -118,11 +120,7 @@ function Footer({ booksReducer }) {
               <div className="links-container">
                 <p className="links-heading">contact</p>
                 {contact?.map((ele, idx) => (
-                  <FooterLinksMapper
-                    item={ele}
-                    key={idx}
-                 
-                  />
+                  <FooterLinksMapper item={ele} key={idx} />
                 ))}
               </div>
             </div>

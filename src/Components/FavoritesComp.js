@@ -1,11 +1,21 @@
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState } from "react";
 import OngoingNovelsMapper from "./OngoingNovelsMapper";
 import BOOK_CARD from "../Assets/Images/book-card.png";
 import { connect } from "react-redux";
+import { favoriteThisBook } from "../store/actions/actions";
 
-function FavoritesComp({ title, books, favoriteBookHandler }) {
+function FavoritesComp({ title, books ,accessToken}) {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const favoriteBookHandler = (item) => {
+    
+
+    
+    favoriteThisBook(item, accessToken, "favoritedBooks")
+  };
+
   return (
     <div className="section-div ongoing_novel">
       <div className="section-heading-div">

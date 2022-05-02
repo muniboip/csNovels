@@ -11,7 +11,13 @@ import ReviewsMapper from "../Components/ReviewsMapper";
 import * as actions from "../store/actions/actions";
 import { toast } from "react-toastify";
 
-function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
+function Books({
+  authReducer,
+  booksReducer,
+  getChapterTitles,
+  postReview,
+  favoriteThisBook,
+}) {
   const location = useLocation();
   const navigate = useNavigate();
   const book = location?.state?.book;
@@ -25,7 +31,6 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
   const [allReviews, setAllReviews] = useState(book?.rates);
 
   useEffect(() => {
-
     getChapterTitles(bookId, accessToken);
   }, []);
 
@@ -62,6 +67,10 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
     setReview("");
     setRating(0);
   };
+
+  const favoriteBookHandler = (item) => {
+    favoriteThisBook(item, accessToken, "favoritedBooks");
+  };
   return (
     <>
       <Header />
@@ -70,10 +79,7 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
           <div className="book-desc-box">
             <div className="row">
               <div className="col-md-3 book-img-col">
-                <img
-                  src={`${imageUrl}/${book?.image?.name || book?.Cover?.name}`}
-                  class="book-image"
-                ></img>
+                <img src={`${book?.Cover?.url}`} class="book-image"></img>
               </div>
               <div className="col-md-9">
                 <h1 className="book-head">{book?.Title}</h1>
@@ -124,7 +130,7 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                           <path d="M3,12h8c0.6,0,1-0.4,1-1V1c0-0.6-0.4-1-1-1H2C0.9,0,0,0.9,0,2v11c0,1.7,1.3,3,3,3h8c0.6,0,1-0.4,1-1 s-0.4-1-1-1H3c-0.6,0-1-0.4-1-1S2.4,12,3,12z"></path>
                         </svg>
                       </span>
-                      <span className="head">{`${book?.chapterCount} Chapters`}</span>
+                      <span className="head">{`${book?.chapters.length} Chapters`}</span>
                     </div>
                   </div>
                   <div className="col-md-3"></div>
@@ -137,15 +143,15 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i> */}
                     <StarRatings
-                      rating={book?.totalRates ===null? 0 :book?.totalRates }
+                      rating={book?.avgRate === null ? 0 : book?.avgRate}
                       starRatedColor="orange"
                       numberOfStars={5}
                       starSpacing="2px"
                       name="rating"
                     />
                   </span>
-                  <span className="rate">{`${book?.totalRates}`}</span>
-                  <span className="rating">{`${book?.rates?.length} REVIEWS`}</span>
+                  <span className="rate">{`${book?.avgRate}`}</span>
+                  <span className="rating">{`${book?.comments?.length} REVIEWS`}</span>
                 </div>
 
                 <div className="read-buttons">
@@ -155,14 +161,14 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                      
+
                         // navigate(`/ReadBookPage/${book?._id}/${book.chapters[0]._id}`)
                         navigate(`/ReadBookPage`, {
                           replace: true,
                           state: {
                             bookId: book?._id,
                             bookName: book?.Title,
-                            bookImage: `${imageUrl}/${book?.image?.name}`,
+                            bookImage: `${book?.Cover?.url}`,
                           },
                         });
                       }}
@@ -170,7 +176,13 @@ function Books({ authReducer, booksReducer, getChapterTitles, postReview }) {
                       Read now
                     </a>
                   </button>
-                  <span className="heart">
+
+                  <span
+                    className="heart"
+                    onClick={() => {
+                      favoriteBookHandler(book);
+                    }}
+                  >
                     <i class="far fa-heart"></i>
                   </span>
                 </div>

@@ -57,7 +57,7 @@ const HomePage = ({
     title:
       "Book Title Goes Here On Even Two Lines Test Test Test Test Test Test Test Two Lines Even Test Test Test Test Test Test Test",
     category: "urban",
-    heading: "great marshal",
+    heading: "great l",
     chapters: 3471,
     status: "completed",
     image: BOOK_CARD,
@@ -347,9 +347,9 @@ const HomePage = ({
                   <span className="gradient-blue-ball" />
                   <span className="gradient-green-ball" />
                   <span className="gradient-red-ball" />
-                  <div className="three-lines">
+                  {/* <div className="three-lines">
                     <img src={THREE_LINES} className="three-lines-image" />
-                  </div>
+                  </div> */}
                   <div className="free-book-image">
                     <div>
                       <p className="free-book-status">
@@ -512,18 +512,18 @@ const HomePage = ({
               </tr>
             </thead>
             <tbody>
-              {booksReducer.recentChapters.map((item, idx) => (
+              {booksReducer?.recentChapters?.map((item, idx) => (
                 // <tr key={idx} className={(idx % 2 !== 0 && "color-border"}>
                 <tr key={idx} className={`${idx % 2 !== 0 && "color-border"}`}>
                   <td className="border-0 ">
-                    <p className="table-labels pl-4">{item.book.Title} </p>
+                    <p className="table-labels pl-4">{item?.book?.Title} </p>
                   </td>
                   <td className="border-0 ">
-                    <p className="table-labels">{item.name} </p>
+                    <p className="table-labels">{item?.name} </p>
                   </td>
                   <td className="border-0 ">
                     <p className="table-labels">
-                      {moment(item.createdAt).fromNow()}{" "}
+                      {moment(item?.createdAt).fromNow()}{" "}
                     </p>
                   </td>
                   <td className="border-0 read-div">
@@ -535,7 +535,9 @@ const HomePage = ({
                             state: {
                               bookId: item.book?._id,
                               bookName: item.book?.Title,
-                              bookImage: `${imageUrl}/${item.book?.Cover?.name}`,
+                              bookImage: `${item.book?.Cover?.url}`,
+                              // bookImage: `${imageUrl}/${item.book?.Cover?.url}`,
+
                               chapter : item.name
                             },
                           });
