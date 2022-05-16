@@ -11,6 +11,8 @@ import * as actions from "../../store/actions/actions";
 import { connect, useDispatch } from "react-redux";
 import { Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
+import { PaymentRequestButtonElement } from "@stripe/react-stripe-js";
+import {BsDownload } from 'react-icons/bs';
 
 const BillingComponent = ({ authReducer }) => {
   const [packages, setpackages] = useState([]);
@@ -26,20 +28,19 @@ const BillingComponent = ({ authReducer }) => {
     if (!authReducer.isLogin) {
       navigate("/");
     }
-    
+
     const data = await getpackage();
 
     data.map((item) => {
-      if (item._id == authReducer?.userData?.package?.product._id) {
+      if (item?._id == authReducer?.userData?.package?.product?._id) {
         setpackages(item);
         Object.assign(packages, authReducer?.userData?.package);
       }
     });
 
     sethistor(await getpackagehistory(authReducer.accessToken));
-  }, [isload]);
+  }, []);
 
-  useEffect(() => {}, [isload]);
   const openModal = () => {
     setisopen(true);
   };
@@ -223,8 +224,19 @@ const BillingComponent = ({ authReducer }) => {
               {histor.map((item) => {
                 return (
                   <tr>
-                    <td>#{item._id.slice(item._id.length - 5)}</td>
-                    <td>{item.amount} USD$</td>
+                    <td>
+                      <a href={item.invoice} target="_blank">
+                        <button
+                          type="button"
+                          class="btn  invoicebtn"
+                        >
+                          
+                          <BsDownload style={{"width":"40px !important","height":"10px !important"}}/>
+
+                        </button>
+                      </a>
+                    </td>
+                    <td>{item.amount} $</td>
                     <td>{item.status}</td>
                     <td>{item.start.split("T")[0]}</td>
                     <td>{item.end.split("T")[0]}</td>

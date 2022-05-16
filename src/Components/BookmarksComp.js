@@ -20,12 +20,17 @@ const favoriteBookHandler = (_id) => {
   };
 
   setIsLoading(true);
-  favoriteThisBook(data, authReducer.accessToken, "bookmarks")
+  favoriteThisBook(data, authReducer.accessToken, "favoritedBooks")
 };
 
   const bookmarks = booksReducer.bookmarks;
 
-
+//   {
+//     Cover:{url:item.book.Cover.url},
+//     _id:item.book._id,
+//     Title:item.book.Title,
+//     chapter:item.chapter
+// }
   return (
     <div className="section-div ongoing_novel">
       <div className="section-heading-div">
@@ -37,8 +42,11 @@ const favoriteBookHandler = (_id) => {
            
           <OngoingNovelsMapper
             key={idx}
-            item={item}          
+            item={item
+              
+            }          
             favoriteBookHandler={favoriteBookHandler}
+            from="Bookmarks"
 
           />
         ))

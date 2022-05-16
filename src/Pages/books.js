@@ -71,6 +71,7 @@ function Books({
   const favoriteBookHandler = (item) => {
     favoriteThisBook(item, accessToken, "favoritedBooks");
   };
+  
   return (
     <>
       <Header />
@@ -130,7 +131,7 @@ function Books({
                           <path d="M3,12h8c0.6,0,1-0.4,1-1V1c0-0.6-0.4-1-1-1H2C0.9,0,0,0.9,0,2v11c0,1.7,1.3,3,3,3h8c0.6,0,1-0.4,1-1 s-0.4-1-1-1H3c-0.6,0-1-0.4-1-1S2.4,12,3,12z"></path>
                         </svg>
                       </span>
-                      <span className="head">{`${book?.chapters.length} Chapters`}</span>
+                      <span className="head">{`${book?.chapters?.length} Chapters`}</span>
                     </div>
                   </div>
                   <div className="col-md-3"></div>
@@ -143,7 +144,7 @@ function Books({
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i> */}
                     <StarRatings
-                      rating={book?.avgRate === null ? 0 : book?.avgRate}
+                      rating={book?.avgRate === 0 ? 0 : book?.avgRate}
                       starRatedColor="orange"
                       numberOfStars={5}
                       starSpacing="2px"
@@ -163,10 +164,11 @@ function Books({
                         e.stopPropagation();
 
                         // navigate(`/ReadBookPage/${book?._id}/${book.chapters[0]._id}`)
-                        navigate(`/ReadBookPage`, {
+                        
+                        navigate(`/ReadBookPage/${book?._id}/${booksReducer.chaptersTitles[0]._id}`, {
                           replace: true,
                           state: {
-                            bookId: book?._id,
+                        
                             bookName: book?.Title,
                             bookImage: `${book?.Cover?.url}`,
                           },

@@ -32,13 +32,17 @@ function ProfilePage({
   updateFeatures,
   getBookmarks,
 }) {
-  const [headerSelection, setHeaderSelection] = useState(1);
+  const [headerSelection, setHeaderSelection] = useState(
+    window.location.href.split("#")[1]
+  );
   const [isLoading, setIsLoading] = useState(false);
   const accessToken = authReducer?.accessToken;
-  const [favoriteBooks, setFavoriteBooks] = useState([booksReducer.favoritedBooks]);
+  const [favoriteBooks, setFavoriteBooks] = useState([
+   booksReducer.bookmarks
+  ]);
   const imageRef = useRef();
   var navigate = useNavigate();
-
+  
 
   // Edit Profile States
   const [email, setEmail] = useState("");
@@ -128,16 +132,14 @@ function ProfilePage({
     const data = {
       bookId: _id,
     };
+    console.log(data);
 
-    setIsLoading(true);
-    favoriteThisBook(data, accessToken, "favoritedBooks").then(() => {
-      setIsLoading(false);
-    });
+    favoriteThisBook(data, accessToken, "favoritedBooks");
   };
 
   useEffect(() => {
     setIsLoading(true);
-    
+
     getFavoriteBooks(accessToken).then(() => {
       getBookmarks(accessToken);
       setIsLoading(false);
@@ -145,6 +147,7 @@ function ProfilePage({
   }, []);
 
   useEffect(() => {
+    
     setFavoriteBooks(booksReducer?.favoritedBooks);
   }, [booksReducer?.favoritedBooks]);
 
@@ -166,6 +169,13 @@ function ProfilePage({
     }
   };
 
+  useEffect(() => {
+    setHeaderSelection(parseInt(window.location.href.split("#")[1]));
+  }, [window.location.href]);
+  
+useEffect(()=>{
+  console.log("booksReducer?.favoritedBooks");
+},[booksReducer?.favoritedBooks])
   return (
     <div>
       <Header />
@@ -232,79 +242,77 @@ function ProfilePage({
       /> */}
       <div className="container">
         <ul className="navbar-nav ml-auto header-bar my_prof_nav">
-          <li className="nav-item " onClick={() => setHeaderSelection(1)}>
+          <li className="nav-item ">
             <a
               className={`nav-link hover-effect ${
                 headerSelection === 1 && "active"
               }`}
-              href="#"
+              href="#1"
             >
               Dashboard
             </a>
           </li>
-          <li className="nav-item" onClick={() => setHeaderSelection(2)}>
+          <li className="nav-item">
             <a
               className={`nav-link hover-effect ${
                 headerSelection === 2 && "active"
               }`}
-              href="#"
+              href="#2"
             >
               Favorites
             </a>
           </li>
-          <li className="nav-item" onClick={() => setHeaderSelection(3)}>
+          <li className="nav-item">
             <a
               className={`nav-link hover-effect ${
                 headerSelection === 3 && "active"
               }`}
-              href="#"
+              href="#3"
             >
               Bookmarks
             </a>
           </li>
-          <li className="nav-item" onClick={() => setHeaderSelection(4)}>
+          <li className="nav-item">
             <a
               className={`nav-link hover-effect ${
                 headerSelection === 4 && "active"
               }`}
-              href="#"
+              href="#4"
             >
               Billing
             </a>
           </li>
-          <li className="nav-item" onClick={() => setHeaderSelection(5)}>
+          <li className="nav-item">
             <a
               className={`nav-link hover-effect ${
                 headerSelection === 5 && "active"
               }`}
-              href="#"
+              href="#5"
             >
               Settings
             </a>
           </li>
         </ul>
         <div className="my_prof_div">
-          {headerSelection === 1 && (
+          {headerSelection == 1 && (
             <>
               <FreeBookComp />
               <div className="package-info-div">
                 <img src={CS_PRO} style={{ marginRight: "50px" }} />
                 <img src={CS_PLUS} />
-
-              
               </div>
-              <FavoritesComp title="RECENTLY READ" accessToken={authReducer.accessToken}/>
+              <FavoritesComp
+                title="RECENTLY READ"
+                accessToken={authReducer.accessToken}
+              />
               <div className="section-div most_popular">
                 <div className="mp-books-header">
                   <p className="mp-books-header-title">LAST FAVORITED</p>
                 </div>
 
                 <div className="row center-most-popular-in-mobile spacing-adjust">
-                  {favorites?.map((item, idx) => (
-                    <MostWantedNovelsMapper
-                      key={idx}
-                      item={item}
-                    
+                  {favoriteBooks?.map((item, idx) => (
+                    <MostWantedNovelsMapper key={idx} item={item}   favoriteBookHandler={favoriteBookHandler}
                     />
                   ))}
                 </div>
@@ -312,7 +320,7 @@ function ProfilePage({
             </>
           )}
 
-          {headerSelection === 2 &&
+          {headerSelection == 2 &&
             (favoriteBooks?.length > 0 ? (
               <FavoritesComp
                 books={favoriteBooks}
@@ -324,11 +332,11 @@ function ProfilePage({
               </div>
             ))}
 
-          {headerSelection === 3 && <BookmarksComp />}
+          {headerSelection == 3 && <BookmarksComp />}
 
-          {headerSelection === 4 && <BillingComponent />}
+          {headerSelection == 4 && <BillingComponent />}
 
-          {headerSelection === 5 && (
+          {headerSelection == 5 && (
             <>
               <div className="my_edit_component sec-1">
                 <h1>Edit Profile</h1>

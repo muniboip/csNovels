@@ -44,7 +44,7 @@ function App() {
             <Route path="/bookSearch" element={<BookSearch />} />
             <Route path="/library" element={<Library />} />
             <Route path="/book" element={<Books />} />
-            <Route path="/ReadBookPage" element={<ReadBookPage />} />
+            <Route path="/ReadBookPage/:boookid/:chapterid" element={<ReadBookPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/subscription" element={<Subscription />} />
             <Route path="UserAgreement" element={<UserAgreement />} />

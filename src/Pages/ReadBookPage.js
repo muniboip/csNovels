@@ -8,17 +8,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfiniteScroll from "react-infinite-scroll-component";
 import $ from "jquery";
 import * as actions from "../store/actions/actions";
+import filledBookmark from "../Assets/filledbookmark.jpg";
+import unfilledBookmark from "../Assets/unfilledbookmark.jpg";
+
 import {
   faTimes,
   faLock,
   faCog,
   faBars,
   faArrowAltCircleRight,
-  faArrowAltCircleLeft
-
+  faArrowAltCircleLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import { AirplanemodeActiveSharp, BreakfastDining } from "@mui/icons-material";
 import { min } from "moment";
@@ -28,13 +30,15 @@ import AdSense from "react-adsense";
 import { Adsense } from "@ctrl/react-adsense";
 
 import AddComponent from "../Components/Advertisement";
-import {  faBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 function ReadBookPage({
   authReducer,
   booksReducer,
   getChapterContent,
   getChapterTitles,
-  getChapterContentforscroller,
+  createBookmarks,
+  getBookmarks,
+  
 }) {
   const [fontSize, setFontSize] = useState(14);
   const [chaptersTitles, setChaptersTitles] = useState(false);
@@ -48,6 +52,9 @@ function ReadBookPage({
   const [dataOnTop, setDataOnTop] = useState(false);
   const [popup, setpopup] = useState(false);
   const [id, setid] = useState("");
+  const BOOK_IMAGE = location.state?.bookImage;
+  const BOOK_NAME = location.state?.bookName;
+
   // useEffect(() => {
 
   //   const arr = [...chaptercontent];
@@ -97,14 +104,23 @@ function ReadBookPage({
   }, [booksReducer.chapterContent]);
 
   const scrollToEnd = async () => {
-    addvertisementshown();
     var key = "";
     booksReducer?.chaptersTitles.map((e, ind) => {
       if (e.name === chaptercontent[chaptercontent.length - 1][0].content) {
         key = ind;
       }
     });
-
+    navigate(
+      `/ReadBookPage/${bookId}/${booksReducer?.chaptersTitles[key + 1]._id}`,
+      {
+        replace: true,
+        state: {
+          bookId: bookId,
+          bookName: BOOK_NAME,
+          bookImage: BOOK_IMAGE,
+        },
+      }
+    );
     await getChapterContent(
       booksReducer?.chaptersTitles[key + 1]._id,
       bookId,
@@ -112,7 +128,6 @@ function ReadBookPage({
     );
   };
   const scrollToTop = async () => {
-    addvertisementshown();
     var key = "";
 
     if (chaptercontent.length != 0) {
@@ -121,8 +136,23 @@ function ReadBookPage({
           key = ind;
         }
       });
+
       if (key > 0) {
         setDataOnTop(true);
+        navigate(
+          `/ReadBookPage/${bookId}/${
+            booksReducer?.chaptersTitles[key - 1]._id
+          }`,
+          {
+            replace: true,
+            state: {
+              bookId: bookId,
+              bookName: BOOK_NAME,
+              bookImage: BOOK_IMAGE,
+            },
+          }
+        );
+
         await getChapterContent(
           booksReducer?.chaptersTitles[key - 1]._id,
           bookId,
@@ -131,21 +161,22 @@ function ReadBookPage({
       }
     }
   };
-  window.onscroll = function () {
-    if (
-      window.innerHeight + document.documentElement.scrollTop ==
-      document.documentElement.offsetHeight
-    ) {
-      scrollToEnd();
-    } else if (document.documentElement.scrollTop == 0) {
-      scrollToTop();
-    }
-  };
 
-  const bookId = location.state.bookId;
-  const BOOK_IMAGE = location.state.bookImage;
+  if (authReducer?.userData?.package?.product?.name == "CS Plus") {
+    window.onscroll = function () {
+      if (
+        window.innerHeight + document.documentElement.scrollTop ==
+        document.documentElement.offsetHeight
+      ) {
+        scrollToEnd();
+      } else if (document.documentElement.scrollTop == 0) {
+        scrollToTop();
+      }
+    };
+  }
+  const bookId = window.location.pathname.split("/")[2];
   const [chaptersRange, setChaptersRange] = useState([]);
-  const BOOK_NAME = location.state.bookName;
+
   const [hasMoreData, setHasMoreData] = useState(true);
   const [selectedRange, setSelectedRange] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
@@ -193,7 +224,7 @@ function ReadBookPage({
   useEffect(() => {
     _onPressFontSizeHandler();
   }, [fontSize]);
-
+const [data,setdata] = useState("")
   useEffect(async () => {
     if (booksReducer?.chaptersTitles?.length > 0) {
       const CHAPTERS_LENGTH = booksReducer?.chaptersTitles?.length;
@@ -218,59 +249,54 @@ function ReadBookPage({
       setChapterSets(CHAPTERS_SETS);
       setChaptersTitles(CHAPTERS_SETS[0]);
       setSelectedRange({ index: 0, set: RANGE_SETS[0] });
-      setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
-      let id = booksReducer.chaptersTitles.find(
-        (e) => e.name == location.state.chapter
-      )?._id;
-
-      if (id) {
-        getChapterContent(id, bookId, accessToken);
+      if (location.state.chapterId) {
+        setSelectedChapterId(location.state.chapterId);
       } else {
-        getChapterContent(
-          booksReducer?.chaptersTitles[0]._id,
-          bookId,
-          accessToken
-        );
+        setSelectedChapterId(booksReducer?.chaptersTitles[0]?._id);
       }
+
+      // let id;
+      // if (location.state?.chapter?.trim().replaceAll(" ", "").length == 24) {
+      //   id = location.state.chapter;
+      // }
+      // id = booksReducer.chaptersTitles.find(
+      //   (e) => e.name == id
+      // )?._id;
+
+      // if (id) {
+      //   getChapterContent(id, bookId, accessToken);
+      // } else {
+      //   getChapterContent(
+      //     window.location.pathname.split("/")[3],
+      //     bookId,
+      //     accessToken
+      //   );
+      // }
     }
     // }
   }, [booksReducer?.chaptersTitles]);
 
   useEffect(async () => {
-    
     setidIsSelected(true);
-    getChapterContent(selectedChapterId, bookId, accessToken);
+    getChapterContent(
+      window.location.pathname.split("/")[3],
+      bookId,
+      accessToken
+    );
+    
+    setdata(booksReducer.bookmarks.filter(
+      (e) => e.chapter._id == window.location.pathname.split("/")[3]
+    )
+  )
+  }, [window.location.pathname]);
+  useEffect(()=>{
+    
+    setdata(booksReducer.bookmarks.filter(
+      (e) => e.chapter._id == window.location.pathname.split("/")[3]
+    ))
+    
+  },[booksReducer?.bookmarks])
 
-    // setChaptercontent( [booksReducer.chapterContent]);
-  }, [selectedChapterId]);
-
-  
-  const addvertisementshown = (id) => {
-    if (authReducer?.userData?.package?.product?.name != "CS Plus") {
-      setpopup(true);
-    } else {
-      if (id) {
-        setSelectedChapterId(id);
-      }
-    }
-  };
-
-  // useEffect(() => {
-
-  //   const content = booksReducer?.chapterContent;
-
-  //   if (data.length > 0) {
-  //     if (content[0].content != data[data.length - 1][0].content) {
-  //       const dumb = [...data];
-  //       dumb[dumb.length] = content;
-  //       setdata(dumb);
-  //     }
-  //   } else {
-  //     const dumb = [...data];
-  //     dumb[dumb.length] = content;
-  //     setdata(dumb);
-  //   }
-  // }, [booksReducer?.chapterContent]);
   const closeModal = () => {
     setSelectedChapterId(id);
 
@@ -287,10 +313,37 @@ function ReadBookPage({
     setChaptersTitles(newList);
   }, [selectedRange]);
 
+ 
+  
+  const bookMarkthebook = async () => {
+    const res =await  createBookmarks(
+      bookId,
+      window.location.pathname.split("/")[3],
+      authReducer.accessToken
+    );
+    
+    // if (res)setdata(window.location.pathname.split("/")[3])
+    // else setdata('')
+    getBookmarks(authReducer.accessToken);
+    
+  };
+console.log(data.length);
+  const navigate = useNavigate();
+
   const BookReading = (books) => {
     return (
       <>
-        <h3>{`${books.book[0]?.content}: Title`}</h3>
+        <h3>
+          {`${books.book[0]?.content}: Title`} {"   "}
+          
+          <span onClick={() => bookMarkthebook()}>
+            {data.length == 0 ? (
+              <img src={unfilledBookmark} style={{ height: "30px" }} />
+            ) : (
+              <img src={filledBookmark} style={{ height: "30px" }} />
+            )}
+          </span>
+        </h3>
 
         {books.book?.map(
           (ele, idx) => idx !== 0 && <p className="mt-2">{ele?.content}</p>
@@ -364,9 +417,7 @@ function ReadBookPage({
           <div className="container">
             <div className="book_img">
               <img
-                src={`${
-                  booksReducer?.book?.Cover?.url
-                }`}
+                src={`${BOOK_IMAGE}`}
                 className="img-fluid"
                 alt="book-image"
               />
@@ -382,16 +433,6 @@ function ReadBookPage({
             <div className="hr_book">
               <img src={BOOK_IMAGE} className="img-fluid" alt="" />
             </div>
-            
-            <FontAwesomeIcon icon={faBookmark} onClick={()=>{
-              
-              
-              const chaptertitleId = booksReducer.chaptersTitles.filter((e)=>{return e.name==booksReducer.chapterContent[0].content})
-              
-              actions.createBookmarks(bookId,chaptertitleId[0]._id,authReducer.accessToken)
-            }} />
-<FontAwesomeIcon icon={faArrowAltCircleLeft} onClick={()=>{scrollToTop()}} style={{'font-size': '30px'}}/>
-<FontAwesomeIcon icon={faArrowAltCircleRight} onClick={()=>{scrollToEnd()}} style={{'font-size': '30px'}} />
 
             {/* Book Content Paragraphs  */}
             <div className="chapter_content">
@@ -426,6 +467,32 @@ function ReadBookPage({
                   return <BookReading book={item} />;
                 })}
               </InfiniteScroll>
+            </div>
+            <div style={{ "margin-left": "85%", "margin-top": "10px" }}>
+              {authReducer?.userData?.package?.product?.name != "CS Plus" ? (
+                <>
+                  <FontAwesomeIcon
+                    icon={faArrowAltCircleLeft}
+                    onClick={() => {
+                      setidIsSelected(true);
+                      setpopup(true);
+
+                      scrollToTop();
+                    }}
+                    style={{ "font-size": "30px" }}
+                  />
+                  <FontAwesomeIcon
+                    icon={faArrowAltCircleRight}
+                    onClick={() => {
+                      setidIsSelected(true);
+                      setpopup(true);
+
+                      scrollToEnd();
+                    }}
+                    style={{ "font-size": "30px" }}
+                  />
+                </>
+              ) : null}
             </div>
             {/* <div className="chapter_content">
               <InfiniteScroll
@@ -484,16 +551,28 @@ function ReadBookPage({
                   return (
                     <li>
                       <a
-                        href="#"
+                        href={`/ReadBookPage/${bookId}/${ele?._id}`}
                         onClick={(e) => {
                           e.preventDefault();
+
+                          navigate(`/ReadBookPage/${bookId}/${ele?._id}`, {
+                            replace: true,
+                            state: {
+                              bookId: bookId,
+                              bookName: BOOK_NAME,
+                              bookImage: BOOK_IMAGE,
+                              chapterId: ele?._id,
+                            },
+                          });
+
                           // setSelectedChapterId(ele._id);
-                          setid(ele?._id);
-                          addvertisementshown(ele?._id);
+                          // setid(ele?._id);
                         }}
                         style={{
                           color:
-                            selectedChapterId === ele?._id ? "#3b66f5" : "#000",
+                            window.location.pathname.split("/")[3] === ele?._id
+                              ? "#3b66f5"
+                              : "#000",
                           textTransform: "capitalize",
                         }}
                       >
@@ -633,15 +712,19 @@ function ReadBookPage({
           </button>
         </Modal.Header>
         <Modal.Body>
+          <h1>Google add Here</h1>
           {/* <Adsense client="ca-pub-5004354455774494" slot="7885184093" /> */}
-          <amp-ad width="100vw" height="320"
-     type="adsense"
-     data-ad-client="ca-pub-5004354455774494"
-     data-ad-slot="3071342394"
-     data-auto-format="rspv"
-     data-full-width="">
-  <div overflow=""></div>
-</amp-ad>
+          <amp-ad
+            width="100vw"
+            height="320"
+            type="adsense"
+            data-ad-client="ca-pub-5004354455774494"
+            data-ad-slot="3071342394"
+            data-auto-format="rspv"
+            data-full-width=""
+          >
+            <div overflow=""></div>
+          </amp-ad>
 
           {/* 
           <ins

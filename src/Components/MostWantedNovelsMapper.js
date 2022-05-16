@@ -19,6 +19,7 @@ function MostWantedNovelsMapper({
   // const [data, setData] = useState();
   const navigate = useNavigate();
   const isLogin = authReducer?.isLogin;
+  console.log(item);
   return (
     <div className="most-popular-books mb-5">
       <div
@@ -37,7 +38,7 @@ function MostWantedNovelsMapper({
         }}
       >
         <img
-          src={`${imageUrl}/${item?.image?.name}`}
+          src={`${item?.Cover?.url}`}
           className="mp-book-cover"
         />
       </div>
@@ -70,26 +71,27 @@ function MostWantedNovelsMapper({
           >
             <path d="M3,12h8c0.6,0,1-0.4,1-1V1c0-0.6-0.4-1-1-1H2C0.9,0,0,0.9,0,2v11c0,1.7,1.3,3,3,3h8c0.6,0,1-0.4,1-1 s-0.4-1-1-1H3c-0.6,0-1-0.4-1-1S2.4,12,3,12z" />
           </svg>
-          <p className="mp-book-chapter-number">{`${item?.chapterCount} Chapters`}</p>
+          <p className="mp-book-chapter-number">{`Chapters ${item?.chapters} `}</p>
           <svg
-            onClick={(e) => {
-              e.stopPropagation();
-              if (isLogin) {
-                !isLoading && favoriteBookHandler(item?._id);
-              } else {
-                toast.info("Login Required!");
-              }
-            }}
-            className={
-              item?.isLike ? "mp-favorite-heart2" : "mp-favorite-heart"
+          onClick={(e) => {
+            e.stopPropagation();
+
+
+            if (isLogin) {
+              favoriteBookHandler(item._id);
+              
+            } else {
+              toast.info("Login Required!");
             }
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z" />
-          </svg>
+          }}
+          className={item?.isLike ? "mp-favorite-heart2" : "mp-favorite-heart"}
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 4.248c-3.148-5.402-12-3.825-12 2.944 0 4.661 5.571 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-6.792-8.875-8.306-12-2.944z" />
+        </svg>
         </div>
       </div>
     </div>

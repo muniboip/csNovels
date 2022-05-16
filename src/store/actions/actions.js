@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import {  useNavigate } from "react-router-dom";
 
 
+
 export const userLogin = (data, loginSuccess) => async (dispatch) => {
   try {
 
@@ -60,6 +61,7 @@ export const getpackagehistory =async (token) => {
       },
     };
     const response = await axios.get(`${apiUrl}/subscription/getUserOrder`,header);
+    console.log(response.data.data);
 return response.data.data.reverse();
     
   } catch (err) {
@@ -324,7 +326,7 @@ export const getAllBooks = (id, token) => async (dispatch) => {
     // const URL = `${apiUrl}/book/getAllBooks?&userId=${id}&limit=20`;
     const response = await axios.get(`${apiUrl}/book/gets?id=${id}`, header);
     // const response = await axios.get(URL, header);
-    
+    console.log(response?.data?.data);
     if (response.data.success) {
       dispatch({
         type: types.GET_ALL_BOOKS,
@@ -403,18 +405,20 @@ export const favoriteThisBook =
         Accept: "application/json",
       },
     };
-    const bookId={
-      bookId:data._id
-    }
+   
+    
     
     try {
       const response = await axios.post(
         `${apiUrl}/favoriteBook/favoritOrunfavorite`,
-        bookId,
+        data,
         header
       );
       
       if (response?.data?.success) {
+        toast.success(
+          response.data.msg
+        );
         dispatch({
           type: types.FAVORITE_THIS_BOOK,
           payload: { data: data, bookArrayName: bookArrayName },
@@ -648,8 +652,10 @@ export const getBookmarks = (token) => async (dispatch) => {
   };
 
   try {
+    
     const response = await axios.get(URL, authHeader);
     if (response?.data?.success) {
+      
       dispatch({
         type: types.GET_BOOKMARKS,
         payload: response.data.data,
@@ -660,7 +666,30 @@ export const getBookmarks = (token) => async (dispatch) => {
   }
 };
 
+export const deleteBookMark=async(id,token)=>{
+  console.log(id,token);
+  const URL = `${apiUrl}/bookmark/delete/${id}`;
 
+  const authHeader = {
+    headers: {
+      Authorization: "Bearer " + token,
+      Accept: "application/json",
+    },
+  };
+
+  try {
+    const response = await axios.delete(URL, authHeader);
+    if (response?.data?.success) {
+      toast.success(response?.data?.msg)
+      
+    
+      
+
+    }
+  } catch (err) {
+    
+  }
+}
 export const createBookmarks = (book,chapter,token) => async (dispatch) => {
   const URL = `${apiUrl}/bookmark/create`;
 
@@ -674,10 +703,12 @@ const data = {book,chapter}
   try {
     const response = await axios.post(URL,data, authHeader);
     if (response?.data?.success) {
-      dispatch({
-        type: types.GET_BOOKMARKS,
-        payload: response.data.data,
-      });
+      toast.success(response?.data?.msg)
+      // if(response?.data.msg=="BookMark successfully"){
+      //   return true
+      // }
+      
+
     }
   } catch (err) {
     

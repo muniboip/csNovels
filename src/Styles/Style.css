@@ -587,10 +587,23 @@ svg.mp-favorite-heart:active {
 .free-book-details {
   padding-left: 30px;
 }
-
+.category{
+  padding-left: 10px;
+}
+.invoiceView{
+  background: rgb(228, 164, 25);
+    width: 100%;
+    margin-bottom: 10px;
+    height: 70px;
+    font-size: 20px;
+    color: white;
+ 
+}
+.invoiceView a{
+  text-decoration: none !important;
+}
 .free-book-image {
-  display: flex;
-  flex-direction: row;
+  
   width: 187px;
   height: 248px;
   /* cursor: no; */
@@ -599,6 +612,7 @@ svg.mp-favorite-heart:active {
   background-size: cover;
   position: relative;
   z-index: 1;
+  min-width: 187px;
 }
 /* .free-book-image:hover > * {
   -moz-transform: scale(1.1);
@@ -2671,6 +2685,19 @@ span.rating i {
   .copyright-cs {
     font-size: 16px;
   }
+}
+.invoicebtn{
+ 
+  width: 100%;
+  margin-bottom: 10px;
+  height: 70px;
+  font-size: 20px;
+ 
+  background-color: none;
+  color: black;
+}
+.invoicebtn:hover{
+  border: solid 3px rgb(228, 164, 25);
 }
 .subcancelbtn{
   width: 30%;  

@@ -24,7 +24,7 @@ function Top10Mapper({ authReducer, item, index, onClick, getBook }) {
         });
       }}
     >
-      <img  src={`${imageUrl}/${item?.image?.name || item?.Cover?.name}`} className="top10-image" />
+      <img  src={`${ item?.Cover?.url}`} className="top10-image" />
       <p className={`top10BookColor_${index + 1}`}>
         {index + 1 < 10 ? `0${index + 1}` : index + 1}
       </p>
@@ -34,9 +34,9 @@ function Top10Mapper({ authReducer, item, index, onClick, getBook }) {
         <div className="star-and-rating">
           <StarRatings
             starDimension={"12"}
-            rating={1}
-            starRatedColor="gray"
-            numberOfStars={1}
+            rating={item?.avgRate}
+            starRatedColor="#ffc240"
+            numberOfStars={4}
             name="rating"
           />
           <p className="top10-book-rating">{item.totalRates}</p>

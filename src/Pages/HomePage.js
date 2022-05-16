@@ -175,26 +175,21 @@ const HomePage = ({
     },
   ]);
 
-  const favoriteBookHandler = (_id) => {
+  const favoriteBookHandler = (id) => {
     const data = {
-      bookId: _id,
+      bookId: id,
     };
-
+    console.log(data);
     setIsLoading(true);
-    favoriteThisBook(data, accessToken, "books").then(() => {
-      setIsLoading(false);
-    });
+    favoriteThisBook(data, accessToken, "favoritedBooks");
   };
 
   useEffect(() => {
     setIsLoading(true);
     getRecentChapter();
 
-    getAllBooks(userId, accessToken).then(() => {
-      setIsLoading(false);
-    });
+    getAllBooks(userId, accessToken);
   }, []);
-  
 
   useEffect(() => {
     let mostPopularNovels = booksReducer?.books?.filter(
@@ -207,10 +202,10 @@ const HomePage = ({
       (ele) => ele?.releaseSchedule === "completed"
     );
     let top10Books = booksReducer?.books?.sort(
-      (a, b) => b?.totalRates - a?.totalRates
+      (a, b) => b?.avgRate - a?.avgRate
     );
     let recentArrivedBooksDateWiseSorted = booksReducer?.books?.sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
     let recent5Arrived = [];
     for (let i = 0; i < recentArrivedBooksDateWiseSorted?.length; i++) {
@@ -223,6 +218,7 @@ const HomePage = ({
     setRecent(recent5Arrived);
     setOngoing(ongoingNovels);
     setTop10(top10Books);
+    console.log("Books updated");
   }, [booksReducer?.books]);
 
   return (
@@ -253,7 +249,6 @@ const HomePage = ({
                   item={item}
                   isLoading={isLoading}
                   favoriteBookHandler={favoriteBookHandler}
-                
                 />
               ))}
             </div>
@@ -282,7 +277,7 @@ const HomePage = ({
                   item={item}
                   isLoading={isLoading}
                   favoriteBookHandler={favoriteBookHandler}
-                
+                  from="homepage"
                 />
               ))}
             </div>
@@ -300,12 +295,7 @@ const HomePage = ({
               <p className="section-heading-inner">TOP 10.</p>
               <div className="books-container">
                 {top10?.map((ele, idx) => (
-                  <Top10Mapper
-                    key={idx}
-                    item={ele}
-                    index={idx}
-                    
-                  />
+                  <Top10Mapper key={idx} item={ele} index={idx} />
                 ))}
               </div>
             </div>
@@ -315,12 +305,7 @@ const HomePage = ({
 
               <div className="row-425 row-426 recent-width recent-books-container">
                 {recent.map((ele, idx) => (
-                  <Top10Mapper
-                    key={idx}
-                    item={ele}
-                    index={idx}
-                   
-                  />
+                  <Top10Mapper key={idx} item={ele} index={idx} />
                 ))}
               </div>
             </div>
@@ -347,13 +332,13 @@ const HomePage = ({
                   <span className="gradient-blue-ball" />
                   <span className="gradient-green-ball" />
                   <span className="gradient-red-ball" />
-                  {/* <div className="three-lines">
+                  <div className="three-lines">
                     <img src={THREE_LINES} className="three-lines-image" />
-                  </div> */}
+                  </div>
                   <div className="free-book-image">
                     <div>
                       <p className="free-book-status">
-                        {freeBookOfWeek.status}{" "}
+                        {/* {freeBookOfWeek.status}{" "} */}
                       </p>
                       <p className="free-book-heading">
                         {freeBookOfWeek.heading}
@@ -402,7 +387,7 @@ const HomePage = ({
         {/* Categories  */}
         <div className="book-categories-section">
           <div className="row">
-            <div className="col-md-4 col-sm-6">
+            <div className="col-md-4 col-sm-6 category">
               <div
                 onClick={(e) => {
                   e.preventDefault();
@@ -417,7 +402,7 @@ const HomePage = ({
               </div>
             </div>
 
-            <div className="col-md-4 col-sm-6">
+            <div className="col-md-4 col-sm-6 category">
               <div
                 onClick={(e) => {
                   e.preventDefault();
@@ -431,7 +416,8 @@ const HomePage = ({
                 <p className="book-category-label">Sci-Fi</p>
               </div>
             </div>
-            <div className="col-md-4 col-sm-6">
+
+            <div className="col-md-4 col-sm-6 category">
               <div
                 onClick={(e) => {
                   e.preventDefault();
@@ -473,7 +459,6 @@ const HomePage = ({
                       item={item}
                       isLoading={isLoading}
                       favoriteBookHandler={favoriteBookHandler}
-                      
                     />
                   ))
                 : completed?.map((item, idx) => (
@@ -482,7 +467,6 @@ const HomePage = ({
                       item={item}
                       isLoading={isLoading}
                       favoriteBookHandler={favoriteBookHandler}
-                     
                     />
                   ))}
             </div>
@@ -530,20 +514,24 @@ const HomePage = ({
                     <p className="text-center read-p">
                       <a
                         onClick={() => {
-                          navigate(`/ReadBookPage`, {
-                            replace: true,
-                            state: {
-                              bookId: item.book?._id,
-                              bookName: item.book?.Title,
-                              bookImage: `${item.book?.Cover?.url}`,
-                              // bookImage: `${imageUrl}/${item.book?.Cover?.url}`,
-
-                              chapter : item.name
-                            },
-                          });
+                          actions.getChapterTitles(item.book?._id, accessToken);
+                          const chapterId = booksReducer.chaptersTitles.filter(
+                            (e) => e.name == item.name
+                          )
+                          console.log(chapterId);
+                          navigate(
+                            `/ReadBookPage/${item.book?._id}/${chapterId}`,
+                            {
+                              replace: true,
+                              state: {
+                                bookName: item.book?.Title,
+                                bookImage: `${item.book?.Cover?.url}`,
+                              },
+                            }
+                          );
                         }}
                       >
-                        READ
+                        READ Now
                       </a>
                     </p>
                   </td>

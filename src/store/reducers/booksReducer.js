@@ -68,29 +68,40 @@ export function booksReducer(state = initialState, action) {
       };
 
     case FAVORITE_THIS_BOOK:
-      let bookId = action.payload.data._id;
+      let bookId = action.payload.data.bookId;
       let bookArrayName = action.payload.bookArrayName;
       
       let index = 0;
-
       let copyArray = [];
       let propertToReplace = null;
-
+      
       if (bookArrayName === "bookmarks") {
+        console.log(bookArrayName,"=================");
+
         copyArray = state?.bookmarks?.slice();
         state?.bookmarks?.map((ele, idx) => {
           if (ele?._id === bookId) {
             index = idx;
           }
         });
+        
       } else if (bookArrayName === "favoritedBooks") {
-        state.favoritedBooks.indexOf()
-        var i = state.favoritedBooks.map(function(e) { return e._id; }).indexOf(bookId);
-        if(i==-1){
-          state.favoritedBooks[state?.favoritedBooks.length] = action.payload.data;
-        }else{
-          state.favoritedBooks.splice(i,1)
-        }
+        
+        console.log(bookArrayName,"=================");
+        const copyBooks = [...state.books]
+        console.log(copyBooks,"-=-----------");
+        var i = copyBooks?.findIndex((e)=>{return e._id==bookId})
+        if( copyBooks.length>0){
+        copyBooks[i].isLike = !copyBooks[i].isLike}
+        console.log(state.books.filter(e=>e.isLike==true));
+        const copyfavbooks = [...state.books.filter(e=>e.isLike==true)]
+console.log(copyfavbooks,"==============");
+        propertToReplace = { books: copyBooks ,favoritedBooks:copyfavbooks };
+        // if(i==-1){
+        //   state.favoritedBooks[state?.favoritedBooks.length] = action.payload.data;
+        // }else{
+        //   state.favoritedBooks.splice(i,1)
+        // }
       } else if (bookArrayName === "filteredBooks") {
         copyArray = state?.filteredBooks?.slice();
         state?.filteredBooks?.map((ele, idx) => {
@@ -100,13 +111,16 @@ export function booksReducer(state = initialState, action) {
         });
       }
 
-      copyArray[index].isLike = !copyArray[index]?.isLike;
+      // copyArray[index].isLike = !copyArray[index]?.isLike;
 
       if (bookArrayName === "books") {
+
         propertToReplace = { books: copyArray };
-      } else if (bookArrayName === "favoritedBooks") {
-        propertToReplace = { favoritedBooks: state.favoritedBooks };
-      } else if (bookArrayName === "filteredBooks") {
+      } else 
+      // if (bookArrayName === "favoritedBooks") {
+      //   propertToReplace = { favoritedBooks: state.favoritedBooks };
+      // } else 
+      if (bookArrayName === "filteredBooks") {
         propertToReplace = { filteredBooks: copyArray };
       }
       
