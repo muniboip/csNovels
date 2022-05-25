@@ -43,7 +43,7 @@ export const subscription = async (token, interval, product) => {
       interval: interval,
       product: product,
     };
-
+console.log(data);
     const response = await axios.post(`${apiUrl}/subscription/create`, data);
     
   } catch (err) {
@@ -61,7 +61,7 @@ export const getpackagehistory =async (token) => {
       },
     };
     const response = await axios.get(`${apiUrl}/subscription/getUserOrder`,header);
-    console.log(response.data.data);
+    
 return response.data.data.reverse();
     
   } catch (err) {
@@ -97,10 +97,8 @@ export const Presubscription = async (
     toast.error(err.response.data.msg);
   }
 };
-export const Cancelsubs = (accessToken) => async (dispatch) => {
+export const Cancelsubs = async (accessToken) => {
   try {
-  
-
     const header = {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -112,16 +110,17 @@ export const Cancelsubs = (accessToken) => async (dispatch) => {
       {},
       header
     );
+    return response.data
     
-    if (response.data.success) {
-      toast.success(response.data.msg);
-      dispatch({
-        type: types.SUBSCRIPTION,
-        payload: null,
-      });
-    } else {
-      toast.error(response.data.msg);
-    }
+    // if (response.data.success) {
+    //   toast.success(response.data.msg);
+    //   dispatch({
+    //     type: types.SUBSCRIPTION,
+    //     payload: null,
+    //   });
+    // } else {
+    //   toast.error(response.data.msg);
+    // }
   } catch (err) {
     toast.error(err.response.data.msg);
   }

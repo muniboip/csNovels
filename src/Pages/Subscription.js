@@ -207,27 +207,6 @@ function Subscription({ authReducer }) {
                 </div>
               </div>
             );
-          } else if (authReducer.userData?.package?.amount >= item.amount) {
-            return (
-              <div class="sign-up current">
-                <div class="free currt">
-                  <span class="span1"> ${item.amount}</span>
-                </div>
-                <div class="free-acc">
-                  <h2>
-                    Get unlimited access<br></br> to all novels!{" "}
-                  </h2>
-                  <p>charged monthly OR one time payment for 30 day access</p>
-                </div>
-                <div class="free-cs ">
-                  <button class="btn1" style={{ cursor: "pointer" }}>
-                    {" "}
-                    SUBSCRIBED
-                  </button>
-                  <h1>{item.name}</h1>
-                </div>
-              </div>
-            );
           } else if (
             !item.free &&
             authReducer.userData?.package?.amount != item.amount
@@ -267,8 +246,57 @@ function Subscription({ authReducer }) {
                 </div>
               </div>
             );
-          }
-        })}
+          }else if(authReducer.userData?.package?.amount > 5 && authReducer.userData?.package?.amount <=14) {
+           
+           return(  <div class="sign-up current">
+               <div class="free currt">
+                 <span class="span1"> $9</span>
+               </div>
+               <div class="free-acc">
+                 <h2>
+                   Get unlimited access<br></br> to all novels!{" "}
+                 </h2>
+                 <p>charged monthly OR one time payment for 30 day access</p>
+               </div>
+               <div class="free-cs ">
+                 <button class="btn1" style={{ cursor: "pointer" }}>
+                   {" "}
+                   SUBSCRIBED
+                 </button>
+                 <h1>{item.name}</h1>
+               </div>
+             </div>)
+           
+         }else if(authReducer.userData?.package?.amount >=15) {
+           
+           return(  <div class="sign-up current">
+               <div class="free currt">
+                 <span class="span1"> $15</span>
+               </div>
+               <div class="free-acc">
+                 <h2>
+                   Get unlimited access<br></br> to all novels!{" "}
+                 </h2>
+                 <p>charged monthly OR one time payment for 30 day access</p>
+               </div>
+               <div class="free-cs ">
+                 <button class="btn1" style={{ cursor: "pointer" }}>
+                   {" "}
+                   SUBSCRIBED
+                 </button>
+                 <h1>{item.name}</h1>
+               </div>
+             </div>
+           )
+         }}
+        
+        
+         
+        
+        )}
+      
+        
+        
 
         {
           // authReducer.userData.package ? (

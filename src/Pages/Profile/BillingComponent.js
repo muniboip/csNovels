@@ -53,17 +53,18 @@ const BillingComponent = ({ authReducer }) => {
 
     var response;
     if (immediate) {
-      response = Cancelsubs(authReducer.accessToken);
+      response = await Cancelsubs(authReducer.accessToken);
     } else {
-      response = Canceltimesubs(authReducer.accessToken);
+      response = await Canceltimesubs(authReducer.accessToken);
     }
-
-    if (response.success) {
-      toast.success(response.data.msg);
+console.log(immediate, response);
+    if (!response.success) {
+      console.log("=====");
       dispatch({
         type: types.SUBSCRIPTION,
         payload: null,
       });
+      toast.success(response?.data?.msg);
     } else {
       dispatch({
         type: types.SUBSCRIPTION,

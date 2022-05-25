@@ -1,4 +1,5 @@
 import { Satellite } from "@mui/icons-material";
+import { subscription } from "../actions/actions";
 import {
   LOGIN_SUCCESS,
   LOGOUT_REQUEST,
@@ -69,7 +70,8 @@ export const authReducer = (state = initialData, action) => {
         ...state,
         userData:{
           ...state.userData,
-          package: action?.payload
+          package: action?.payload,
+          subscription:action?.payload?.subscription ? action?.payload?.subscription : null,
         }
       };
 

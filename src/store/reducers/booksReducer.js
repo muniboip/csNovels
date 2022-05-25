@@ -70,13 +70,12 @@ export function booksReducer(state = initialState, action) {
     case FAVORITE_THIS_BOOK:
       let bookId = action.payload.data.bookId;
       let bookArrayName = action.payload.bookArrayName;
-      
-      let index = 0;
       let copyArray = [];
       let propertToReplace = null;
-      
+      var index;
+
       if (bookArrayName === "bookmarks") {
-        console.log(bookArrayName,"=================");
+        
 
         copyArray = state?.bookmarks?.slice();
         state?.bookmarks?.map((ele, idx) => {
@@ -84,19 +83,19 @@ export function booksReducer(state = initialState, action) {
             index = idx;
           }
         });
+      copyArray[index].isLike = !copyArray[index]?.isLike;
         
       } else if (bookArrayName === "favoritedBooks") {
         
-        console.log(bookArrayName,"=================");
+        
         const copyBooks = [...state.books]
-        console.log(copyBooks,"-=-----------");
-        var i = copyBooks?.findIndex((e)=>{return e._id==bookId})
+        
+        var i = copyBooks?.findIndex((e)=>{return e._id===bookId})
         if( copyBooks.length>0){
-        copyBooks[i].isLike = !copyBooks[i].isLike}
-        console.log(state.books.filter(e=>e.isLike==true));
-        const copyfavbooks = [...state.books.filter(e=>e.isLike==true)]
-console.log(copyfavbooks,"==============");
+        copyBooks[i].isLike = !copyBooks[i].isLike}        
+        const copyfavbooks = [...state.books.filter(e=>e.isLike===true)]
         propertToReplace = { books: copyBooks ,favoritedBooks:copyfavbooks };
+        
         // if(i==-1){
         //   state.favoritedBooks[state?.favoritedBooks.length] = action.payload.data;
         // }else{
@@ -104,6 +103,9 @@ console.log(copyfavbooks,"==============");
         // }
       } else if (bookArrayName === "filteredBooks") {
         copyArray = state?.filteredBooks?.slice();
+        
+
+
         state?.filteredBooks?.map((ele, idx) => {
           if (ele?._id === bookId) {
             index = idx;
@@ -111,7 +113,7 @@ console.log(copyfavbooks,"==============");
         });
       }
 
-      // copyArray[index].isLike = !copyArray[index]?.isLike;
+      copyArray[index].isLike = !copyArray[index]?.isLike;
 
       if (bookArrayName === "books") {
 
